@@ -1,0 +1,15 @@
+{
+  "name": "citadel-game-servers",
+  "version": "0.0.1",
+  "description": "An open source tool to create game servers on the fly, based on docker",
+  "repository": "https://github.com/MisterTakaashi/Citadel",
+  "author": "MisterTakaashi",
+  "scripts": {
+    "hive": "yarn workspace citadel-hive"
+  },
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "workspaces": [
+    "citadel-hive"
+  ]
+}

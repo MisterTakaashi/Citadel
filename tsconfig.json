@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "CommonJS",
+    "lib": ["ESNext"],
+
+    "strict": true,
+
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true
+  }
+}
