@@ -1,8 +1,8 @@
-import ApplicationController from './application';
+import { commonControllers } from 'citadel-lib';
 import InstanceModel from '../models/instance';
 import { Context } from 'koa';
 
-class InstanceController extends ApplicationController {
+class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
     this.renderSuccess<{ instances: typeof InstanceModel[] }>(ctx, {

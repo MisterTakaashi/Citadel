@@ -1,9 +1,8 @@
 import * as Docker from 'dockerode';
 import { Context } from 'koa';
+import { commonControllers } from 'citadel-lib';
 
-import ApplicationController from './application';
-
-class InstanceController extends ApplicationController {
+class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
     const docker = new Docker();

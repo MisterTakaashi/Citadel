@@ -1,8 +1,8 @@
-import ApplicationController from './application';
+import { commonControllers } from 'citadel-lib';
 import ServerModel from '../models/server';
 import { Context } from 'koa';
 
-class ServerController extends ApplicationController {
+class ServerController extends commonControllers.ApplicationController {
   // GET /servers
   async index(ctx: Context) {
     this.renderSuccess<{ servers: typeof ServerModel[] }>(ctx, {

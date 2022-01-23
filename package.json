@@ -6,12 +6,14 @@
   "author": "MisterTakaashi",
   "scripts": {
     "hive": "yarn workspace citadel-hive",
-    "drone": "yarn workspace citadel-drone"
+    "drone": "yarn workspace citadel-drone",
+    "lib": "yarn workspace citadel-lib"
   },
   "license": "GPL-3.0-or-later",
   "private": true,
   "workspaces": [
     "citadel-hive",
-    "citadel-drone"
+    "citadel-drone",
+    "citadel-lib"
   ]
 }

@@ -1,7 +1,7 @@
 import { Context } from 'koa';
-import ApplicationController from './application';
+import { commonControllers } from 'citadel-lib';
 
-class PingController extends ApplicationController {
+class PingController extends commonControllers.ApplicationController {
   // GET /ping
   async index(ctx: Context) {
     this.renderSuccess(ctx, { ping: 'pong' });
