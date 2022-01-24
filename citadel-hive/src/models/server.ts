@@ -1,13 +1,15 @@
-import { Schema, model } from 'mongoose';
+import { getModelForClass, prop } from '@typegoose/typegoose';
+import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
-const schema = new Schema(
-  {
-    ip: { type: String, required: true },
-    port: { type: String, required: true, default: '8081' },
-  },
-  {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-  }
-);
+class Server extends TimeStamps {
+  @prop()
+  public ip: string;
 
-export default model('Server', schema);
+  @prop()
+  public port: string;
+}
+
+const ServerModel = getModelForClass(Server);
+
+export default Server;
+export { ServerModel };

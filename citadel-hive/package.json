@@ -13,12 +13,13 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "dependencies": {
+    "@typegoose/typegoose": "^9.5.0",
+    "citadel-lib": "*",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-router": "^10.1.1",
-    "mongoose": "^6.1.7",
-    "citadel-lib": "*"
+    "mongoose": "^6.1.7"
   },
   "devDependencies": {
     "@types/koa": "^2.13.4",

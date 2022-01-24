@@ -1,11 +1,11 @@
 import { commonControllers } from 'citadel-lib';
-import InstanceModel from '../models/instance';
+import { InstanceModel } from '../models/instance';
 import { Context } from 'koa';
 
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
-    this.renderSuccess<{ instances: typeof InstanceModel[] }>(ctx, {
+    this.renderSuccess(ctx, {
       instances: await InstanceModel.find(),
     });
   }
@@ -14,7 +14,7 @@ class InstanceController extends commonControllers.ApplicationController {
   async create(ctx: Context) {
     const newInstance = new InstanceModel(ctx.request.body);
 
-    this.renderSuccess<{ instance: typeof InstanceModel }>(ctx, {
+    this.renderSuccess(ctx, {
       instance: await newInstance.save(),
     });
   }

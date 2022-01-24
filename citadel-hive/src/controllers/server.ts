@@ -1,11 +1,11 @@
 import { commonControllers } from 'citadel-lib';
-import ServerModel from '../models/server';
+import { ServerModel } from '../models/server';
 import { Context } from 'koa';
 
 class ServerController extends commonControllers.ApplicationController {
   // GET /servers
   async index(ctx: Context) {
-    this.renderSuccess<{ servers: typeof ServerModel[] }>(ctx, {
+    this.renderSuccess(ctx, {
       servers: await ServerModel.find(),
     });
   }
@@ -14,7 +14,7 @@ class ServerController extends commonControllers.ApplicationController {
   async create(ctx: Context) {
     const newServer = new ServerModel(ctx.request.body);
 
-    this.renderSuccess<{ server: typeof ServerModel }>(ctx, {
+    this.renderSuccess(ctx, {
       server: await newServer.save(),
     });
   }
