@@ -17,7 +17,7 @@ router.get('/instances', async (ctx: Context) => {
 });
 
 router.post('/instances', async (ctx: Context) => {
-  await new InstanceController().index(ctx);
+  await new InstanceController().create(ctx);
 });
 
 export default router;
