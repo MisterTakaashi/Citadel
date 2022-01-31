@@ -15,24 +15,29 @@ class InstanceController extends commonControllers.ApplicationController {
     );
 
     this.renderSuccess(ctx, {
-      servers: gameContainers,
+      instances: gameContainers.map(({ Id, Names, Image, State }) => ({
+        id: Id,
+        name: Names[0],
+        image: Image,
+        state: State,
+      })),
     });
   }
 
   // POST /instances
   async create(ctx: Context) {
-    const { body } = ctx.request;
+    const { image } = ctx.request.body;
 
     const docker = new Docker();
-    await pullImage(docker, 'mysql:latest');
+    await pullImage(docker, image);
 
     await docker.createContainer({
-      Image: 'mysql:latest',
-      name: 'citadel_mysql',
+      Image: image,
+      name: `citadel_${image.split(':')[0]}`,
     });
 
     this.renderSuccess(ctx, {
-      servers: body,
+      instances: { image },
     });
   }
 }
