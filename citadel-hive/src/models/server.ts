@@ -3,10 +3,7 @@ import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 class Server extends TimeStamps {
   @prop()
-  public ip: string;
-
-  @prop()
-  public port: string;
+  public url: string;
 }
 
 const ServerModel = getModelForClass(Server);
