@@ -7,13 +7,15 @@
   "scripts": {
     "hive": "yarn workspace citadel-hive",
     "drone": "yarn workspace citadel-drone",
-    "lib": "yarn workspace citadel-lib"
+    "lib": "yarn workspace citadel-lib",
+    "app": "yarn workspace citadel-app"
   },
   "license": "GPL-3.0-or-later",
   "private": true,
   "workspaces": [
     "citadel-hive",
     "citadel-drone",
-    "citadel-lib"
+    "citadel-lib",
+    "citadel-app"
   ]
 }
