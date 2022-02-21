@@ -18,7 +18,8 @@ function Dashboard() {
 
   return (
     <Layout>
-      <div className='container mx-auto my-10'>
+      <div className='container mx-auto mb-10'>
+        <h2 className='text-white text-3xl font-bold my-5'>My Instances</h2>
         <div className='grid grid-cols-4 gap-4'>
           {instances &&
             instances.map((instance, index) => (
