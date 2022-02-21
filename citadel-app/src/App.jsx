@@ -1,13 +1,15 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Layout from './components/layout';
+import Dashboard from './pages/dashboard/dashboard';
 
 function App() {
   return (
-    <div className='h-screen bg-white dark:bg-slate-900'>
-      <Layout />
-      <h1 className='text-3xl font-bold underline'>Hello world!</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<Dashboard />} />
+      </Routes>
+    </Router>
   );
 }
 
