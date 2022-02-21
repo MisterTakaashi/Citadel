@@ -1,7 +1,7 @@
 import * as Docker from 'dockerode';
 import { Context } from 'koa';
 import { commonControllers } from 'citadel-lib';
-import { pullImage } from '../lib/docker';
+import DockerProvider from '../providers/docker';
 
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
@@ -29,12 +29,9 @@ class InstanceController extends commonControllers.ApplicationController {
     const { image } = ctx.request.body;
 
     const docker = new Docker();
-    await pullImage(docker, image);
-
-    await docker.createContainer({
-      Image: image,
-      name: `citadel_${image.split(':')[0]}`,
-    });
+    const provider = new DockerProvider(docker);
+    await provider.fetchBinaries(image);
+    await provider.createInstance(image);
 
     this.renderSuccess(ctx, {
       instances: { image },
