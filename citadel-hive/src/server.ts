@@ -1,6 +1,7 @@
 import * as koa from 'koa';
 import * as koaJson from 'koa-json';
 import * as koaBodyParser from 'koa-bodyparser';
+import * as cors from '@koa/cors';
 import { connect } from 'mongoose';
 
 import router from './router';
@@ -11,6 +12,7 @@ import router from './router';
   const port = process.env.PORT || 3000;
 
   const app = new koa();
+  app.use(cors({ origin: '*' }));
   app.use(koaJson());
   app.use(koaBodyParser());
   app.use(router.routes());
