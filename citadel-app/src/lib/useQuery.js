@@ -15,14 +15,19 @@ const useQuery = (endpoint) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios({ url: `${apiUrl}${endpoint}` }).then(({ data: apiResponse }) => {
-      if (!apiResponse.error) {
-        setResponse(apiResponse.data);
-      } else {
-        setError(apiResponse.error);
-      }
-      setLoading(false);
-    });
+    axios({ url: `${apiUrl}${endpoint}` })
+      .then(({ data: apiResponse }) => {
+        if (!apiResponse.error) {
+          setResponse(apiResponse.data);
+        } else {
+          setError(apiResponse.error);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+      });
   }, [endpoint]);
 
   return { response, loading, error };
