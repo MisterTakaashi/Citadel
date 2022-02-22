@@ -1,6 +1,8 @@
 import axios from 'axios';
+import * as Bluebird from 'bluebird';
+import Server from '../models/server';
 
-const queryDrone = async (url: string, apiInterface: string, resultKey?: string) => {
+const queryDrone = async ({ url }: Server, apiInterface: string, resultKey?: string) => {
   try {
     const result = await axios({ url: `${url}/${apiInterface}` });
 
@@ -18,4 +20,20 @@ const queryDrone = async (url: string, apiInterface: string, resultKey?: string)
   }
 };
 
-export default queryDrone;
+const queryDrones = async (servers: Server[], apiInterface: string, resultKey?: string) => {
+  const results = await Bluebird.map(servers, (currentServer: Server) =>
+    queryDrone(currentServer, apiInterface, resultKey)
+  );
+
+  const filteredResults = results.reduce((acc, currentResult) => {
+    if (currentResult.error) {
+      return acc;
+    }
+
+    return [...acc, ...currentResult.response];
+  }, []);
+
+  return filteredResults;
+};
+
+export { queryDrone, queryDrones };

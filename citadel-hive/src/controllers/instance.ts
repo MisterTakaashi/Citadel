@@ -1,24 +1,13 @@
-import * as Bluebird from 'bluebird';
 import { commonControllers } from 'citadel-lib';
 import { InstanceModel } from '../models/instance';
-import Server, { ServerModel } from '../models/server';
+import { ServerModel } from '../models/server';
 import { Context } from 'koa';
-import queryDrone from '../lib/drone-query';
+import { queryDrones } from '../lib/drone-query';
 
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
-    const servers = await ServerModel.find();
-
-    const results = await Bluebird.map(servers, (currentServer: Server) => queryDrone(currentServer.url, 'instances'));
-
-    const instances = results.reduce((acc, currentResult) => {
-      if (currentResult.error) {
-        return acc;
-      }
-
-      return [...acc, ...currentResult.response];
-    }, []);
+    const instances = await queryDrones(await ServerModel.find(), 'instances');
 
     this.renderSuccess(ctx, {
       instances,
@@ -31,6 +20,24 @@ class InstanceController extends commonControllers.ApplicationController {
 
     this.renderSuccess(ctx, {
       instance: await newInstance.save(),
+    });
+  }
+
+  // GET /instances/:name
+  async details(ctx: Context) {
+    const { name } = ctx.params;
+
+    const instances = await queryDrones(await ServerModel.find(), 'instances');
+
+    const instance = instances.find((currentInstance) => currentInstance.name === name);
+
+    if (!instance) {
+      this.renderError(ctx, 404, `Cannot find instance "${name}"`);
+      return;
+    }
+
+    this.renderSuccess(ctx, {
+      instance,
     });
   }
 }

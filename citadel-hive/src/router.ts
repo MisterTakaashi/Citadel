@@ -14,6 +14,10 @@ router.post('/instances', async (ctx) => {
   await new InstanceController().create(ctx);
 });
 
+router.get('/instances/:name', async (ctx) => {
+  await new InstanceController().details(ctx);
+});
+
 // Servers
 router.get('/servers', async (ctx) => {
   await new ServerController().index(ctx);
