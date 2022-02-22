@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import capitalize from 'lodash/capitalize';
-import { faTag } from '@fortawesome/free-solid-svg-icons';
+import { faTag, faCircle } from '@fortawesome/free-solid-svg-icons';
 import Layout from '../../components/layout';
 import Button from '../../components/button';
 import useApiQuery from '../../lib/useApiQuery';
@@ -35,9 +35,20 @@ function Dashboard() {
                   <p className='text-xl font-bold truncate'>{instance.name.replace(/\//g, '')}</p>
                   <p
                     className={`text-xs rounded ${
-                      instance.state === 'created' ? 'bg-green-600' : ''
+                      instance.state === 'created' ? 'bg-orange-600' : ''
+                    } ${instance.state === 'running' ? 'bg-green-600' : ''} ${
+                      instance.state === 'exited' ? 'bg-red-600' : ''
                     } p-1`}
                   >
+                    {instance.state === 'created' && (
+                      <FontAwesomeIcon icon={faCircle} size='xs' className='text-orange-400' />
+                    )}
+                    {instance.state === 'running' && (
+                      <FontAwesomeIcon icon={faCircle} size='xs' className='text-green-400' />
+                    )}
+                    {instance.state === 'exited' && (
+                      <FontAwesomeIcon icon={faCircle} size='xs' className='text-red-400' />
+                    )}{' '}
                     {capitalize(instance.state)}
                   </p>
                 </div>
@@ -51,7 +62,7 @@ function Dashboard() {
                   <Button color='red' size='sm' className='my-3 mr-3 px-4'>
                     Shut down
                   </Button>
-                  <Button color='gray' size='sm' className='my-3 px-4'>
+                  <Button color='slate' size='sm' className='my-3 px-4'>
                     Manage
                   </Button>
                 </div>
