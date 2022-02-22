@@ -28,14 +28,26 @@ class InstanceController extends commonControllers.ApplicationController {
   async create(ctx: Context) {
     const { image } = ctx.request.body;
 
-    const docker = new Docker();
-    const provider = new DockerProvider(docker);
+    const provider = new DockerProvider(new Docker());
     await provider.fetchBinaries(image);
-    await provider.createInstance(image);
+
+    const instanceName = await provider.createInstance(image);
+    await provider.startInstance(instanceName);
 
     this.renderSuccess(ctx, {
       instances: { image },
     });
+  }
+
+  // POST /instances/:name/start
+  async start(ctx: Context) {
+    const { name } = ctx.params as { name: string };
+
+    const provider = new DockerProvider(new Docker());
+    provider.startInstance(name);
+
+    // TODO: Add a normalized method to get infos of an instance
+    this.renderSuccess(ctx, { instance: null });
   }
 }
 

@@ -8,8 +8,28 @@ class DockerProvider implements BaseProvider {
     this.docker = docker;
   }
 
-  async createInstance(image: string): Promise<void> {
-    await this.docker.createContainer({ Image: image, name: `citadel_${image.split(':')[0]}` });
+  async getContainerByName(name: string): Promise<Docker.ContainerInfo | undefined> {
+    const containers = await this.docker.listContainers({ all: true });
+
+    return containers.find((currentContainer) => currentContainer.Names.includes(`/${name}`));
+  }
+
+  async startInstance(name: string): Promise<void> {
+    const containerInfo = await this.getContainerByName(name);
+
+    if (!containerInfo) {
+      throw new Error('Instance not found by name');
+    }
+
+    const container = this.docker.getContainer(containerInfo.Id);
+    await container.start();
+  }
+
+  async createInstance(image: string): Promise<string> {
+    const name = `citadel_${image.split(':')[0]}`;
+    await this.docker.createContainer({ Image: image, name });
+
+    return name;
   }
 
   async fetchBinaries(repoTag: string): Promise<void> {

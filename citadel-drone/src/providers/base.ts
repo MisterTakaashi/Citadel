@@ -1,5 +1,6 @@
 interface BaseProvider {
-  createInstance(image: string): Promise<void>;
+  startInstance(name: string): Promise<void>;
+  createInstance(image: string): Promise<string>;
   fetchBinaries: (repoTag: string) => Promise<void>;
 }
 
