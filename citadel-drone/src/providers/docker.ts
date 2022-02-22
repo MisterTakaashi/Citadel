@@ -1,3 +1,4 @@
+import { InstanceInfo, InstanceState } from 'citadel-lib';
 import * as Docker from 'dockerode';
 import BaseProvider from './base';
 
@@ -8,14 +9,38 @@ class DockerProvider implements BaseProvider {
     this.docker = docker;
   }
 
-  async getContainerByName(name: string): Promise<Docker.ContainerInfo | undefined> {
+  async getContainer(name: string): Promise<Docker.ContainerInfo | undefined> {
     const containers = await this.docker.listContainers({ all: true });
 
     return containers.find((currentContainer) => currentContainer.Names.includes(`/${name}`));
   }
 
+  async getInstances(): Promise<InstanceInfo[]> {
+    const containers = (await this.docker.listContainers({ all: true })).filter((currentContainer) =>
+      currentContainer.Names.find((currentName) => currentName.startsWith('/citadel_'))
+    );
+
+    return containers.map(({ Names, Image, State }) => ({
+      name: Names[0].substring(1),
+      image: Image,
+      state: State as InstanceState,
+    }));
+  }
+
+  async getInstance(name: string): Promise<InstanceInfo | undefined> {
+    const containerInfo = await this.getContainer(name);
+
+    if (!containerInfo) return undefined;
+
+    return {
+      name: containerInfo.Names[0].substring(1),
+      image: containerInfo.Image,
+      state: containerInfo.State as InstanceState,
+    };
+  }
+
   async startInstance(name: string): Promise<void> {
-    const containerInfo = await this.getContainerByName(name);
+    const containerInfo = await this.getContainer(name);
 
     if (!containerInfo) {
       throw new Error('Instance not found by name');

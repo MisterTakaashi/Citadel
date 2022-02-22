@@ -6,21 +6,10 @@ import DockerProvider from '../providers/docker';
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
-    const docker = new Docker();
-
-    const containers = await docker.listContainers({ all: true });
-    console.log(containers);
-    const gameContainers = containers.filter((currentContainer) =>
-      currentContainer.Names.find((currentName) => currentName.startsWith('/citadel_'))
-    );
+    const provider = new DockerProvider(new Docker());
 
     this.renderSuccess(ctx, {
-      instances: gameContainers.map(({ Id, Names, Image, State }) => ({
-        id: Id,
-        name: Names[0],
-        image: Image,
-        state: State,
-      })),
+      instances: await provider.getInstances(),
     });
   }
 
@@ -44,10 +33,14 @@ class InstanceController extends commonControllers.ApplicationController {
     const { name } = ctx.params as { name: string };
 
     const provider = new DockerProvider(new Docker());
-    provider.startInstance(name);
+    try {
+      await provider.startInstance(name);
+    } catch (err) {
+      this.renderError(ctx, 400, err.reason);
+      return;
+    }
 
-    // TODO: Add a normalized method to get infos of an instance
-    this.renderSuccess(ctx, { instance: null });
+    this.renderSuccess(ctx, { instance: await provider.getInstance(name) });
   }
 }
 
