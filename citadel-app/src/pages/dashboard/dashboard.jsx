@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import capitalize from 'lodash/capitalize';
 import { faTag, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 import Layout from '../../components/layout';
 import Button from '../../components/button';
 import useApiQuery from '../../lib/useApiQuery';
@@ -11,7 +12,7 @@ function Dashboard() {
 
   const generateColor = (index) => {
     const colors = ['purple', 'sky'];
-    const emojis = ['🎮', '🎲'];
+    const emojis = ['🪣🎮🔫', '🔧🤖🚀'];
 
     return [colors[index], emojis[index]];
   };
@@ -62,9 +63,11 @@ function Dashboard() {
                   <Button color='red' size='sm' className='my-3 mr-3 px-4'>
                     Shut down
                   </Button>
-                  <Button color='slate' size='sm' className='my-3 px-4'>
-                    Manage
-                  </Button>
+                  <Link to={`/instances/${instance.name}`}>
+                    <Button color='slate' size='sm' className='my-3 px-4'>
+                      Manage
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
