@@ -5,10 +5,15 @@ import { Link } from 'react-router-dom';
 import Layout from '../../components/layout';
 import Button from '../../components/button';
 import useApiQuery from '../../lib/useApiQuery';
+import useApiAction from '../../lib/useApiAction';
 import ServerStatus from '../../components/server-status';
 
 function Dashboard() {
   const { instances } = useApiQuery('/instances', 'instances');
+  const [action, { loading: startLoading }] = useApiAction(
+    `/instances/citadel_redis/start`,
+    'instances'
+  );
 
   const generateColor = (index) => {
     const colors = ['purple', 'sky'];
@@ -43,7 +48,13 @@ function Dashboard() {
 
                 <div className='mx-3'>
                   <div className='h-px bg-gray-600' />
-                  <Button color='red' size='sm' className='my-3 mr-3 px-4'>
+                  <Button
+                    color='red'
+                    size='sm'
+                    className='my-3 mr-3 px-4'
+                    disabled={startLoading}
+                    onClick={action}
+                  >
                     Shut down
                   </Button>
                   <Link to={`/instances/${instance.name}`}>
