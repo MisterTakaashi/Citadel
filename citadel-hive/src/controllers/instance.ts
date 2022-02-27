@@ -2,7 +2,7 @@ import { commonControllers } from 'citadel-lib';
 import { InstanceModel } from '../models/instance';
 import { ServerModel } from '../models/server';
 import { Context } from 'koa';
-import { queryDrones } from '../lib/drone-query';
+import { queryDrone, queryDrones } from '../lib/drone-query';
 
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
@@ -39,6 +39,24 @@ class InstanceController extends commonControllers.ApplicationController {
     this.renderSuccess(ctx, {
       instance,
     });
+  }
+
+  // POST /instances/:name/start
+  async start(ctx: Context) {
+    const { name } = ctx.params as { name: string };
+
+    const instances = await queryDrones(await ServerModel.find(), 'instances');
+
+    const instance = instances.find((currentInstance) => currentInstance.name === name);
+
+    const result = await queryDrone(instance.server, `instances/${name}/start`, 'instance', 'post');
+
+    if (result.error) {
+      this.renderError(ctx, result.code, result.error);
+      return;
+    }
+
+    this.renderSuccess(ctx, result);
   }
 }
 

@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios, { Method } from 'axios';
 import * as Bluebird from 'bluebird';
 import Server from '../models/server';
 
-const queryDrone = async ({ url }: Server, apiInterface: string, resultKey?: string) => {
+const queryDrone = async ({ url }: Server, apiInterface: string, resultKey?: string, method: Method = 'get') => {
   try {
-    const result = await axios({ url: `${url}/${apiInterface}` });
+    const result = await axios({ url: `${url}/${apiInterface}`, method });
 
     const response = result.data;
 
@@ -12,11 +12,11 @@ const queryDrone = async ({ url }: Server, apiInterface: string, resultKey?: str
       throw response.error;
     }
 
-    return { response: response.data[resultKey || apiInterface], error: false };
+    return { response: response.data[resultKey || apiInterface], server: { url }, error: false };
   } catch (err) {
     console.error('Cannot query drone', url);
 
-    return { response: undefined, error: err };
+    return { response: undefined, code: err.response.status, error: err.response?.data?.message || err };
   }
 };
 
@@ -30,7 +30,14 @@ const queryDrones = async (servers: Server[], apiInterface: string, resultKey?: 
       return acc;
     }
 
-    return [...acc, ...currentResult.response];
+    let response = currentResult.response;
+    if (Array.isArray(currentResult.response)) {
+      response = currentResult.response.map((currenResponse) => ({ ...currenResponse, server: currentResult.server }));
+    } else {
+      response.server = currentResult.server;
+    }
+
+    return [...acc, ...response];
   }, []);
 
   return filteredResults;
