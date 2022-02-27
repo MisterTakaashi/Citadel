@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import capitalize from 'lodash/capitalize';
-import { faTag, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import Layout from '../../components/layout';
 import Button from '../../components/button';
 import useApiQuery from '../../lib/useApiQuery';
+import ServerStatus from '../../components/server-status';
 
 function Dashboard() {
   const { instances } = useApiQuery('/instances', 'instances');
@@ -34,24 +34,7 @@ function Dashboard() {
                 </div>
                 <div className='flex justify-between items-center m-3 mb-0'>
                   <p className='text-xl font-bold truncate'>{instance.name.replace(/\//g, '')}</p>
-                  <p
-                    className={`text-xs rounded ${
-                      instance.state === 'created' ? 'bg-orange-600' : ''
-                    } ${instance.state === 'running' ? 'bg-green-600' : ''} ${
-                      instance.state === 'exited' ? 'bg-red-600' : ''
-                    } p-1`}
-                  >
-                    {instance.state === 'created' && (
-                      <FontAwesomeIcon icon={faCircle} size='xs' className='text-orange-400' />
-                    )}
-                    {instance.state === 'running' && (
-                      <FontAwesomeIcon icon={faCircle} size='xs' className='text-green-400' />
-                    )}
-                    {instance.state === 'exited' && (
-                      <FontAwesomeIcon icon={faCircle} size='xs' className='text-red-400' />
-                    )}{' '}
-                    {capitalize(instance.state)}
-                  </p>
+                  <ServerStatus state={instance.state} background size='xs' />
                 </div>
 
                 <p className='dark:text-gray-400 px-3 pb-3'>
