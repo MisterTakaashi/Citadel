@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { faServer } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 function Layout({ children }) {
   return (
@@ -12,24 +13,25 @@ function Layout({ children }) {
           <div className='relative flex items-center justify-between h-16'>
             <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
               <div className='flex-shrink-0 flex items-center'>
-                <FontAwesomeIcon icon={faServer} className='text-white' size='2x' />
+                <Link to='/'>
+                  <FontAwesomeIcon icon={faServer} className='text-white' size='2x' />
+                </Link>
               </div>
               <div className='hidden sm:block sm:ml-6'>
                 <div className='flex space-x-4'>
-                  <a
-                    href='/'
+                  <Link
+                    to='/'
                     className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                    aria-current='page'
                   >
                     Dashboard
-                  </a>
+                  </Link>
 
-                  <a
-                    href='/'
+                  <Link
+                    to='/'
                     className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
                   >
                     Documentation
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
