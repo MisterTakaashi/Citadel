@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { faServer } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Layout({ children }) {
+  const location = useLocation();
+
   return (
     <div className='h-screen bg-white dark:bg-slate-900'>
       <nav className='dark:bg-gray-800'>
@@ -21,14 +23,22 @@ function Layout({ children }) {
                 <div className='flex space-x-4'>
                   <Link
                     to='/'
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                    className={`${
+                      location.pathname === '/' || location.pathname.startsWith('/instances')
+                        ? 'bg-gray-900 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    } px-3 py-2 rounded-md text-sm font-medium`}
                   >
                     Dashboard
                   </Link>
 
                   <Link
                     to='/'
-                    className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+                    className={`${
+                      location.pathname === '/documentation'
+                        ? 'bg-gray-900 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    } px-3 py-2 rounded-md text-sm font-medium`}
                   >
                     Documentation
                   </Link>
