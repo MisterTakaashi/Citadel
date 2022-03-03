@@ -70,14 +70,14 @@ function Instance() {
             <div className='flex mb-4'>
               <p className='basis-1/3 text-gray-400'>IP</p>
               <p className='basis-2/3'>
-                {!loading && instance.server.url} {/* eslint-disable-next-line no-undef */}
+                {!loading && instance.server.publicIp} {/* eslint-disable-next-line no-undef */}
                 {window.navigator?.clipboard && (
                   <FontAwesomeIcon
                     icon={faCopy}
                     className='text-gray-500 cursor-pointer'
                     onClick={() => {
                       // eslint-disable-next-line no-undef
-                      navigator.clipboard.writeText(instance.server.url);
+                      navigator.clipboard.writeText(instance.server.publicIp);
                     }}
                   />
                 )}
