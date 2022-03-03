@@ -4,7 +4,7 @@ import capitalize from 'lodash/capitalize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
-function ServerStatus({ state, background, className, size }) {
+function ServerStatus({ state, background, className, size, bullet }) {
   const stateColors = Object.freeze({
     created: { background: 'bg-orange-600', bullet: 'text-orange-400', text: 'text-orange-500' },
     running: { background: 'bg-green-600', bullet: 'text-green-400', text: 'text-green-500' },
@@ -13,11 +13,15 @@ function ServerStatus({ state, background, className, size }) {
 
   return (
     <p
-      className={`text-${size} rounded ${
-        background ? stateColors[state]?.background : ''
-      } p-1 ${className}`}
+      className={`text-${size} rounded ${background ? stateColors[state]?.background : ''} ${
+        background ? 'p-1' : ''
+      } ${className}`}
     >
-      <FontAwesomeIcon icon={faCircle} size='xs' className={stateColors[state]?.bullet} />{' '}
+      {bullet && (
+        <>
+          <FontAwesomeIcon icon={faCircle} size='xs' className={stateColors[state]?.bullet} />{' '}
+        </>
+      )}
       <span className={!background ? stateColors[state].text : ''}>{capitalize(state)}</span>
     </p>
   );
@@ -28,12 +32,14 @@ ServerStatus.propTypes = {
   background: PropTypes.bool,
   className: PropTypes.string,
   size: PropTypes.oneOf(['xs', 'sm', 'md']),
+  bullet: PropTypes.bool,
 };
 
 ServerStatus.defaultProps = {
   background: false,
   className: '',
   size: 'md',
+  bullet: true,
 };
 
 export default ServerStatus;
