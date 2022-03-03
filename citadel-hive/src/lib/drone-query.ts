@@ -2,7 +2,12 @@ import axios, { Method } from 'axios';
 import * as Bluebird from 'bluebird';
 import Server from '../models/server';
 
-const queryDrone = async ({ url }: Server, apiInterface: string, resultKey?: string, method: Method = 'get') => {
+const queryDrone = async (
+  { url, publicIp }: Server,
+  apiInterface: string,
+  resultKey?: string,
+  method: Method = 'get'
+) => {
   try {
     const result = await axios({ url: `${url}/${apiInterface}`, method });
 
@@ -12,7 +17,7 @@ const queryDrone = async ({ url }: Server, apiInterface: string, resultKey?: str
       throw response.error;
     }
 
-    return { response: response.data[resultKey || apiInterface], server: { url }, error: false };
+    return { response: response.data[resultKey || apiInterface], server: { url, publicIp }, error: false };
   } catch (err) {
     console.error('Cannot query drone', url);
 
