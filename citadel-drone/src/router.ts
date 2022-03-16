@@ -24,4 +24,8 @@ router.post('/instances/:name/start', async (ctx: Context) => {
   await new InstanceController().start(ctx);
 });
 
+router.post('/instances/:name/stop', async (ctx: Context) => {
+  await new InstanceController().stop(ctx);
+});
+
 export default router;

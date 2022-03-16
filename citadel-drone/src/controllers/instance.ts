@@ -42,6 +42,21 @@ class InstanceController extends commonControllers.ApplicationController {
 
     this.renderSuccess(ctx, { instance: await provider.getInstance(name) });
   }
+
+  // POST /instances/:name/stop
+  async stop(ctx: Context) {
+    const { name } = ctx.params as { name: string };
+
+    const provider = new DockerProvider(new Docker());
+    try {
+      await provider.stopInstance(name);
+    } catch (err) {
+      this.renderError(ctx, 400, err.reason);
+      return;
+    }
+
+    this.renderSuccess(ctx, { instance: await provider.getInstance(name) });
+  }
 }
 
 export default InstanceController;

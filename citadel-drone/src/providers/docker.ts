@@ -50,6 +50,17 @@ class DockerProvider implements BaseProvider {
     await container.start();
   }
 
+  async stopInstance(name: string): Promise<void> {
+    const containerInfo = await this.getContainer(name);
+
+    if (!containerInfo) {
+      throw new Error('Instance not found by name');
+    }
+
+    const container = this.docker.getContainer(containerInfo.Id);
+    await container.stop();
+  }
+
   async createInstance(image: string): Promise<string> {
     const name = `citadel_${image.split(':')[0]}`;
     await this.docker.createContainer({ Image: image, name });
