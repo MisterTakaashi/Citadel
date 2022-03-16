@@ -7,9 +7,10 @@ const apiUrl = 'http://localhost:3000';
  * Make a action to the Hive API
  *
  * @param {string} endpoint The endpoint to call
+ * @param {Function} callback The callback to execute after the query
  * @returns {any} Response of the API
  */
-const useAction = (endpoint) => {
+const useAction = (endpoint, callback) => {
   const [response, setResponse] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,11 +25,13 @@ const useAction = (endpoint) => {
         } else {
           setError(apiResponse.error);
         }
-        setLoading(false);
       })
       .catch((err) => {
         setError(err);
+      })
+      .finally(() => {
         setLoading(false);
+        if (callback) callback();
       });
   };
 

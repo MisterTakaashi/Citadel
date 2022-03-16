@@ -11,8 +11,13 @@ const apiUrl = 'http://localhost:3000';
  */
 const useQuery = (endpoint) => {
   const [response, setResponse] = useState();
+  const [refreshTriggered, setRefreshTriggered] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const refetch = () => {
+    setRefreshTriggered(!refreshTriggered);
+  };
 
   useEffect(() => {
     axios({ url: `${apiUrl}${endpoint}` })
@@ -28,9 +33,9 @@ const useQuery = (endpoint) => {
         setError(err);
         setLoading(false);
       });
-  }, [endpoint]);
+  }, [endpoint, refreshTriggered]);
 
-  return { response, loading, error };
+  return { response, loading, error, refetch };
 };
 
 export default useQuery;

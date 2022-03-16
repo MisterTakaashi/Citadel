@@ -1,9 +1,9 @@
 import useAction from './useAction';
 
-const useApiQuery = (apiInterface, resultKey) => {
-  const { action, response, ...rest } = useAction(apiInterface);
+const useApiAction = (apiInterface, resultKey, callback) => {
+  const { action, response, ...rest } = useAction(apiInterface, callback);
 
   return [action, { [resultKey]: response?.[resultKey], ...rest }];
 };
 
-export default useApiQuery;
+export default useApiAction;

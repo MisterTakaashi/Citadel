@@ -7,10 +7,20 @@ import Layout from '../../components/layout';
 import ServerStatus from '../../components/server-status';
 import Button from '../../components/button';
 import useApiQuery from '../../lib/useApiQuery';
+import useApiAction from '../../lib/useApiAction';
 
 function Instance() {
   const { name } = useParams();
-  const { instance, loading } = useApiQuery(`/instances/${name}`, 'instance');
+
+  const {
+    instance,
+    loading,
+    refetch: refetchInstance,
+  } = useApiQuery(`/instances/${name}`, 'instance');
+  const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', () =>
+    refetchInstance()
+  );
+  const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', () => refetchInstance());
 
   return (
     <Layout>
@@ -84,9 +94,30 @@ function Instance() {
               </p>
             </div>
             <div className='flex mt-3'>
-              <Button disabled={loading} color='red' className='mr-2'>
-                Shut down
-              </Button>
+              {!loading && instance.state === 'exited' && (
+                <Button
+                  disabled={loading}
+                  color='green'
+                  className='mr-2'
+                  onClick={() => {
+                    startServer();
+                  }}
+                >
+                  Start instance
+                </Button>
+              )}
+              {!loading && instance.state === 'running' && (
+                <Button
+                  disabled={loading}
+                  color='red'
+                  className='mr-2'
+                  onClick={() => {
+                    stopServer();
+                  }}
+                >
+                  Shut down
+                </Button>
+              )}
               <Button disabled={loading} color='slate' className='mx-2'>
                 Destroy
               </Button>
