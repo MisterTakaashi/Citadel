@@ -6,6 +6,138 @@
 	},
 	"item": [
 		{
+			"name": "Hive",
+			"item": [
+				{
+					"name": "List Instances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/instances",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Instance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/instances/citadel_redis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances",
+								"citadel_redis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/instances/citadel_redis/start",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances",
+								"citadel_redis",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stop Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/instances/citadel_redis/stop",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances",
+								"citadel_redis",
+								"stop"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create server",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"url\": \"http://localhost:3001\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/servers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"servers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Drone",
 			"item": [
 				{
@@ -37,6 +169,66 @@
 					"response": []
 				},
 				{
+					"name": "Start Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/instances/citadel_redis/start",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"instances",
+								"citadel_redis",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stop Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/instances/citadel_redis/stop",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"instances",
+								"citadel_redis",
+								"stop"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List Instances",
 					"request": {
 						"method": "GET",
@@ -54,26 +246,21 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Hive",
-			"item": [
+				},
 				{
-					"name": "List Instances",
+					"name": "Ping Drone",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/instances",
+							"raw": "http://localhost:3001/ping",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "3000",
+							"port": "3001",
 							"path": [
-								"instances"
+								"ping"
 							]
 						}
 					},
