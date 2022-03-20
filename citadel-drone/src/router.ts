@@ -28,4 +28,8 @@ router.post('/instances/:name/stop', async (ctx: Context) => {
   await new InstanceController().stop(ctx);
 });
 
+router.get('/instances/:name/logs', async (ctx: Context) => {
+  await new InstanceController().logs(ctx);
+});
+
 export default router;

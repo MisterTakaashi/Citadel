@@ -91,6 +91,20 @@ class DockerProvider implements BaseProvider {
         this.docker.modem.followProgress(stream, onDownloadFinished, onDownloadProgress);
       }))();
   }
+
+  async getLogs(name: string, tail = 50, since?: number): Promise<string> {
+    if (tail > 100) tail = 100;
+
+    const containerInfos = await this.getContainer(name);
+    const container = this.docker.getContainer(containerInfos.Id);
+    const buffer = (await container.logs({
+      since,
+      stdout: true,
+      stderr: true,
+      tail,
+    })) as unknown as Buffer;
+    return buffer.toString();
+  }
 }
 
 export default DockerProvider;

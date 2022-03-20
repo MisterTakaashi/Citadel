@@ -57,6 +57,16 @@ class InstanceController extends commonControllers.ApplicationController {
 
     this.renderSuccess(ctx, { instance: await provider.getInstance(name) });
   }
+
+  // GET /instances/:name/logs
+  async logs(ctx: Context) {
+    const { name } = ctx.params as { name: string };
+
+    const provider = new DockerProvider(new Docker());
+    const logs = await provider.getLogs(name);
+
+    this.renderSuccess(ctx, { logs });
+  }
 }
 
 export default InstanceController;
