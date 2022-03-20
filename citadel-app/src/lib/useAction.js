@@ -15,10 +15,15 @@ const useAction = (endpoint, callback) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const action = () => {
+  const action = (params) => {
     setLoading(true);
 
-    axios({ url: `${apiUrl}${endpoint}`, method: 'POST' })
+    let finalEndpoint = endpoint;
+    if (typeof endpoint === 'function') {
+      finalEndpoint = endpoint(params);
+    }
+
+    axios({ url: `${apiUrl}${finalEndpoint}`, method: 'POST' })
       .then(({ data: apiResponse }) => {
         if (!apiResponse.error) {
           setResponse(apiResponse.data);

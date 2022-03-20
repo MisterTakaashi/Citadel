@@ -9,10 +9,16 @@ import useApiAction from '../../lib/useApiAction';
 import ServerStatus from '../../components/server-status';
 
 function Dashboard() {
-  const { instances } = useApiQuery('/instances', 'instances');
-  const [action, { loading: startLoading }] = useApiAction(
-    `/instances/citadel_redis/start`,
-    'instances'
+  const { instances, refetch } = useApiQuery('/instances', 'instances');
+  const [startInstance, { loading: startLoading }] = useApiAction(
+    (instanceName) => `/instances/${instanceName}/start`,
+    'instances',
+    () => refetch()
+  );
+  const [stopInstance, { loading: stopLoading }] = useApiAction(
+    (instanceName) => `/instances/${instanceName}/stop`,
+    'instances',
+    () => refetch()
   );
 
   const generateColor = (index) => {
@@ -48,15 +54,32 @@ function Dashboard() {
 
                 <div className='mx-3'>
                   <div className='h-px bg-gray-600' />
-                  <Button
-                    color='red'
-                    size='sm'
-                    className='my-3 mr-3 px-4'
-                    disabled={startLoading}
-                    onClick={action}
-                  >
-                    Shut down
-                  </Button>
+                  {instance.state === 'exited' && (
+                    <Button
+                      color='green'
+                      size='sm'
+                      className='my-3 mr-3 px-4'
+                      disabled={startLoading}
+                      onClick={() => {
+                        startInstance(instance.name);
+                      }}
+                    >
+                      Start instance
+                    </Button>
+                  )}
+                  {instance.state === 'running' && (
+                    <Button
+                      color='red'
+                      size='sm'
+                      className='my-3 mr-3 px-4'
+                      disabled={stopLoading}
+                      onClick={() => {
+                        stopInstance(instance.name);
+                      }}
+                    >
+                      Shut down
+                    </Button>
+                  )}
                   <Link to={`/instances/${instance.name}`}>
                     <Button color='slate' size='sm' className='my-3 px-4'>
                       Manage
