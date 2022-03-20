@@ -26,6 +26,10 @@ router.post('/instances/:name/stop', async (ctx) => {
   await new InstanceController().stop(ctx);
 });
 
+router.get('/instances/:name/logs', async (ctx) => {
+  await new InstanceController().logs(ctx);
+});
+
 // Servers
 router.get('/servers', async (ctx) => {
   await new ServerController().index(ctx);

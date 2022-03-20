@@ -76,6 +76,19 @@ class InstanceController extends commonControllers.ApplicationController {
 
     this.renderSuccess(ctx, result);
   }
+
+  // GET /instances/:name/logs
+  async logs(ctx: Context) {
+    const { name } = ctx.params as { name: string };
+
+    const instances = await queryDrones(await ServerModel.find(), 'instances');
+
+    const instance = instances.find((currentInstance) => currentInstance.name === name);
+
+    const result = await queryDrone(instance.server, `instances/${name}/logs`, 'logs', 'get');
+
+    this.renderSuccess(ctx, result);
+  }
 }
 
 export default InstanceController;
