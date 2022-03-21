@@ -17,6 +17,10 @@ function Instance() {
     loading,
     refetch: refetchInstance,
   } = useApiQuery(`/instances/${name}`, 'instance');
+  const { response: logs, loading: loadingLogs } = useApiQuery(
+    `/instances/${name}/logs`,
+    'response'
+  );
   const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', () =>
     refetchInstance()
   );
@@ -124,7 +128,9 @@ function Instance() {
             </div>
           </div>
         </Card>
-        <Card title='Details' className='basis-2/3 ml-5' />
+        <Card title='Details' className='basis-2/3 ml-5'>
+          {!loadingLogs && logs.split('\n').map((log) => <p className='mb-2'>{log}</p>)}
+        </Card>
       </div>
     </Layout>
   );
