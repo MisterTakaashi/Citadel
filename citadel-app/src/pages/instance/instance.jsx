@@ -50,8 +50,8 @@ function Instance() {
           </div>
         </div>
       </div>
-      <div className='container mx-auto flex items-start'>
-        <Card title='Details' className='basis-1/3 mr-5'>
+      <div className='container mx-auto flex items-start gap-10'>
+        <Card title='Details' className='basis-1/3'>
           <div className='flex flex-col'>
             <div className='flex mb-4'>
               <p className='basis-1/3 text-gray-400'>Status</p>
@@ -128,7 +128,7 @@ function Instance() {
             </div>
           </div>
         </Card>
-        <Card title='Details' className='basis-2/3 ml-5'>
+        <Card title='Details' className='basis-2/3'>
           {!loadingLogs && logs.split('\n').map((log) => <p className='mb-2'>{log}</p>)}
         </Card>
       </div>
