@@ -94,7 +94,7 @@ function Instance() {
               </p>
             </div>
             <div className='flex mt-3'>
-              {!loading && instance.state === 'exited' && (
+              {!loading && (instance.state === 'exited' || instance.state === 'created') && (
                 <Button
                   disabled={loading}
                   color='green'

@@ -54,7 +54,7 @@ function Dashboard() {
 
                 <div className='mx-3'>
                   <div className='h-px bg-gray-600' />
-                  {instance.state === 'exited' && (
+                  {(instance.state === 'exited' || instance.state === 'created') && (
                     <Button
                       color='green'
                       size='sm'
