@@ -128,8 +128,8 @@ function Instance() {
             </div>
           </div>
         </Card>
-        <Card title='Details' className='basis-2/3'>
-          {!loadingLogs && logs.split('\n').map((log) => <p className='mb-2'>{log}</p>)}
+        <Card title='Console' className='basis-2/3'>
+          {!loadingLogs && logs.split('\n').map((log) => <p className='mb-2 break-all'>{log}</p>)}
         </Card>
       </div>
     </Layout>

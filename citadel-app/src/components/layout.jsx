@@ -9,7 +9,7 @@ function Layout({ children }) {
   const location = useLocation();
 
   return (
-    <div className='h-screen bg-white dark:bg-slate-900'>
+    <div className='min-h-screen bg-white dark:bg-slate-900'>
       <nav className='dark:bg-gray-800'>
         <div className='container mx-auto'>
           <div className='relative flex items-center justify-between h-16'>

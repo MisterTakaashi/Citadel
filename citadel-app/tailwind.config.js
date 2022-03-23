@@ -8,5 +8,6 @@ module.exports = {
     {
       pattern: /bg-(\w+)-(\d+)/,
     },
+    'p-2',
   ],
 };
