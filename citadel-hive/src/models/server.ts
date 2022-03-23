@@ -2,6 +2,9 @@ import { getModelForClass, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 class Server extends TimeStamps {
+  @prop({ required: true })
+  public name: string;
+
   @prop({ required: true, unique: true })
   public url: string;
 
