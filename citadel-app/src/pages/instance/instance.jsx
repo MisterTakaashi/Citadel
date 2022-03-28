@@ -129,7 +129,14 @@ function Instance() {
           </div>
         </Card>
         <Card title='Console' className='basis-2/3'>
-          {!loadingLogs && logs.split('\n').map((log) => <p className='mb-2 break-all'>{log}</p>)}
+          <div className='font-mono tracking-tight leading-5 bg-slate-700 rounded px-5 py-3 max-h-[32rem] overflow-y-auto'>
+            {!loadingLogs &&
+              logs.map((log) => (
+                <p className={`mb-2 break-all ${log.charAt(0) === '\u0065' ? 'text-red-500' : ''}`}>
+                  {log.substring('1')}
+                </p>
+              ))}
+          </div>
         </Card>
       </div>
     </Layout>
