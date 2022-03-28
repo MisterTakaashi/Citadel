@@ -1,14 +1,18 @@
 import React from 'react';
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route, useParams, Link, useLocation } from 'react-router-dom';
 import Overview from './overview';
+import Console from './console';
 import Layout from '../../components/layout';
 import ServerStatus from '../../components/server-status';
 import useApiQuery from '../../lib/useApiQuery';
 
 function Instance() {
   const { name } = useParams();
+  const { pathname } = useLocation();
+
+  const currentRoute = pathname.split('/')[pathname.split('/').length - 1];
 
   const { instance, loading } = useApiQuery(`/instances/${name}`, 'instance');
 
@@ -28,16 +32,35 @@ function Instance() {
 
           <div className='h-px bg-gray-600 mt-7 mb-5' />
           <div className='flex'>
-            <span className='dark:text-white font-bold border-0 border-b-2 border-solid border-green-500 pb-4 mr-4'>
-              Overview
-            </span>
+            <Link to={`/instances/${name}`}>
+              <span
+                className={`dark:text-white border-0 pb-4 mr-4 ${
+                  currentRoute.startsWith(name)
+                    ? 'font-bold border-b-2 border-solid border-green-500'
+                    : ''
+                }`}
+              >
+                Overview
+              </span>
+            </Link>
             <span className='dark:text-white border-0 pb-4 mx-4'>Addons</span>
-            <span className='dark:text-white border-0 pb-4 mx-4'>Console</span>
+            <Link to={`/instances/${name}/console`}>
+              <span
+                className={`dark:text-white border-0 pb-4 mx-4 ${
+                  currentRoute.startsWith('console')
+                    ? 'font-bold border-b-2 border-solid border-green-500'
+                    : ''
+                }`}
+              >
+                Console
+              </span>
+            </Link>
           </div>
         </div>
       </div>
       <Routes>
         <Route path='/' element={<Overview />} />
+        <Route path='/console' element={<Console />} />
       </Routes>
     </Layout>
   );
