@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' element={<Dashboard />} />
-        <Route path='/instances/:name' element={<Instance />} />
+        <Route path='/instances/:name/*' element={<Instance />} />
       </Routes>
     </Router>
   );
