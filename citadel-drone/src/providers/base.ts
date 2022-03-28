@@ -7,7 +7,7 @@ interface BaseProvider {
   stopInstance(name: string): Promise<void>;
   createInstance(image: string): Promise<string>;
   fetchBinaries: (repoTag: string) => Promise<void>;
-  getLogs(name: string, tail: number, since?: number): Promise<string>;
+  getLogs(name: string, tail: number, since?: number): Promise<string[]>;
 }
 
 export default BaseProvider;

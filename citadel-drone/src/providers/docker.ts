@@ -92,7 +92,7 @@ class DockerProvider implements BaseProvider {
       }))();
   }
 
-  async getLogs(name: string, tail = 50, since?: number): Promise<string> {
+  async getLogs(name: string, tail = 50, since?: number): Promise<string[]> {
     if (tail > 100) tail = 100;
 
     const containerInfos = await this.getContainer(name);
@@ -103,7 +103,22 @@ class DockerProvider implements BaseProvider {
       stderr: true,
       tail,
     })) as unknown as Buffer;
-    return buffer.toString();
+    return buffer
+      .toString()
+      .split('\n')
+      .reduce((acc, currentLine: string) => {
+        const logType = currentLine.charAt(0);
+
+        if (currentLine.length <= 8) return acc;
+
+        if (logType === '\u0002') {
+          return [...acc, `\u0065${currentLine.substring(8)}`];
+        } else if (logType === '\u0001') {
+          return [...acc, `\u006F${currentLine.substring(8)}`];
+        }
+
+        return acc;
+      }, []);
   }
 }
 
