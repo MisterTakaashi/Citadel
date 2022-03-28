@@ -98,7 +98,7 @@ function Dashboard() {
         <Card title='Drones' className='basis-1/4 mt-5'>
           {servers &&
             servers.map((server) => (
-              <div className='flex justify-between items-center'>
+              <div className='flex justify-between items-center' key={server.name}>
                 <div>
                   <p>
                     {server.name

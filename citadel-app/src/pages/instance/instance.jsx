@@ -1,6 +1,7 @@
 import { faTag, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import uniqueId from 'lodash/uniqueId';
+import React, { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import Card from '../../components/card';
 import Layout from '../../components/layout';
@@ -9,8 +10,22 @@ import Button from '../../components/button';
 import useApiQuery from '../../lib/useApiQuery';
 import useApiAction from '../../lib/useApiAction';
 
+function isConsoleBottom(e) {
+  if (e.offsetHeight + e.scrollTop >= e.scrollHeight) {
+    return true;
+  }
+
+  return false;
+}
+
+function scrollToBottom(e) {
+  e.scrollIntoView();
+}
+
 function Instance() {
   const { name } = useParams();
+
+  const consoleEndRef = useRef();
 
   const {
     instance,
@@ -25,6 +40,20 @@ function Instance() {
     refetchInstance()
   );
   const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', () => refetchInstance());
+
+  useEffect(() => {
+    if (!logs) {
+      setTimeout(() => {
+        scrollToBottom(consoleEndRef.current);
+      }, 500);
+
+      return;
+    }
+
+    if (isConsoleBottom(consoleEndRef.current.parentNode)) {
+      scrollToBottom(consoleEndRef.current);
+    }
+  }, [logs]);
 
   return (
     <Layout>
@@ -132,10 +161,14 @@ function Instance() {
           <div className='font-mono tracking-tight leading-5 bg-slate-700 rounded px-5 py-3 max-h-[32rem] overflow-y-auto'>
             {!loadingLogs &&
               logs.map((log) => (
-                <p className={`mb-2 break-all ${log.charAt(0) === '\u0065' ? 'text-red-500' : ''}`}>
+                <p
+                  className={`mb-2 break-all ${log.charAt(0) === '\u0065' ? 'text-red-500' : ''}`}
+                  key={uniqueId(log)}
+                >
                   {log.substring('1')}
                 </p>
               ))}
+            <div ref={consoleEndRef} />
           </div>
         </Card>
       </div>
