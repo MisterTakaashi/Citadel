@@ -6,11 +6,12 @@ const apiUrl = 'http://localhost:3000';
 /**
  * Make a action to the Hive API
  *
- * @param {string} endpoint The endpoint to call
+ * @param {string | Function} endpoint The endpoint to call
+ * @param {object | Function} body The body to send
  * @param {Function} callback The callback to execute after the query
  * @returns {any} Response of the API
  */
-const useAction = (endpoint, callback) => {
+const useAction = (endpoint, body, callback) => {
   const [response, setResponse] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,7 +24,12 @@ const useAction = (endpoint, callback) => {
       finalEndpoint = endpoint(params);
     }
 
-    axios({ url: `${apiUrl}${finalEndpoint}`, method: 'POST' })
+    let finalBody = body;
+    if (typeof body === 'function') {
+      finalBody = body(params);
+    }
+
+    axios({ url: `${apiUrl}${finalEndpoint}`, method: 'POST', data: finalBody })
       .then(({ data: apiResponse }) => {
         if (!apiResponse.error) {
           setResponse(apiResponse.data);

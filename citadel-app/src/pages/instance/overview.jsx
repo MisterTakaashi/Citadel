@@ -21,10 +21,12 @@ function InstanceOverview() {
     `/instances/${name}/logs`,
     'response'
   );
-  const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', () =>
+  const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', null, () =>
     refetchInstance()
   );
-  const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', () => refetchInstance());
+  const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', null, () =>
+    refetchInstance()
+  );
 
   return (
     <div className='container mx-auto flex items-start gap-10'>
