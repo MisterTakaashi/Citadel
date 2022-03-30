@@ -24,7 +24,7 @@ class InstanceController extends commonControllers.ApplicationController {
     await provider.startInstance(instanceName);
 
     this.renderSuccess(ctx, {
-      instances: { image },
+      instance: { image },
     });
   }
 
