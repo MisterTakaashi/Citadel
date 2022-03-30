@@ -2,6 +2,7 @@ import * as Router from 'koa-router';
 
 import ServerController from './controllers/server';
 import InstanceController from './controllers/instance';
+import ImageController from './controllers/image';
 
 const router = new Router();
 
@@ -37,6 +38,11 @@ router.get('/servers', async (ctx) => {
 
 router.post('/servers', async (ctx) => {
   await new ServerController().create(ctx);
+});
+
+// Images
+router.get('/images', async (ctx) => {
+  await new ImageController().index(ctx);
 });
 
 export default router;
