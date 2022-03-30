@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3c2b9231-5363-4f07-94cf-c71ff6c6d1ee",
+		"_postman_id": "3d41bd64-455e-4530-8ab2-f5bb297789bc",
 		"name": "Citadel",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -28,6 +28,25 @@
 					"response": []
 				},
 				{
+					"name": "List Images",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/images",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Instance",
 					"request": {
 						"method": "GET",
@@ -42,6 +61,55 @@
 							"path": [
 								"instances",
 								"citadel_redis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Instance Logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/instances/citadel_redis/logs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances",
+								"citadel_redis",
+								"logs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"image\": \"elasticsearch:8.0.0\",\n    \"drone\": \"angry beetle\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/instances",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances"
 							]
 						}
 					},
