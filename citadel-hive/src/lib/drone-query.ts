@@ -6,10 +6,12 @@ const queryDrone = async (
   { url, publicIp }: Server,
   apiInterface: string,
   resultKey?: string,
-  method: Method = 'get'
+  method: Method = 'get',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: any
 ) => {
   try {
-    const result = await axios({ url: `${url}/${apiInterface}`, method });
+    const result = await axios({ url: `${url}/${apiInterface}`, method, data: body });
 
     const response = result.data;
 

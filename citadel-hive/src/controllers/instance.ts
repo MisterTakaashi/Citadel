@@ -1,5 +1,4 @@
 import { commonControllers } from 'citadel-lib';
-import { InstanceModel } from '../models/instance';
 import { ServerModel } from '../models/server';
 import { Context } from 'koa';
 import { queryDrone, queryDrones } from '../lib/drone-query';
@@ -16,10 +15,22 @@ class InstanceController extends commonControllers.ApplicationController {
 
   // POST /instances
   async create(ctx: Context) {
-    const newInstance = new InstanceModel(ctx.request.body);
+    const { drone, image } = ctx.request.body;
+    const server = await ServerModel.findOne({ name: drone });
+    if (!server) {
+      this.renderError(ctx, 404, `Cannot find drone "${drone}"`);
+      return;
+    }
+
+    const instance = await queryDrone(server, 'instances', 'instance', 'post', { image });
+
+    if (!instance) {
+      this.renderError(ctx, 401, `Cannot create instance on drone "${drone}"`);
+      return;
+    }
 
     this.renderSuccess(ctx, {
-      instance: await newInstance.save(),
+      instance,
     });
   }
 
