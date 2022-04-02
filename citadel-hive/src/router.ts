@@ -19,6 +19,10 @@ router.get('/instances/:name', async (ctx) => {
   await new InstanceController().details(ctx);
 });
 
+router.delete('/instances/:name', async (ctx) => {
+  await new InstanceController().remove(ctx);
+});
+
 router.post('/instances/:name/start', async (ctx) => {
   await new InstanceController().start(ctx);
 });

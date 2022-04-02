@@ -34,6 +34,27 @@ class InstanceController extends commonControllers.ApplicationController {
     });
   }
 
+  // DELETE /instances/:name
+  async remove(ctx: Context) {
+    const { name } = ctx.params;
+    const instances = await queryDrones(await ServerModel.find(), 'instances');
+
+    const instance = instances.find((currentInstance) => currentInstance.name === name);
+    if (!instance) {
+      this.renderError(ctx, 401, `Cannot find instance named "${name}"`);
+      return;
+    }
+
+    const server = await ServerModel.findOne({ name: instance.server.name });
+
+    const result = await queryDrone(server, `instances/${name}`, 'instances', 'delete');
+    if (result.code >= 400) {
+      return this.renderError(ctx, result.code, result.error);
+    }
+
+    this.renderSuccess(ctx, {});
+  }
+
   // GET /instances/:name
   async details(ctx: Context) {
     const { name } = ctx.params;

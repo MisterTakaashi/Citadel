@@ -3,7 +3,7 @@ import * as Bluebird from 'bluebird';
 import Server from '../models/server';
 
 const queryDrone = async (
-  { url, publicIp }: Server,
+  { url, publicIp, name }: Server,
   apiInterface: string,
   resultKey?: string,
   method: Method = 'get',
@@ -19,9 +19,9 @@ const queryDrone = async (
       throw response.error;
     }
 
-    return { response: response.data[resultKey || apiInterface], server: { url, publicIp }, error: false };
+    return { response: response.data[resultKey || apiInterface], server: { url, publicIp, name }, error: false };
   } catch (err) {
-    console.error('Cannot query drone', url);
+    console.error('Cannot query drone', url, err.message, err.response?.data);
 
     return { response: undefined, code: err.response.status, error: err.response?.data?.message || err };
   }
