@@ -5,7 +5,7 @@ interface BaseProvider {
   getInstance(name: string): Promise<InstanceInfo | undefined>;
   startInstance(name: string): Promise<void>;
   stopInstance(name: string): Promise<void>;
-  createInstance(image: string): Promise<string>;
+  createInstance(image: string, name?: string): Promise<string>;
   fetchBinaries: (repoTag: string) => Promise<void>;
   getLogs(name: string, tail: number, since?: number): Promise<string[]>;
 }

@@ -61,11 +61,13 @@ class DockerProvider implements BaseProvider {
     await container.stop();
   }
 
-  async createInstance(image: string): Promise<string> {
-    const name = `citadel_${image.split(':')[0]}`;
-    await this.docker.createContainer({ Image: image, name });
+  async createInstance(image: string, name?: string): Promise<string> {
+    const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
+    const containerName = `citadel_${name?.replace(/^citadel_?/, '') || defaultName}`;
 
-    return name;
+    await this.docker.createContainer({ Image: image, name: containerName });
+
+    return containerName;
   }
 
   async fetchBinaries(repoTag: string): Promise<void> {
