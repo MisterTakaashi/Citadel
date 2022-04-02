@@ -15,14 +15,14 @@ class InstanceController extends commonControllers.ApplicationController {
 
   // POST /instances
   async create(ctx: Context) {
-    const { drone, image } = ctx.request.body;
+    const { drone, image, name } = ctx.request.body;
     const server = await ServerModel.findOne({ name: drone });
     if (!server) {
       this.renderError(ctx, 404, `Cannot find drone "${drone}"`);
       return;
     }
 
-    const instance = await queryDrone(server, 'instances', 'instance', 'post', { image });
+    const instance = await queryDrone(server, 'instances', 'instance', 'post', { image, name });
 
     if (!instance) {
       this.renderError(ctx, 401, `Cannot create instance on drone "${drone}"`);
