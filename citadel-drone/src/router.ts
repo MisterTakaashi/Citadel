@@ -20,6 +20,10 @@ router.post('/instances', async (ctx: Context) => {
   await new InstanceController().create(ctx);
 });
 
+router.delete('/instances/:name', async (ctx: Context) => {
+  await new InstanceController().remove(ctx);
+});
+
 router.post('/instances/:name/start', async (ctx: Context) => {
   await new InstanceController().start(ctx);
 });

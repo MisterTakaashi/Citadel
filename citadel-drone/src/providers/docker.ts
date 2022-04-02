@@ -70,6 +70,13 @@ class DockerProvider implements BaseProvider {
     return containerName;
   }
 
+  async removeInstance(name: string): Promise<void> {
+    const containerInfo = await this.getContainer(name);
+
+    const container = this.docker.getContainer(containerInfo.Id);
+    await container.remove();
+  }
+
   async fetchBinaries(repoTag: string): Promise<void> {
     const stream = await this.docker.pull(`${repoTag}`);
 

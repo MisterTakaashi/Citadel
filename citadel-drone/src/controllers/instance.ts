@@ -28,6 +28,25 @@ class InstanceController extends commonControllers.ApplicationController {
     });
   }
 
+  // DELETE /instances/:name
+  async remove(ctx: Context) {
+    const { name } = ctx.params as { name: string };
+
+    const provider = new DockerProvider(new Docker());
+    try {
+      await provider.removeInstance(name);
+    } catch (err) {
+      if (err.statusCode === 409) {
+        this.renderError(ctx, 400, 'Cannot remove a running container');
+        return;
+      }
+      this.renderError(ctx, 400, err.message);
+      return;
+    }
+
+    this.renderSuccess(ctx, {});
+  }
+
   // POST /instances/:name/start
   async start(ctx: Context) {
     const { name } = ctx.params as { name: string };
