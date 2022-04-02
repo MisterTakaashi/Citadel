@@ -9,7 +9,7 @@ RUN apt-get install -y gdb
 USER steam
 WORKDIR /home/steam
 RUN mkdir gameserver
-RUN ./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/steam/gameserver +app_update 4020 validate +quit
+RUN ./steamcmd/steamcmd.sh +force_install_dir /home/steam/gameserver +login anonymous +app_update 4020 validate +quit
 WORKDIR /home/steam/gameserver
 
 # Expose ports

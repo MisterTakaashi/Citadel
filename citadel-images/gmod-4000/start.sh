@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd /home/steam/steamcmd && ./steamcmd.sh +login anonymous \
-                  +force_install_dir /home/steam/gameserver \
+cd /home/steam/steamcmd && ./steamcmd.sh +force_install_dir /home/steam/gameserver \
+                  +login anonymous \
                   +app_update 4020 validate \
                   +quit
 
