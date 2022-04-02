@@ -18,7 +18,7 @@ function CreateInstance({ isOpen, onClose }) {
   const [createInstance] = useApiAction(
     `/instances`,
     'instance',
-    () => ({ image: 'elasticsearch:8.0.0', drone: 'angry beetle' }),
+    () => ({ image: 'mistertakaashi/citadel-gmod-4000:latest', drone: 'angry beetle' }),
     () => onClose()
   );
 
