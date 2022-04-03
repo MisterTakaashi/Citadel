@@ -65,7 +65,7 @@ class DockerProvider implements BaseProvider {
     const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
     const containerName = `citadel_${name?.replace(/^citadel_?/, '') || defaultName}`;
 
-    await this.docker.createContainer({ Image: image, name: containerName });
+    await this.docker.createContainer({ Image: image, name: containerName, Tty: true });
 
     return containerName;
   }
@@ -118,7 +118,7 @@ class DockerProvider implements BaseProvider {
       .reduce((acc, currentLine: string) => {
         const logType = currentLine.charAt(0);
 
-        if (currentLine.length <= 8) return acc;
+        if ((logType === '\u0002' || logType === '\u006F') && currentLine.length <= 8) return acc;
 
         if (logType === '\u0002') {
           return [...acc, `\u0065${currentLine.substring(8)}`];
@@ -126,7 +126,7 @@ class DockerProvider implements BaseProvider {
           return [...acc, `\u006F${currentLine.substring(8)}`];
         }
 
-        return acc;
+        return [...acc, `\u006F${currentLine}`];
       }, []);
   }
 }
