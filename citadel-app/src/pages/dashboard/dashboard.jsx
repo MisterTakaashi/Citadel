@@ -18,12 +18,14 @@ function Dashboard() {
   const [startInstance, { loading: startLoading }] = useApiAction(
     (instanceName) => `/instances/${instanceName}/start`,
     'instances',
+    'POST',
     null,
     () => refetch()
   );
   const [stopInstance, { loading: stopLoading }] = useApiAction(
     (instanceName) => `/instances/${instanceName}/stop`,
     'instances',
+    'POST',
     null,
     () => refetch()
   );

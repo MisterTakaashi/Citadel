@@ -1,7 +1,7 @@
 import React from 'react';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Card from '../../components/card';
 import Button from '../../components/button';
 import ServerStatus from '../../components/server-status';
@@ -11,6 +11,7 @@ import Console from '../../components/console';
 
 function InstanceOverview() {
   const { name } = useParams();
+  const navigate = useNavigate();
 
   const {
     instance,
@@ -21,11 +22,14 @@ function InstanceOverview() {
     `/instances/${name}/logs`,
     'response'
   );
-  const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', null, () =>
+  const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', 'POST', null, () =>
     refetchInstance()
   );
-  const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', null, () =>
+  const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', 'POST', null, () =>
     refetchInstance()
+  );
+  const [destroyServer] = useApiAction(`/instances/${name}`, 'instance', 'DELETE', null, () =>
+    navigate('/')
   );
 
   return (
@@ -101,7 +105,14 @@ function InstanceOverview() {
                 Shut down
               </Button>
             )}
-            <Button disabled={loading} color='slate' className='mx-2'>
+            <Button
+              disabled={loading}
+              color='slate'
+              className='mx-2'
+              onClick={() => {
+                destroyServer();
+              }}
+            >
               Destroy
             </Button>
           </div>

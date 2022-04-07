@@ -18,6 +18,7 @@ function CreateInstance({ isOpen, onClose }) {
   const [createInstance] = useApiAction(
     `/instances`,
     'instance',
+    'POST',
     () => ({ image: 'mistertakaashi/citadel-gmod-4000:latest', drone: 'angry beetle' }),
     () => onClose()
   );
