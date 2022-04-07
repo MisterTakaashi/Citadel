@@ -65,7 +65,7 @@ function Dashboard() {
                   openModal();
                 }}
               >
-                Start instance
+                Create instance
               </Button>
             </div>
             <div className='grid grid-cols-3 gap-4'>

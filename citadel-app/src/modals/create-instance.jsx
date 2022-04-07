@@ -15,7 +15,7 @@ function CreateInstance({ isOpen, onClose }) {
     setGameSelected(images[0]);
   }
 
-  const [createInstance] = useApiAction(
+  const [createInstance, { loading: loadingCreate }] = useApiAction(
     `/instances`,
     'instance',
     'POST',
@@ -121,6 +121,8 @@ function CreateInstance({ isOpen, onClose }) {
 
               <div className='mt-4'>
                 <Button
+                  disabled={loadingCreate}
+                  loading={loadingCreate}
                   onClick={() => {
                     createInstance();
                   }}
