@@ -22,11 +22,19 @@ function InstanceOverview() {
     `/instances/${name}/logs`,
     'response'
   );
-  const [startServer] = useApiAction(`/instances/${name}/start`, 'instance', 'POST', null, () =>
-    refetchInstance()
+  const [startServer, { loading: loadingStart }] = useApiAction(
+    `/instances/${name}/start`,
+    'instance',
+    'POST',
+    null,
+    () => refetchInstance()
   );
-  const [stopServer] = useApiAction(`/instances/${name}/stop`, 'instance', 'POST', null, () =>
-    refetchInstance()
+  const [stopServer, { loading: loadingStop }] = useApiAction(
+    `/instances/${name}/stop`,
+    'instance',
+    'POST',
+    null,
+    () => refetchInstance()
   );
   const [destroyServer] = useApiAction(`/instances/${name}`, 'instance', 'DELETE', null, () =>
     navigate('/')
@@ -83,30 +91,32 @@ function InstanceOverview() {
           <div className='flex mt-3'>
             {!loading && (instance.state === 'exited' || instance.state === 'created') && (
               <Button
-                disabled={loading}
+                disabled={loading || loadingStop || loadingStart}
                 color='green'
                 className='mr-2'
                 onClick={() => {
                   startServer();
                 }}
+                loading={loadingStart}
               >
                 Start instance
               </Button>
             )}
             {!loading && instance.state === 'running' && (
               <Button
-                disabled={loading}
+                disabled={loading || loadingStop || loadingStart}
                 color='red'
                 className='mr-2'
                 onClick={() => {
                   stopServer();
                 }}
+                loading={loadingStop}
               >
                 Shut down
               </Button>
             )}
             <Button
-              disabled={loading}
+              disabled={loading || loadingStop || loadingStart}
               color='slate'
               className='mx-2'
               onClick={() => {

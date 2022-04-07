@@ -59,7 +59,8 @@ function Dashboard() {
                 color='green'
                 size='sm'
                 className='my-3 mr-3 px-4'
-                disabled={startLoading}
+                disabled={startLoading || stopLoading}
+                loading={startLoading}
                 onClick={() => {
                   openModal();
                 }}
@@ -96,7 +97,8 @@ function Dashboard() {
                           color='green'
                           size='sm'
                           className='my-3 mr-3 px-4'
-                          disabled={startLoading}
+                          disabled={startLoading || stopLoading}
+                          loading={startLoading}
                           onClick={() => {
                             startInstance(instance.name);
                           }}
@@ -109,7 +111,8 @@ function Dashboard() {
                           color='red'
                           size='sm'
                           className='my-3 mr-3 px-4'
-                          disabled={stopLoading}
+                          disabled={stopLoading || stopLoading}
+                          loading={stopLoading}
                           onClick={() => {
                             stopInstance(instance.name);
                           }}
