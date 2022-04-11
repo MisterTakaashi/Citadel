@@ -1,0 +1,7 @@
+{
+  "name": "Garry's Mod",
+  "appid": 4000,
+  "ports": [
+    "27015/udp"
+  ]
+}
