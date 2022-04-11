@@ -18,10 +18,11 @@ function InstanceOverview() {
     loading,
     refetch: refetchInstance,
   } = useApiQuery(`/instances/${name}`, 'instance');
-  const { response: logs, loading: loadingLogs } = useApiQuery(
-    `/instances/${name}/logs`,
-    'response'
-  );
+  const {
+    response: logs,
+    loading: loadingLogs,
+    refetch: refetchLogs,
+  } = useApiQuery(`/instances/${name}/logs`, 'response');
   const [startServer, { loading: loadingStart }] = useApiAction(
     `/instances/${name}/start`,
     'instance',
@@ -129,7 +130,7 @@ function InstanceOverview() {
         </div>
       </Card>
       <Card title='Console' className='basis-2/3'>
-        {!loadingLogs && <Console logs={logs} />}
+        {!loadingLogs && <Console logs={logs} refresh={refetchLogs} />}
       </Card>
     </div>
   );

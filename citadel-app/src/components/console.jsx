@@ -14,8 +14,15 @@ function scrollToBottom(e) {
   e.scrollIntoView();
 }
 
-function Console({ logs }) {
+function Console({ logs, refresh, refreshInterval }) {
   const consoleEndRef = useRef();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refresh();
+    }, refreshInterval);
+    return () => clearInterval(interval);
+  }, [refresh, refreshInterval]);
 
   useEffect(() => {
     scrollToBottom(consoleEndRef.current);
@@ -44,6 +51,13 @@ function Console({ logs }) {
 
 Console.propTypes = {
   logs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  refresh: PropTypes.func,
+  refreshInterval: PropTypes.number,
+};
+
+Console.defaultProps = {
+  refresh: () => {},
+  refreshInterval: 1000,
 };
 
 export default Console;

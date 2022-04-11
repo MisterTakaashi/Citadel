@@ -7,14 +7,15 @@ import Console from '../../components/console';
 function InstanceConsole() {
   const { name } = useParams();
 
-  const { response: logs, loading: loadingLogs } = useApiQuery(
-    `/instances/${name}/logs`,
-    'response'
-  );
+  const {
+    response: logs,
+    loading: loadingLogs,
+    refetch: refetchLogs,
+  } = useApiQuery(`/instances/${name}/logs`, 'response');
 
   return (
     <div className='container mx-auto flex items-start gap-10'>
-      <Card title='Console'>{!loadingLogs && <Console logs={logs} />}</Card>
+      <Card title='Console'>{!loadingLogs && <Console logs={logs} refresh={refetchLogs} />}</Card>
     </div>
   );
 }
