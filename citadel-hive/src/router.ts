@@ -49,4 +49,8 @@ router.get('/images', async (ctx) => {
   await new ImageController().index(ctx);
 });
 
+router.get('/images/:image', async (ctx) => {
+  await new ImageController().details(ctx);
+});
+
 export default router;

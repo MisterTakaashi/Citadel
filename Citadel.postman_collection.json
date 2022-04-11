@@ -47,6 +47,26 @@
 					"response": []
 				},
 				{
+					"name": "Get Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/images/gmod-4000",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"images",
+								"gmod-4000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Instance",
 					"request": {
 						"method": "GET",
@@ -94,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"image\": \"elasticsearch:8.0.0\",\n    \"drone\": \"angry beetle\"\n}",
+							"raw": "{\n    \"image\": \"mistertakaashi/citadel-gmod-4000:latest\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -198,6 +218,35 @@
 							"port": "3000",
 							"path": [
 								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Instance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/instances/citadel_gmod",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"instances",
+								"citadel_gmod"
 							]
 						}
 					},
@@ -329,6 +378,35 @@
 							"port": "3001",
 							"path": [
 								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Instance",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/instances/citadel_redis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"instances",
+								"citadel_redis"
 							]
 						}
 					},
