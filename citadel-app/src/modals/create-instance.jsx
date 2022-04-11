@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faCaretRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/button';
 import useApiQuery from '../lib/useApiQuery';
 import useApiAction from '../lib/useApiAction';
@@ -22,6 +22,7 @@ function CreateInstance({ isOpen, onClose }) {
     () => ({ image: 'mistertakaashi/citadel-gmod-4000:latest', drone: 'angry beetle' }),
     () => onClose()
   );
+  const { image: imageConfig } = useApiQuery('/images/gmod-4000', 'image');
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -70,7 +71,7 @@ function CreateInstance({ isOpen, onClose }) {
                 {gameSelected && (
                   <Listbox value={gameSelected} onChange={setGameSelected}>
                     <div className='relative mt-1'>
-                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
+                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
                         <span className='block truncate'>{gameSelected.name}</span>
                         <span className='absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
                           <FontAwesomeIcon icon={faAngleDown} />
@@ -117,6 +118,23 @@ function CreateInstance({ isOpen, onClose }) {
                     </div>
                   </Listbox>
                 )}
+                <p className='dark:text-white mt-5'>Mapped ports</p>
+                {gameSelected &&
+                  imageConfig &&
+                  imageConfig.ports?.map((imagePort) => (
+                    <div
+                      className='text-gray-400 flex items-center justify-between'
+                      key={`${gameSelected.name}-${imagePort}`}
+                    >
+                      <span>{imagePort}</span>
+                      <FontAwesomeIcon icon={faCaretRight} />
+                      <input
+                        value={imagePort.replace('/udp', '').replace('/tcp', '')}
+                        inputMode='numeric'
+                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black'
+                      />
+                    </div>
+                  ))}
               </div>
 
               <div className='mt-4'>
