@@ -61,11 +61,28 @@ class DockerProvider implements BaseProvider {
     await container.stop();
   }
 
-  async createInstance(image: string, name?: string): Promise<string> {
+  async createInstance(
+    image: string,
+    name?: string,
+    config?: { portsMapping: { [name: string]: string }; volumes: string[] }
+  ): Promise<string> {
     const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
     const containerName = `citadel_${name?.replace(/^citadel_?/, '') || defaultName}`;
 
-    await this.docker.createContainer({ Image: image, name: containerName, Tty: true });
+    await this.docker.createContainer({
+      Image: image,
+      name: containerName,
+      Tty: true,
+      HostConfig: {
+        PortBindings: config
+          ? Object.entries(config.portsMapping).reduce((acc, portMapping) => {
+              acc[portMapping[0]] = [{ HostPort: portMapping[1] }];
+
+              return acc;
+            }, {})
+          : {},
+      },
+    });
 
     return containerName;
   }

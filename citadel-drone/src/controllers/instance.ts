@@ -15,12 +15,15 @@ class InstanceController extends commonControllers.ApplicationController {
 
   // POST /instances
   async create(ctx: Context) {
-    const { image, name } = ctx.request.body;
+    const { image, name, config } = ctx.request.body;
+
+    const { portsMapping, volumes } = config;
+    console.log(portsMapping, volumes);
 
     const provider = new DockerProvider(new Docker());
     await provider.fetchBinaries(image);
 
-    const instanceName = await provider.createInstance(image, name);
+    const instanceName = await provider.createInstance(image, name, config);
     await provider.startInstance(instanceName);
 
     this.renderSuccess(ctx, {

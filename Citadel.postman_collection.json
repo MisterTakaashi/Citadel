@@ -114,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"image\": \"mistertakaashi/citadel-gmod-4000:latest\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\"\n}",
+							"raw": "{\n    \"image\": \"mistertakaashi/citadel-gmod-4000:latest\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\",\n    \"config\": {\n        \"portsMapping\": {\"27015/udp\": \"27015\"},\n        \"volumes\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -264,7 +264,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"image\": \"elasticsearch:8.0.0\"\n}",
+							"raw": "{\n    \"image\": \"mistertakaashi/citadel-gmod-4000:latest\",\n    \"name\": \"gmod\",\n    \"config\": {\n        \"portsMapping\": {\"27015/udp\": \"27015\"},\n        \"volumes\": []\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
