@@ -3,5 +3,8 @@
   "appid": 4000,
   "ports": [
     "27015/udp"
-  ]
+  ],
+  "docker": {
+    "image": "mistertakaashi/citadel-gmod-4000:latest"
+  }
 }
