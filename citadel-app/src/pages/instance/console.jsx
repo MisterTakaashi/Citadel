@@ -15,7 +15,9 @@ function InstanceConsole() {
 
   return (
     <div className='container mx-auto flex items-start gap-10'>
-      <Card title='Console'>{!loadingLogs && <Console logs={logs} refresh={refetchLogs} />}</Card>
+      <Card title='Console' className='w-full'>
+        {!loadingLogs && <Console logs={logs} refresh={refetchLogs} />}
+      </Card>
     </div>
   );
 }
