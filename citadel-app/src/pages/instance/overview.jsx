@@ -1,5 +1,5 @@
 import React from 'react';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCaretRight, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams, useNavigate } from 'react-router-dom';
 import Card from '../../components/card';
@@ -88,6 +88,22 @@ function InstanceOverview() {
                 />
               )}
             </p>
+          </div>
+          <div className='flex flex-col mb-4'>
+            <p className='text-gray-400'>Ports Mapping</p>
+            {!loading &&
+              Object.entries(instance.portsMapping).map((ports) => (
+                <div className='flex items-center gap-4' key={`${ports}`}>
+                  <p>{ports[0]}</p>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                  <p>{ports[1]}</p>
+                </div>
+              ))}
+            {!loading && instance.state !== 'running' && (
+              <p className='text-orange-400 text-sm'>
+                The instance must be running to retrieve ports mapping
+              </p>
+            )}
           </div>
           <div className='flex mt-3'>
             {!loading && (instance.state === 'exited' || instance.state === 'created') && (
