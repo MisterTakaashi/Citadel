@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,20 +9,44 @@ import useApiAction from '../lib/useApiAction';
 
 function CreateInstance({ isOpen, onClose }) {
   const { images } = useApiQuery('/images', 'images');
+  const { image: imageConfig, refetch: refetchConfig } = useApiQuery('/images', 'image');
   const [gameSelected, setGameSelected] = useState();
+  const [portsBinding, setPortsBinding] = useState({});
 
   if (!gameSelected && images) {
     setGameSelected(images[0]);
+  }
+  if (Object.keys(portsBinding).length === 0 && imageConfig) {
+    setPortsBinding(
+      imageConfig.ports.reduce(
+        (acc, port) => ({ ...acc, [port]: port.replace(/\/(udp)?(tcp)?/, '') }),
+        {}
+      )
+    );
   }
 
   const [createInstance, { loading: loadingCreate }] = useApiAction(
     `/instances`,
     'instance',
     'POST',
-    () => ({ image: 'mistertakaashi/citadel-gmod-4000:latest', drone: 'angry beetle' }),
+    ({ image, portsMapping }) => {
+      return {
+        image,
+        drone: 'angry beetle',
+        config: {
+          portsMapping,
+          volumes: [],
+        },
+      };
+    },
     () => onClose()
   );
-  const { image: imageConfig } = useApiQuery('/images/gmod-4000', 'image');
+
+  useEffect(() => {
+    if (gameSelected) {
+      refetchConfig(`/images/${gameSelected.slug}`);
+    }
+  }, [gameSelected, refetchConfig]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -119,9 +143,8 @@ function CreateInstance({ isOpen, onClose }) {
                   </Listbox>
                 )}
                 <p className='dark:text-white mt-5'>Mapped ports</p>
-                {gameSelected &&
-                  imageConfig &&
-                  imageConfig.ports?.map((imagePort) => (
+                {portsBinding &&
+                  Object.entries(portsBinding).map(([imagePort, hostPort]) => (
                     <div
                       className='text-gray-400 flex items-center justify-between'
                       key={`${gameSelected.name}-${imagePort}`}
@@ -129,7 +152,15 @@ function CreateInstance({ isOpen, onClose }) {
                       <span>{imagePort}</span>
                       <FontAwesomeIcon icon={faCaretRight} />
                       <input
-                        value={imagePort.replace('/udp', '').replace('/tcp', '')}
+                        value={hostPort}
+                        onChange={(event) => {
+                          if (event.target.value.length > 0 && !/^\d+$/.test(event.target.value))
+                            return;
+
+                          const bindingCopy = { ...portsBinding };
+                          bindingCopy[imagePort] = event.target.value;
+                          setPortsBinding(bindingCopy);
+                        }}
                         inputMode='numeric'
                         className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black'
                       />
@@ -142,7 +173,7 @@ function CreateInstance({ isOpen, onClose }) {
                   disabled={loadingCreate}
                   loading={loadingCreate}
                   onClick={() => {
-                    createInstance();
+                    createInstance({ image: imageConfig.docker.image, portsMapping: portsBinding });
                   }}
                 >
                   Got it !
