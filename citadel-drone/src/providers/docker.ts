@@ -1,5 +1,7 @@
 import { InstanceInfo, InstanceState } from 'citadel-lib';
 import * as Docker from 'dockerode';
+import * as Bluebird from 'bluebird';
+import { omit } from 'lodash';
 import BaseProvider from './base';
 
 class DockerProvider implements BaseProvider {
@@ -16,15 +18,11 @@ class DockerProvider implements BaseProvider {
   }
 
   async getInstances(): Promise<InstanceInfo[]> {
-    const containers = (await this.docker.listContainers({ all: true })).filter((currentContainer) =>
-      currentContainer.Names.find((currentName) => currentName.startsWith('/citadel_'))
-    );
+    const containers = (await this.docker.listContainers({ all: true }))
+      .filter((currentContainer) => currentContainer.Names.find((currentName) => currentName.startsWith('/citadel_')))
+      .map((currentContainer) => currentContainer.Names[0].substring(1));
 
-    return containers.map(({ Names, Image, State }) => ({
-      name: Names[0].substring(1),
-      image: Image,
-      state: State as InstanceState,
-    }));
+    return Bluebird.map(containers, (instanceName) => this.getInstance(instanceName));
   }
 
   async getInstance(name: string): Promise<InstanceInfo | undefined> {
@@ -36,6 +34,28 @@ class DockerProvider implements BaseProvider {
       name: containerInfo.Names[0].substring(1),
       image: containerInfo.Image,
       state: containerInfo.State as InstanceState,
+      portsMapping: containerInfo.Ports.reduce((acc, port) => {
+        if (acc[`${port.PrivatePort}/${port.Type}`] || acc[`${port.PrivatePort}`]) {
+          return acc;
+        }
+
+        // If we already registered a mapping for tcp or udp and then we find the other one, the mapping is now valid for both protocols
+        if (acc[`${port.PrivatePort}/tcp`] && port.Type === 'udp') {
+          const newAcc = omit(acc, `${port.PrivatePort}/tcp`);
+          newAcc[`${port.PrivatePort}`] = `${port.PublicPort}`;
+
+          return newAcc;
+        }
+
+        if (acc[`${port.PrivatePort}/udp`] && port.Type === 'tcp') {
+          const newAcc = omit(acc, `${port.PrivatePort}/udp`);
+          newAcc[`${port.PrivatePort}`] = `${port.PublicPort}`;
+
+          return newAcc;
+        }
+
+        return { ...acc, [`${port.PrivatePort}/${port.Type}`]: `${port.PublicPort}` };
+      }, {}),
     };
   }
 
