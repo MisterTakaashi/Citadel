@@ -8,4 +8,5 @@ export default class InstanceInfo {
   name: string;
   image: string;
   state: InstanceState;
+  portsMapping: {[instancePort: string]: string};
 }
