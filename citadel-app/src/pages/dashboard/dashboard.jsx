@@ -51,8 +51,8 @@ function Dashboard() {
     <>
       <CreateInstanceModal isOpen={isCreateInstanceModalOpen} onClose={() => closeModal()} />
       <Layout>
-        <div className='container mx-auto mb-10 flex items-start gap-5'>
-          <div className='basis-3/4'>
+        <div className='container mx-auto mb-10 flex flex-col md:flex-row items-start gap-5 px-5 md:px-0'>
+          <div className='w-full md:basis-3/4'>
             <div className='flex items-center justify-between'>
               <h2 className='text-white text-3xl font-bold my-5'>My Instances</h2>
               <Button
@@ -65,10 +65,11 @@ function Dashboard() {
                   openModal();
                 }}
               >
-                Create instance
+                <span className='hidden sm:block'>Create instance</span>
+                <span className='block sm:hidden'>+</span>
               </Button>
             </div>
-            <div className='grid grid-cols-3 gap-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
               {instances &&
                 instances.map((instance, index) => (
                   <div key={instance.name} className='dark:bg-gray-800 dark:text-white rounded'>
@@ -130,10 +131,13 @@ function Dashboard() {
                 ))}
             </div>
           </div>
-          <Card title='Drones' className='basis-1/4 mt-5'>
+          <Card title='Drones' className='w-full md:basis-1/4 mt-5'>
             {servers &&
               servers.map((server) => (
-                <div className='flex justify-between items-center' key={server.name}>
+                <div
+                  className='flex flex-row md:flex-col xl:flex-row justify-between items-center sm:items-start xl:items-center'
+                  key={server.name}
+                >
                   <div>
                     <p>
                       {server.name

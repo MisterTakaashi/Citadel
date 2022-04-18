@@ -14,7 +14,7 @@ function InstanceConsole() {
   } = useApiQuery(`/instances/${name}/logs`, 'response');
 
   return (
-    <div className='container mx-auto flex items-start gap-10'>
+    <div className='container mx-auto flex items-start gap-10 px-5 sm:px-0'>
       <Card title='Console' className='w-full'>
         {!loadingLogs && <Console logs={logs} refresh={refetchLogs} />}
       </Card>

@@ -42,10 +42,10 @@ function InstanceOverview() {
   );
 
   return (
-    <div className='container mx-auto flex items-start gap-10'>
-      <Card title='Details' className='basis-1/3'>
+    <div className='container mx-auto flex flex-col lg:flex-row items-start gap-10 px-5 md:px-0'>
+      <Card title='Details' className='w-full md:basis-1/3'>
         <div className='flex flex-col'>
-          <div className='flex mb-4'>
+          <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>Status</p>
             <div className='basis-2/3'>
               {!loading && (
@@ -53,11 +53,11 @@ function InstanceOverview() {
               )}
             </div>
           </div>
-          <div className='flex mb-4'>
+          <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>Image</p>
             <p className='basis-2/3'>{!loading && instance.image}</p>
           </div>
-          <div className='flex mb-4'>
+          <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>Drone URL</p>
             <p className='basis-2/3'>
               {!loading && instance.server.url} {/* eslint-disable-next-line no-undef */}
@@ -73,7 +73,7 @@ function InstanceOverview() {
               )}
             </p>
           </div>
-          <div className='flex mb-4'>
+          <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>IP</p>
             <p className='basis-2/3'>
               {!loading && instance.server.publicIp} {/* eslint-disable-next-line no-undef */}
@@ -89,7 +89,7 @@ function InstanceOverview() {
               )}
             </p>
           </div>
-          <div className='flex flex-col mb-4'>
+          <div className='flex flex-col sm:flex-row flex-col mb-4'>
             <p className='text-gray-400'>Ports Mapping</p>
             {!loading &&
               Object.entries(instance.portsMapping).map((ports) => (
@@ -145,7 +145,7 @@ function InstanceOverview() {
           </div>
         </div>
       </Card>
-      <Card title='Console' className='basis-2/3'>
+      <Card title='Console' className='w-full md:basis-2/3'>
         {!loadingLogs && <Console logs={logs} refresh={refetchLogs} />}
       </Card>
     </div>

@@ -18,15 +18,15 @@ function Instance() {
 
   return (
     <Layout>
-      <div className='dark:bg-gray-800'>
+      <div className='dark:bg-gray-800 px-5 sm:px-0'>
         <div className='container mx-auto mb-10 pt-5'>
           {!loading && <h2 className='text-white text-3xl font-bold mb-3'>{instance.name}</h2>}
           {!loading && (
-            <div className='flex items-baseline'>
+            <div className='flex flex-col sm:flex-row sm:gap-8 items-baseline'>
               <p className='dark:text-gray-400'>
                 <FontAwesomeIcon icon={faTag} /> {instance.image}
               </p>
-              <ServerStatus state={instance.state} className='mx-6' />
+              <ServerStatus state={instance.state} />
             </div>
           )}
 
