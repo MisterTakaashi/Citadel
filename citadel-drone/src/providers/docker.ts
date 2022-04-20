@@ -89,20 +89,25 @@ class DockerProvider implements BaseProvider {
     const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
     const containerName = `citadel_${name?.replace(/^citadel_?/, '') || defaultName}`;
 
-    await this.docker.createContainer({
-      Image: image,
-      name: containerName,
-      Tty: true,
-      HostConfig: {
-        PortBindings: config
-          ? Object.entries(config.portsMapping).reduce((acc, portMapping) => {
-              acc[portMapping[0]] = [{ HostPort: portMapping[1] }];
+    try {
+      await this.docker.createContainer({
+        Image: image,
+        name: containerName,
+        Tty: true,
+        HostConfig: {
+          PortBindings: config
+            ? Object.entries(config.portsMapping).reduce((acc, portMapping) => {
+                acc[portMapping[0]] = [{ HostPort: portMapping[1] }];
 
-              return acc;
-            }, {})
-          : {},
-      },
-    });
+                return acc;
+              }, {})
+            : {},
+          Binds: config?.volumes || [],
+        },
+      });
+    } catch (err) {
+      console.log(':/');
+    }
 
     return containerName;
   }
