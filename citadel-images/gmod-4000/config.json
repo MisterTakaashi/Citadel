@@ -6,5 +6,12 @@
   ],
   "docker": {
     "image": "mistertakaashi/citadel-gmod-4000:latest"
-  }
+  },
+  "persistences": [
+    {
+      "name": "gmod_sv_db",
+      "path": "/home/steam/gameserver/garrysmod/sv.db",
+      "type": "save_file"
+    }
+  ]
 }
