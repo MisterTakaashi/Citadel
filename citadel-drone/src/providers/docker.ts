@@ -1,4 +1,7 @@
-import { InstanceInfo, InstanceState } from 'citadel-lib';
+import { existsSync } from 'fs';
+import { writeFile, mkdir } from 'fs/promises';
+import * as path from 'path';
+import { InstanceInfo, InstanceState, InstanceVolume } from 'citadel-lib';
 import * as Docker from 'dockerode';
 import * as Bluebird from 'bluebird';
 import { omit } from 'lodash';
@@ -84,10 +87,22 @@ class DockerProvider implements BaseProvider {
   async createInstance(
     image: string,
     name?: string,
-    config?: { portsMapping: { [name: string]: string }; volumes: string[] }
+    config?: { portsMapping: { [name: string]: string }; volumes: InstanceVolume[] }
   ): Promise<string> {
     const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
     const containerName = `citadel_${name?.replace(/^citadel_?/, '') || defaultName}`;
+
+    await Bluebird.each(config.volumes, async (volume) => {
+      if (!volume.file && !existsSync(volume.from)) {
+        await mkdir(volume.from, { recursive: true });
+      }
+      if (volume.file && !existsSync(path.join(volume.from, '..'))) {
+        await mkdir(path.join(volume.from, '..'), { recursive: true });
+      }
+      if (volume.file && !existsSync(volume.from)) {
+        await writeFile(volume.from, '');
+      }
+    });
 
     try {
       await this.docker.createContainer({
@@ -102,7 +117,7 @@ class DockerProvider implements BaseProvider {
                 return acc;
               }, {})
             : {},
-          Binds: config?.volumes || [],
+          Binds: config?.volumes.map((volume) => `${volume.from}:${volume.to}`) || [],
         },
       });
     } catch (err) {
