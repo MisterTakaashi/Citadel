@@ -1,8 +1,6 @@
 import { commonControllers, games } from 'citadel-lib';
 import { Context } from 'koa';
-import axios from 'axios';
-
-const CONFIGS_REGISTRY_URL = 'https://raw.githubusercontent.com/MisterTakaashi/Citadel/master/citadel-images';
+import { getImageConfig } from '../lib/config-query';
 
 class ImageController extends commonControllers.ApplicationController {
   // GET /images
@@ -15,9 +13,10 @@ class ImageController extends commonControllers.ApplicationController {
   // GET /images/:image
   async details(ctx: Context) {
     const { image } = ctx.params;
-    const result = await axios.get(`${CONFIGS_REGISTRY_URL}/${image}/config.json`);
 
-    this.renderSuccess(ctx, { image: result.data });
+    this.renderSuccess(ctx, {
+      image: await getImageConfig(image),
+    });
   }
 }
 

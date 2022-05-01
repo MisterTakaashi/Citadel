@@ -1,7 +1,8 @@
-import { commonControllers } from 'citadel-lib';
+import { commonControllers, InstanceVolume } from 'citadel-lib';
 import { ServerModel } from '../models/server';
 import { Context } from 'koa';
 import { queryDrone, queryDrones } from '../lib/drone-query';
+import { getImageConfig } from '../lib/config-query';
 
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
@@ -22,7 +23,22 @@ class InstanceController extends commonControllers.ApplicationController {
       return;
     }
 
-    const instance = await queryDrone(server, 'instances', 'instance', 'post', { image, name, config });
+    const imageConfig = await getImageConfig(image);
+    const volumes =
+      config.volumes?.map((volume: InstanceVolume) => {
+        const registeredPersistence = imageConfig.persistences.find((persistence) => persistence.name === volume.to);
+        if (registeredPersistence) {
+          volume.to = registeredPersistence.path;
+        }
+
+        return volume;
+      }) || [];
+
+    const instance = await queryDrone(server, 'instances', 'instance', 'post', {
+      image: imageConfig.docker.image,
+      name,
+      config: { ...config, volumes },
+    });
 
     if (!instance) {
       this.renderError(ctx, 401, `Cannot create instance on drone "${drone}"`);
