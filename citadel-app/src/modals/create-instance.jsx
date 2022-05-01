@@ -2,7 +2,13 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faCaretRight, faCheck } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleDown,
+  faCaretDown,
+  faCaretRight,
+  faCheck,
+  faWarning,
+} from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/button';
 import useApiQuery from '../lib/useApiQuery';
 import useApiAction from '../lib/useApiAction';
@@ -12,6 +18,7 @@ function CreateInstance({ isOpen, onClose }) {
   const { image: imageConfig, refetch: refetchConfig } = useApiQuery('/images', 'image');
   const [gameSelected, setGameSelected] = useState();
   const [portsBinding, setPortsBinding] = useState({});
+  const [volumesBinding, setVolumesBinding] = useState([]);
 
   if (!gameSelected && images) {
     setGameSelected(images[0]);
@@ -22,6 +29,15 @@ function CreateInstance({ isOpen, onClose }) {
         (acc, port) => ({ ...acc, [port]: port.replace(/\/(udp)?(tcp)?/, '') }),
         {}
       )
+    );
+  }
+  if (volumesBinding.length === 0 && imageConfig) {
+    setVolumesBinding(
+      imageConfig.persistences.map((persistence) => ({
+        to: persistence.name,
+        from: '',
+        file: persistence.type.includes('file'),
+      }))
     );
   }
 
@@ -35,7 +51,7 @@ function CreateInstance({ isOpen, onClose }) {
         drone: 'angry beetle',
         config: {
           portsMapping,
-          volumes: [],
+          volumes: volumesBinding,
         },
       };
     },
@@ -162,7 +178,40 @@ function CreateInstance({ isOpen, onClose }) {
                           setPortsBinding(bindingCopy);
                         }}
                         inputMode='numeric'
-                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black'
+                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black'
+                      />
+                    </div>
+                  ))}
+                <p className='dark:text-white mt-5'>Persisted volumes</p>
+                {volumesBinding &&
+                  volumesBinding.map((volume, volumeIndex) => (
+                    <div
+                      className='text-gray-400 flex flex-col'
+                      key={`${gameSelected.name}-${volume.to}`}
+                    >
+                      <div className='flex items-center'>
+                        <input
+                          value={volume.to}
+                          className='py-2 pl-3 pr-10 grow bg-white rounded-tl-lg rounded-bl-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black disabled:bg-gray-400 disabled:cursor-not-allowed'
+                          disabled
+                        />
+                        <div className='border-solid border-2 border-orange-500 py-1 px-2 rounded-tr-lg rounded-br-lg text-orange-500'>
+                          <FontAwesomeIcon icon={faWarning} />
+                        </div>
+                      </div>
+                      <div className='flex gap-4 items-center mx-auto my-1'>
+                        <FontAwesomeIcon icon={faCaretDown} />
+                        <p className='text-sm'>mapped to</p>
+                        <FontAwesomeIcon icon={faCaretDown} />
+                      </div>
+                      <input
+                        value={volume.from}
+                        onChange={(event) => {
+                          const bindingCopy = [...volumesBinding];
+                          bindingCopy[volumeIndex].from = event.target.value;
+                          setVolumesBinding(bindingCopy);
+                        }}
+                        className='py-2 pl-3 pr-10 bg-white rounded-lg cursor-text shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black disabled:bg-gray-400 disabled:cursor-not-allowed'
                       />
                     </div>
                   ))}
@@ -173,7 +222,7 @@ function CreateInstance({ isOpen, onClose }) {
                   disabled={loadingCreate}
                   loading={loadingCreate}
                   onClick={() => {
-                    createInstance({ image: imageConfig.docker.image, portsMapping: portsBinding });
+                    createInstance({ image: gameSelected.slug, portsMapping: portsBinding });
                   }}
                 >
                   Got it !
