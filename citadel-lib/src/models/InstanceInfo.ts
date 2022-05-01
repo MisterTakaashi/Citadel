@@ -4,9 +4,11 @@ export enum InstanceState {
   Exited = 'exited',
 }
 
-export default class InstanceInfo {
+type InstanceInfo = {
   name: string;
   image: string;
   state: InstanceState;
   portsMapping: {[instancePort: string]: string};
 }
+
+export default InstanceInfo;
