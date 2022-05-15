@@ -1,6 +1,6 @@
 import * as Docker from 'dockerode';
 import { Context } from 'koa';
-import { commonControllers } from 'citadel-lib';
+import { commonControllers, InstanceVolume } from 'citadel-lib';
 import DockerProvider from '../providers/docker';
 
 class InstanceController extends commonControllers.ApplicationController {
@@ -15,7 +15,11 @@ class InstanceController extends commonControllers.ApplicationController {
 
   // POST /instances
   async create(ctx: Context) {
-    const { image, name, config } = ctx.request.body;
+    const { image, name, config } = ctx.request.body as {
+      image: string;
+      name: string;
+      config: { portsMapping: { [name: string]: string }; volumes: InstanceVolume[] };
+    };
 
     const { portsMapping, volumes } = config;
     console.log(portsMapping, volumes);
@@ -23,7 +27,13 @@ class InstanceController extends commonControllers.ApplicationController {
     const provider = new DockerProvider(new Docker());
     await provider.fetchBinaries(image);
 
-    const instanceName = await provider.createInstance(image, name, config);
+    const instanceName = await provider.createInstance(image, name, {
+      portsMapping,
+      volumes: volumes.reduce<InstanceVolume[]>(
+        (acc, volume) => (volume.from.length === 0 ? acc : [...acc, volume]),
+        []
+      ),
+    });
     await provider.startInstance(instanceName);
 
     this.renderSuccess(ctx, {
