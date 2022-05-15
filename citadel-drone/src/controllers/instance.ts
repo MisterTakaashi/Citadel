@@ -18,11 +18,15 @@ class InstanceController extends commonControllers.ApplicationController {
     const { image, name, config } = ctx.request.body as {
       image: string;
       name: string;
-      config: { portsMapping: { [name: string]: string }; volumes: InstanceVolume[] };
+      config: {
+        portsMapping: { [name: string]: string };
+        volumes: InstanceVolume[];
+        environmentVariables: { [name: string]: string };
+      };
     };
 
-    const { portsMapping, volumes } = config;
-    console.log(portsMapping, volumes);
+    const { portsMapping, volumes, environmentVariables } = config;
+    console.log(portsMapping, volumes, environmentVariables);
 
     const provider = new DockerProvider(new Docker());
     await provider.fetchBinaries(image);
@@ -33,6 +37,7 @@ class InstanceController extends commonControllers.ApplicationController {
         (acc, volume) => (volume.from.length === 0 ? acc : [...acc, volume]),
         []
       ),
+      environmentVariables,
     });
     await provider.startInstance(instanceName);
 

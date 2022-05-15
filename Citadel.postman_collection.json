@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3d41bd64-455e-4530-8ab2-f5bb297789bc",
+		"_postman_id": "4487f026-9b5a-42ca-90b7-16a76a706c93",
 		"name": "Citadel",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -114,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"image\": \"mistertakaashi/citadel-gmod-4000:latest\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\",\n    \"config\": {\n        \"portsMapping\": {\"27015/udp\": \"27015\"},\n        \"volumes\": []\n    }\n}",
+							"raw": "{\n    \"image\": \"gmod-4000\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\",\n    \"config\": {\n        \"portsMapping\": {\"27015/udp\": \"27015\"},\n        \"volumes\": [\n            {\n                \"from\": \"/home/pauld/Desktop/pouet/sv.db\",\n                \"to\": \"gmod_sv_db\",\n                \"file\": true\n            }\n        ],\n        \"environmentVariables\": {\n            \"pouet\": \"valid\"\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

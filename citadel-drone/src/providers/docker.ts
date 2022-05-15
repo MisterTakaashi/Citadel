@@ -87,7 +87,11 @@ class DockerProvider implements BaseProvider {
   async createInstance(
     image: string,
     name?: string,
-    config?: { portsMapping: { [name: string]: string }; volumes: InstanceVolume[] }
+    config?: {
+      portsMapping: { [name: string]: string };
+      volumes: InstanceVolume[];
+      environmentVariables: { [name: string]: string };
+    }
   ): Promise<string> {
     const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
     const containerName = `citadel_${name?.replace(/^citadel_?/, '') || defaultName}`;
@@ -119,6 +123,11 @@ class DockerProvider implements BaseProvider {
             : {},
           Binds: config?.volumes.map((volume) => `${volume.from}:${volume.to}`) || [],
         },
+        Env: config?.environmentVariables
+          ? Object.entries(config?.environmentVariables).map(
+              ([variableName, variableValue]) => `${variableName}=${variableValue}`
+            )
+          : [],
       });
     } catch (err) {
       console.log(':/');
