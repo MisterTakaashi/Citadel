@@ -90,10 +90,10 @@ function InstanceOverview() {
             </p>
           </div>
           <div className='flex flex-col sm:flex-row flex-col mb-4'>
-            <p className='text-gray-400'>Ports Mapping</p>
+            <p className='basis-1/3 text-gray-400'>Ports Mapping</p>
             {!loading &&
               Object.entries(instance.portsMapping).map((ports) => (
-                <div className='flex items-center gap-4' key={`${ports}`}>
+                <div className='basis-2/3 flex items-center gap-4' key={`${ports}`}>
                   <p>{ports[0]}</p>
                   <FontAwesomeIcon icon={faCaretRight} />
                   <p>{ports[1]}</p>
