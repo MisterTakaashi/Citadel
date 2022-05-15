@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import capitalize from 'lodash/capitalize';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -15,13 +16,18 @@ import useApiAction from '../lib/useApiAction';
 
 function CreateInstance({ isOpen, onClose }) {
   const { images } = useApiQuery('/images', 'images');
+  const { servers } = useApiQuery('/servers', 'servers');
   const { image: imageConfig, refetch: refetchConfig } = useApiQuery('/images', 'image');
+  const [serverSelected, setServerSelected] = useState();
   const [gameSelected, setGameSelected] = useState();
   const [portsBinding, setPortsBinding] = useState({});
   const [volumesBinding, setVolumesBinding] = useState([]);
 
   if (!gameSelected && images) {
     setGameSelected(images[0]);
+  }
+  if (!serverSelected && servers) {
+    setServerSelected(servers[0]);
   }
   if (Object.keys(portsBinding).length === 0 && imageConfig) {
     setPortsBinding(
@@ -48,7 +54,7 @@ function CreateInstance({ isOpen, onClose }) {
     ({ image, portsMapping }) => {
       return {
         image,
-        drone: 'angry beetle',
+        drone: serverSelected.name,
         config: {
           portsMapping,
           volumes: volumesBinding,
@@ -107,7 +113,66 @@ function CreateInstance({ isOpen, onClose }) {
               </div>
 
               <div className='w-full my-5'>
-                <p className='dark:text-white'>Select an image</p>
+                <p className='dark:text-white'>Select a drone</p>
+                {serverSelected && (
+                  <Listbox value={serverSelected} onChange={setServerSelected}>
+                    <div className='relative mt-1'>
+                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
+                        <span className='block truncate'>
+                          {serverSelected.name
+                            .split(' ')
+                            .map((namePart) => capitalize(namePart))
+                            .join(' ')}
+                        </span>
+                        <span className='absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
+                          <FontAwesomeIcon icon={faAngleDown} />
+                        </span>
+                      </Listbox.Button>
+                      <Transition
+                        as={Fragment}
+                        leave='transition ease-in duration-100'
+                        leaveFrom='opacity-100'
+                        leaveTo='opacity-0'
+                      >
+                        <Listbox.Options className='absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+                          {servers &&
+                            servers.map((server) => (
+                              <Listbox.Option
+                                key={server.name}
+                                className={({ active }) =>
+                                  `cursor-default select-none relative py-2 pl-10 pr-4 ${
+                                    active ? 'text-blue-900 bg-blue-100' : 'text-gray-900'
+                                  }`
+                                }
+                                value={server}
+                              >
+                                {({ selected }) => (
+                                  <>
+                                    <span
+                                      className={`block truncate ${
+                                        selected ? 'font-medium' : 'font-normal'
+                                      }`}
+                                    >
+                                      {server.name
+                                        .split(' ')
+                                        .map((namePart) => capitalize(namePart))
+                                        .join(' ')}
+                                    </span>
+                                    {selected ? (
+                                      <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600'>
+                                        <FontAwesomeIcon icon={faCheck} />
+                                      </span>
+                                    ) : null}
+                                  </>
+                                )}
+                              </Listbox.Option>
+                            ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </Listbox>
+                )}
+                <p className='dark:text-white mt-5'>Select an image</p>
                 {gameSelected && (
                   <Listbox value={gameSelected} onChange={setGameSelected}>
                     <div className='relative mt-1'>
