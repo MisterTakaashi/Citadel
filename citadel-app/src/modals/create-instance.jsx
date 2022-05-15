@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import capitalize from 'lodash/capitalize';
+import mapKeys from 'lodash/mapKeys';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -22,6 +23,7 @@ function CreateInstance({ isOpen, onClose }) {
   const [gameSelected, setGameSelected] = useState();
   const [portsBinding, setPortsBinding] = useState({});
   const [volumesBinding, setVolumesBinding] = useState([]);
+  const [envVars, setEnvVars] = useState({});
 
   if (!gameSelected && images) {
     setGameSelected(images[0]);
@@ -58,6 +60,7 @@ function CreateInstance({ isOpen, onClose }) {
         config: {
           portsMapping,
           volumes: volumesBinding,
+          environmentVariables: envVars,
         },
       };
     },
@@ -280,9 +283,57 @@ function CreateInstance({ isOpen, onClose }) {
                       />
                     </div>
                   ))}
+                <p className='dark:text-white mt-5'>Environment variables</p>
+                {Object.entries(envVars).map(([envVarName, envVar], index) => (
+                  <div
+                    className={`flex items-center gap-4 ${index > 0 ? 'mt-3' : ''}`}
+                    key={`${gameSelected.name}-${envVarName}`}
+                  >
+                    <div className='basis-1/2'>
+                      <input
+                        value={envVarName}
+                        onChange={(event) => {
+                          const envVarsCopy = { ...envVars };
+
+                          setEnvVars(
+                            mapKeys(envVarsCopy, (_, key) =>
+                              key === envVarName ? event.target.value : key
+                            )
+                          );
+                        }}
+                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
+                      />
+                    </div>
+                    <FontAwesomeIcon icon={faCaretRight} className='text-gray-400' />
+                    <div className='basis-1/2'>
+                      <input
+                        value={envVar}
+                        onChange={(event) => {
+                          const envVarsCopy = { ...envVars };
+                          envVarsCopy[envVarName] = event.target.value;
+
+                          setEnvVars(envVarsCopy);
+                        }}
+                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
+                      />
+                    </div>
+                  </div>
+                ))}
+                <div className='flex'>
+                  <Button
+                    size='sm'
+                    className={`grow ${Object.keys(envVars).length > 0 ? 'mt-3' : ''}`}
+                    color='green'
+                    onClick={() => {
+                      setEnvVars({ ...envVars, [`ENV_${Object.keys(envVars).length}`]: '' });
+                    }}
+                  >
+                    Add environment variable
+                  </Button>
+                </div>
               </div>
 
-              <div className='mt-4'>
+              <div className='mt-6 flex flex-row-reverse'>
                 <Button
                   disabled={loadingCreate}
                   loading={loadingCreate}
@@ -290,7 +341,7 @@ function CreateInstance({ isOpen, onClose }) {
                     createInstance({ image: gameSelected.slug, portsMapping: portsBinding });
                   }}
                 >
-                  Got it !
+                  Create the instance
                 </Button>
               </div>
             </div>
