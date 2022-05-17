@@ -28,7 +28,7 @@ function CreateInstance({ isOpen, onClose }) {
   if (!gameSelected && images) {
     setGameSelected(images[0]);
   }
-  if (!serverSelected && servers) {
+  if (!serverSelected && servers && servers.length > 0) {
     setServerSelected(servers[0]);
   }
   if (Object.keys(portsBinding).length === 0 && imageConfig) {

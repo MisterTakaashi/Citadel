@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import CreateInstanceModal from '../../modals/create-instance';
+import AddDroneModal from '../../modals/add-drone';
 import Layout from '../../components/layout';
 import Button from '../../components/button';
 import Card from '../../components/card';
@@ -13,7 +14,7 @@ import ServerStatus from '../../components/server-status';
 
 function Dashboard() {
   const { instances, refetch } = useApiQuery('/instances', 'instances');
-  const { servers } = useApiQuery('/servers', 'servers');
+  const { servers, refetch: refetchServers } = useApiQuery('/servers', 'servers');
 
   const [startInstance, { loading: startLoading }] = useApiAction(
     (instanceName) => `/instances/${instanceName}/start`,
@@ -37,19 +38,37 @@ function Dashboard() {
     return [colors[index], emojis[index]];
   };
 
-  const [isCreateInstanceModalOpen, setIsCreateInstanceModelOpen] = useState(false);
-  function closeModal() {
-    setIsCreateInstanceModelOpen(false);
+  const [isCreateInstanceModalOpen, setIsCreateInstanceModalOpen] = useState(false);
+  const [isAddDroneModalOpen, setIsAddDroneModalOpen] = useState(false);
+  function closeCreateInstanceModal() {
+    setIsCreateInstanceModalOpen(false);
     refetch();
   }
 
-  function openModal() {
-    setIsCreateInstanceModelOpen(true);
+  function closeAddDroneModal() {
+    setIsAddDroneModalOpen(false);
+    refetchServers();
+  }
+
+  function openCreateInstanceModal() {
+    setIsCreateInstanceModalOpen(true);
+  }
+
+  function openAddDroneModal() {
+    setIsAddDroneModalOpen(true);
   }
 
   return (
     <>
-      <CreateInstanceModal isOpen={isCreateInstanceModalOpen} onClose={() => closeModal()} />
+      {isCreateInstanceModalOpen && (
+        <CreateInstanceModal
+          isOpen={isCreateInstanceModalOpen}
+          onClose={() => closeCreateInstanceModal()}
+        />
+      )}
+      {isAddDroneModalOpen && (
+        <AddDroneModal isOpen={isAddDroneModalOpen} onClose={() => closeAddDroneModal()} />
+      )}
       <Layout>
         <div className='container mx-auto mb-10 flex flex-col md:flex-row items-start gap-5 px-5 md:px-0'>
           <div className='w-full md:basis-3/4'>
@@ -62,7 +81,7 @@ function Dashboard() {
                 disabled={startLoading || stopLoading}
                 loading={startLoading}
                 onClick={() => {
-                  openModal();
+                  openCreateInstanceModal();
                 }}
               >
                 <span className='hidden sm:block'>Create instance</span>
@@ -150,6 +169,14 @@ function Dashboard() {
                   <ServerStatus background bullet state='running' size='sm' />
                 </div>
               ))}
+            <Button
+              size='sm'
+              color='green'
+              className='mt-3 w-full'
+              onClick={() => openAddDroneModal()}
+            >
+              Add a server as drone
+            </Button>
           </Card>
         </div>
       </Layout>
