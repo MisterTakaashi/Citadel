@@ -287,7 +287,8 @@ function CreateInstance({ isOpen, onClose }) {
                 {Object.entries(envVars).map(([envVarName, envVar], index) => (
                   <div
                     className={`flex items-center gap-4 ${index > 0 ? 'mt-3' : ''}`}
-                    key={`${gameSelected.name}-${envVarName}`}
+                    // eslint-disable-next-line
+                    key={`${gameSelected.name}-${index}`}
                   >
                     <div className='basis-1/2'>
                       <input
