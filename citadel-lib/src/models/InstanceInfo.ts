@@ -1,3 +1,5 @@
+import InstanceVolume from "./InstanceVolume";
+
 export enum InstanceState {
   Created = 'created',
   Running = 'running',
@@ -9,6 +11,8 @@ type InstanceInfo = {
   image: string;
   state: InstanceState;
   portsMapping: {[instancePort: string]: string};
+  environmentVariables: string[];
+  volumes: InstanceVolume[];
 }
 
 export default InstanceInfo;
