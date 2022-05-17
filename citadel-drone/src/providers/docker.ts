@@ -1,5 +1,5 @@
 import { existsSync } from 'fs';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, lstat } from 'fs/promises';
 import * as path from 'path';
 import { InstanceInfo, InstanceState, InstanceVolume } from 'citadel-lib';
 import * as Docker from 'dockerode';
@@ -33,6 +33,8 @@ class DockerProvider implements BaseProvider {
 
     if (!containerInfo) return undefined;
 
+    const container = await this.docker.getContainer(containerInfo.Id).inspect();
+
     return {
       name: containerInfo.Names[0].substring(1),
       image: containerInfo.Image,
@@ -59,6 +61,15 @@ class DockerProvider implements BaseProvider {
 
         return { ...acc, [`${port.PrivatePort}/${port.Type}`]: `${port.PublicPort}` };
       }, {}),
+      volumes: await Bluebird.Promise.map<{ Source: string; Destination: string }, InstanceVolume>(
+        containerInfo.Mounts,
+        async (mount) => ({
+          file: !(await lstat(mount.Source)).isDirectory(),
+          from: mount.Source,
+          to: mount.Destination,
+        })
+      ),
+      environmentVariables: container.Config.Env,
     };
   }
 
