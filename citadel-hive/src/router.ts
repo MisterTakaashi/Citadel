@@ -3,6 +3,7 @@ import * as Router from 'koa-router';
 import ServerController from './controllers/server';
 import InstanceController from './controllers/instance';
 import ImageController from './controllers/image';
+import AccountController from './controllers/account';
 
 const router = new Router();
 
@@ -51,6 +52,11 @@ router.get('/images', async (ctx) => {
 
 router.get('/images/:image', async (ctx) => {
   await new ImageController().details(ctx);
+});
+
+// Accounts
+router.post('/accounts', async (ctx) => {
+  await new AccountController().create(ctx);
 });
 
 export default router;
