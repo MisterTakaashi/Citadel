@@ -1,5 +1,5 @@
 import React from 'react';
-import { faCaretRight, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretRight, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams, useNavigate } from 'react-router-dom';
 import Card from '../../components/card';
@@ -95,7 +95,7 @@ function InstanceOverview() {
               Object.entries(instance.portsMapping).map((ports) => (
                 <div className='basis-2/3 flex items-center gap-4' key={`${ports}`}>
                   <p>{ports[0]}</p>
-                  <FontAwesomeIcon icon={faCaretRight} />
+                  <FontAwesomeIcon icon={faCaretRight} className='text-gray-400' />
                   <p>{ports[1]}</p>
                 </div>
               ))}
@@ -104,6 +104,32 @@ function InstanceOverview() {
                 The instance must be running to retrieve ports mapping
               </p>
             )}
+          </div>
+          <div className='flex flex-col flex-col mb-4'>
+            <p className='text-gray-400'>Volumes</p>
+            {!loading &&
+              instance.volumes.map((volume) => (
+                <div className='flex flex-col gap-1 break-all' key={`${volume.from}-${volume.to}`}>
+                  <p>{volume.from}</p>
+                  <div className='flex items-center justify-center gap-4 text-gray-400'>
+                    <FontAwesomeIcon icon={faCaretDown} />
+                    <p className='text-sm'>mapped to</p>
+                    <FontAwesomeIcon icon={faCaretDown} />
+                  </div>
+                  <p>{volume.to}</p>
+                </div>
+              ))}
+          </div>
+          <div className='flex flex-col flex-col mb-4'>
+            <p className='text-gray-400'>Environment variables</p>
+            <div className='flex flex-col gap-1'>
+              {!loading &&
+                instance.environmentVariables.map((envVar) => (
+                  <div className='break-all' key={`${envVar}`}>
+                    <p>{envVar}</p>
+                  </div>
+                ))}
+            </div>
           </div>
           <div className='flex mt-3'>
             {!loading && (instance.state === 'exited' || instance.state === 'created') && (
