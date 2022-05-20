@@ -4,6 +4,7 @@ import ServerController from './controllers/server';
 import InstanceController from './controllers/instance';
 import ImageController from './controllers/image';
 import AccountController from './controllers/account';
+import SessionController from './controllers/session';
 
 const router = new Router();
 
@@ -57,6 +58,11 @@ router.get('/images/:image', async (ctx) => {
 // Accounts
 router.post('/accounts', async (ctx) => {
   await new AccountController().create(ctx);
+});
+
+// Sessions
+router.post('/sessions', async (ctx) => {
+  await new SessionController().create(ctx);
 });
 
 export default router;
