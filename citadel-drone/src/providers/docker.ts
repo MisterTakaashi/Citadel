@@ -127,7 +127,11 @@ class DockerProvider implements BaseProvider {
         HostConfig: {
           PortBindings: config
             ? Object.entries(config.portsMapping).reduce((acc, portMapping) => {
-                acc[portMapping[0]] = [{ HostPort: portMapping[1] }];
+                const regex = /(udp)|(tcp)/;
+
+                acc[regex.test(portMapping[0]) ? portMapping[0] : `${portMapping[0]}/tcp`] = [
+                  { HostPort: regex.test(portMapping[0]) ? portMapping[0] : `${portMapping[0]}/tcp` },
+                ];
 
                 return acc;
               }, {})
