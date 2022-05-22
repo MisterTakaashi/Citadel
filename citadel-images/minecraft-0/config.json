@@ -1,0 +1,17 @@
+{
+  "name": "Minecraft",
+  "appid": 0,
+  "ports": [
+    "25565"
+  ],
+  "docker": {
+    "image": "mistertakaashi/citadel-minecraft-0:latest"
+  },
+  "persistences": [
+    {
+      "name": "minecraft_db",
+      "path": "/etc/minecraft",
+      "type": "save_folder"
+    }
+  ]
+}
