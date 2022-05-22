@@ -14,7 +14,7 @@ RUN mkdir -pv /opt/minecraft /etc/minecraft
 RUN adduser -DHs /sbin/nologin minecraft
 
 # Add the EULA file
-RUN echo eula=true > /etc/minecraft/eula.txt
+COPY ./eula.txt /etc/minecraft/eula.txt
 
 # Install dependencies, fetch Minecraft server jar file and chown files
 ARG JAR_URL=https://launcher.mojang.com/v1/objects/${MC_JAR_SHA1}/server.jar
@@ -25,7 +25,7 @@ RUN apk add --update ca-certificates nss tzdata wget \
     && chown -R minecraft:minecraft /etc/minecraft /opt/minecraft
 
 # Define volumes
-VOLUME /etc/minecraft
+VOLUME /etc/minecraft/server.properties
 
 # Expose port
 EXPOSE 25565

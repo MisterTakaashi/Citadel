@@ -9,9 +9,9 @@
   },
   "persistences": [
     {
-      "name": "minecraft_db",
-      "path": "/etc/minecraft",
-      "type": "save_folder"
+      "name": "minecraft_server_properties",
+      "path": "/etc/minecraft/server.properties",
+      "type": "save_file"
     }
   ]
 }
