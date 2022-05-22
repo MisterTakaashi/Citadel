@@ -73,6 +73,12 @@ function CreateInstance({ isOpen, onClose }) {
     }
   }, [gameSelected, refetchConfig]);
 
+  useEffect(() => {
+    setPortsBinding({});
+    setVolumesBinding([]);
+    setEnvVars({});
+  }, [imageConfig]);
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='fixed inset-0 z-10 overflow-y-auto' onClose={onClose}>
