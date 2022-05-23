@@ -26,6 +26,7 @@ RUN apk add --update ca-certificates nss tzdata wget \
 
 # Define volumes
 VOLUME /etc/minecraft/server.properties
+VOLUME /etc/minecraft/world
 
 # Expose port
 EXPOSE 25565

@@ -9,6 +9,11 @@
   },
   "persistences": [
     {
+      "name": "minecraft_world",
+      "path": "/etc/minecraft/world",
+      "type": "save_folder"
+    },
+    {
       "name": "minecraft_server_properties",
       "path": "/etc/minecraft/server.properties",
       "type": "save_file"
