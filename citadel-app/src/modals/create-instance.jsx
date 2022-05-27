@@ -4,13 +4,7 @@ import capitalize from 'lodash/capitalize';
 import mapKeys from 'lodash/mapKeys';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faAngleDown,
-  faCaretDown,
-  faCaretRight,
-  faCheck,
-  faWarning,
-} from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faCaretDown, faCaretRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/button';
 import useApiQuery from '../lib/useApiQuery';
 import useApiAction from '../lib/useApiAction';
@@ -126,7 +120,7 @@ function CreateInstance({ isOpen, onClose }) {
                 {serverSelected && (
                   <Listbox value={serverSelected} onChange={setServerSelected}>
                     <div className='z-40 relative mt-1'>
-                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
+                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
                         <span className='block truncate'>
                           {serverSelected.name
                             .split(' ')
@@ -185,7 +179,7 @@ function CreateInstance({ isOpen, onClose }) {
                 {gameSelected && (
                   <Listbox value={gameSelected} onChange={setGameSelected}>
                     <div className='relative mt-1'>
-                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
+                      <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
                         <span className='block truncate'>{gameSelected.name}</span>
                         <span className='absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
                           <FontAwesomeIcon icon={faAngleDown} />
@@ -252,43 +246,42 @@ function CreateInstance({ isOpen, onClose }) {
                           setPortsBinding(bindingCopy);
                         }}
                         inputMode='numeric'
-                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black'
+                        className='py-2 pl-3 pr-10 bg-white rounded shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black'
                       />
                     </div>
                   ))}
                 <p className='dark:text-white mt-5'>Persisted volumes</p>
-                {volumesBinding &&
-                  volumesBinding.map((volume, volumeIndex) => (
-                    <div
-                      className='text-gray-400 flex flex-col'
-                      key={`${gameSelected.name}-${volume.to}`}
-                    >
-                      <div className='flex items-center'>
-                        <input
-                          value={volume.to}
-                          className='py-2 pl-3 pr-10 grow bg-white rounded-tl-lg rounded-bl-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black disabled:bg-gray-400 disabled:cursor-not-allowed'
-                          disabled
-                        />
-                        <div className='border-solid border-2 border-orange-500 py-1 px-2 rounded-tr-lg rounded-br-lg text-orange-500'>
-                          <FontAwesomeIcon icon={faWarning} />
+                <div className='flex flex-col gap-4'>
+                  {volumesBinding &&
+                    volumesBinding.map((volume, volumeIndex) => (
+                      <div
+                        className='text-gray-400 flex flex-col'
+                        key={`${gameSelected.name}-${volume.to}`}
+                      >
+                        <div className='flex items-center'>
+                          <input
+                            value={volume.to}
+                            className='py-2 pl-3 pr-10 grow bg-white rounded shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black disabled:bg-gray-400 disabled:cursor-not-allowed'
+                            disabled
+                          />
                         </div>
+                        <div className='flex gap-4 items-center mx-auto my-1'>
+                          <FontAwesomeIcon icon={faCaretDown} />
+                          <p className='text-sm'>mapped to</p>
+                          <FontAwesomeIcon icon={faCaretDown} />
+                        </div>
+                        <input
+                          value={volume.from}
+                          onChange={(event) => {
+                            const bindingCopy = [...volumesBinding];
+                            bindingCopy[volumeIndex].from = event.target.value;
+                            setVolumesBinding(bindingCopy);
+                          }}
+                          className='py-2 pl-3 pr-10 bg-white rounded cursor-text shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black disabled:bg-gray-400 disabled:cursor-not-allowed'
+                        />
                       </div>
-                      <div className='flex gap-4 items-center mx-auto my-1'>
-                        <FontAwesomeIcon icon={faCaretDown} />
-                        <p className='text-sm'>mapped to</p>
-                        <FontAwesomeIcon icon={faCaretDown} />
-                      </div>
-                      <input
-                        value={volume.from}
-                        onChange={(event) => {
-                          const bindingCopy = [...volumesBinding];
-                          bindingCopy[volumeIndex].from = event.target.value;
-                          setVolumesBinding(bindingCopy);
-                        }}
-                        className='py-2 pl-3 pr-10 bg-white rounded-lg cursor-text shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black disabled:bg-gray-400 disabled:cursor-not-allowed'
-                      />
-                    </div>
-                  ))}
+                    ))}
+                </div>
                 <p className='dark:text-white mt-5'>Environment variables</p>
                 {Object.entries(envVars).map(([envVarName, envVar], index) => (
                   <div
@@ -308,7 +301,7 @@ function CreateInstance({ isOpen, onClose }) {
                             )
                           );
                         }}
-                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
+                        className='py-2 pl-3 pr-10 bg-white rounded shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
                       />
                     </div>
                     <FontAwesomeIcon icon={faCaretRight} className='text-gray-400' />
@@ -321,7 +314,7 @@ function CreateInstance({ isOpen, onClose }) {
 
                           setEnvVars(envVarsCopy);
                         }}
-                        className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
+                        className='py-2 pl-3 pr-10 bg-white rounded shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
                       />
                     </div>
                   </div>
