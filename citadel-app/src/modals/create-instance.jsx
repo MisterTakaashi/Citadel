@@ -125,7 +125,7 @@ function CreateInstance({ isOpen, onClose }) {
                 <p className='dark:text-white'>Select a drone</p>
                 {serverSelected && (
                   <Listbox value={serverSelected} onChange={setServerSelected}>
-                    <div className='relative mt-1'>
+                    <div className='z-40 relative mt-1'>
                       <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
                         <span className='block truncate'>
                           {serverSelected.name
