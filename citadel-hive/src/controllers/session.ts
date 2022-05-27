@@ -5,6 +5,21 @@ import Account, { AccountModel } from '../models/account';
 import { SessionModel } from '../models/session';
 
 class SessionController extends commonControllers.ApplicationController {
+  // GET /sessions/:token
+  async details(ctx: Context) {
+    const { token } = ctx.params;
+
+    const session = await SessionModel.findOne({ token }).populate('account');
+    if (!session) {
+      this.renderError(ctx, 404, 'Cannot find token');
+      return;
+    }
+
+    const account = session.account as Account;
+
+    this.renderSuccess(ctx, { account: { email: account.email } });
+  }
+
   // POST /sessions
   async create(ctx: Context) {
     const { email, password } = ctx.request.body;

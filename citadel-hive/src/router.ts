@@ -61,6 +61,10 @@ router.post('/accounts', async (ctx) => {
 });
 
 // Sessions
+router.get('/sessions/:token', async (ctx) => {
+  await new SessionController().details(ctx);
+});
+
 router.post('/sessions', async (ctx) => {
   await new SessionController().create(ctx);
 });

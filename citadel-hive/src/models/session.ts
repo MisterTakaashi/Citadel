@@ -9,7 +9,7 @@ class Session extends TimeStamps {
   @prop({ required: true })
   public lastConnection: Date;
 
-  @prop({ ref: () => Account, required: true })
+  @prop({ ref: 'Account', required: true })
   public account: Ref<Account>;
 }
 
