@@ -1,4 +1,5 @@
 import { existsSync } from 'fs';
+import { userInfo } from 'os';
 import { writeFile, mkdir, lstat } from 'fs/promises';
 import * as path from 'path';
 import { InstanceInfo, InstanceState, InstanceVolume } from 'citadel-lib';
@@ -119,11 +120,14 @@ class DockerProvider implements BaseProvider {
       }
     });
 
+    const user = userInfo();
+
     try {
       await this.docker.createContainer({
         Image: image,
         name: containerName,
         Tty: true,
+        User: `${user.uid}:${user.gid}`,
         HostConfig: {
           PortBindings: config
             ? Object.entries(config.portsMapping).reduce((acc, portMapping) => {
