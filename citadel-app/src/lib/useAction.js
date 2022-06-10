@@ -34,16 +34,19 @@ const useAction = (endpoint, method, body, callback) => {
       .then(({ data: apiResponse }) => {
         if (!apiResponse.error) {
           setResponse(apiResponse.data);
+          if (callback) callback(null, apiResponse.data);
         } else {
           setError(apiResponse.error);
+          if (callback) callback(apiResponse.error);
         }
       })
       .catch((err) => {
-        setError(err);
+        const errorMessage = err.response?.data?.message || err.message;
+        setError(errorMessage);
+        if (callback) callback(errorMessage);
       })
       .finally(() => {
         setLoading(false);
-        if (callback) callback();
       });
   };
 
