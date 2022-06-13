@@ -10,6 +10,9 @@ class Server extends TimeStamps {
 
   @prop({ required: true })
   public publicIp: string;
+
+  @prop({ require: true, default: true })
+  public selfHosted: boolean;
 }
 
 const ServerModel = getModelForClass(Server);

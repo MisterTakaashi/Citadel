@@ -16,14 +16,14 @@ class ServerController extends commonControllers.ApplicationController {
   async create(ctx: Context) {
     const { url } = ctx.request.body;
 
-    const { response, error } = await queryDrone({ url, publicIp: '', name: '' }, 'ping', 'ip');
+    const { response, error } = await queryDrone({ url, publicIp: '', name: '', selfHosted: true }, 'ping', 'ip');
 
     if (error) {
       this.renderError(ctx, 400, 'Cannot contact the drone to get its public IP');
       return;
     }
 
-    const newServer = new ServerModel({ url, publicIp: response, name: generateName() });
+    const newServer = new ServerModel({ url, publicIp: response, name: generateName(), selfHosted: true });
 
     this.renderSuccess(ctx, {
       server: await newServer.save(),
