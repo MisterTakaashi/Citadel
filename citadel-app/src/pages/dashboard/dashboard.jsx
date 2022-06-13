@@ -152,23 +152,30 @@ function Dashboard() {
           </div>
           <Card title='Drones' className='w-full md:basis-1/4 mt-5'>
             {servers &&
-              servers.map((server) => (
-                <div
-                  className='flex flex-row md:flex-col xl:flex-row justify-between items-center sm:items-start xl:items-center'
-                  key={server.name}
-                >
-                  <div>
-                    <p>
-                      {server.name
-                        .split(' ')
-                        .map((namePart) => capitalize(namePart))
-                        .join(' ')}
-                    </p>
-                    <p className='text-sm text-gray-400'>{server.url}</p>
+              servers.length > 1 &&
+              servers
+                .filter((server) => server.selfHosted)
+                .map((server) => (
+                  <div
+                    className='flex flex-row md:flex-col xl:flex-row justify-between items-center sm:items-start xl:items-center'
+                    key={server.name}
+                  >
+                    <div>
+                      <p>
+                        {server.name
+                          .split(' ')
+                          .map((namePart) => capitalize(namePart))
+                          .join(' ')}
+                      </p>
+                      <p className='text-sm text-gray-400'>{server.url}</p>
+                    </div>
+                    <ServerStatus background bullet state='running' size='sm' />
                   </div>
-                  <ServerStatus background bullet state='running' size='sm' />
-                </div>
-              ))}
+                ))}
+            <p className='text-gray-400'>
+              You don&apos;t have any self-hosted drone, you will only be able to launch instances
+              via public drones
+            </p>
             <Button
               size='sm'
               color='green'
