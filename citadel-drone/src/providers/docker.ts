@@ -7,6 +7,9 @@ import * as Docker from 'dockerode';
 import * as Bluebird from 'bluebird';
 import { omit } from 'lodash';
 import BaseProvider from './base';
+import makeLogger from '../lib/logger';
+
+const logger = makeLogger(module);
 
 class DockerProvider implements BaseProvider {
   docker: Docker;
@@ -149,7 +152,7 @@ class DockerProvider implements BaseProvider {
           : [],
       });
     } catch (err) {
-      console.log(':/');
+      logger.error(`Cannot create the instance ${err.message}`);
     }
 
     return containerName;
@@ -163,6 +166,7 @@ class DockerProvider implements BaseProvider {
   }
 
   async fetchBinaries(repoTag: string): Promise<void> {
+    logger.info(`Pulling image ${repoTag} from Docker registry`);
     const stream = await this.docker.pull(`${repoTag}`);
 
     await (() =>
@@ -170,10 +174,10 @@ class DockerProvider implements BaseProvider {
         const onDownloadProgress = () => {};
 
         const onDownloadFinished = (err: Error) => {
-          console.log('Download finished :D');
+          logger.info(`Image ${repoTag} pulled from Docker registry`);
 
           if (err) {
-            console.log(err);
+            logger.error(`Error while pulling image ${repoTag} from registry`);
 
             reject(err);
             return;

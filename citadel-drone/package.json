@@ -21,7 +21,9 @@
     "koa-json": "^2.0.2",
     "koa-router": "^10.1.1",
     "lodash": "^4.17.21",
-    "public-ip": "4"
+    "public-ip": "4",
+    "ulid": "^2.3.0",
+    "winston": "^3.8.0"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.1",
