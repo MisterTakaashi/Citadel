@@ -24,7 +24,9 @@
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-router": "^10.1.1",
-    "mongoose": "^6.1.7"
+    "mongoose": "^6.1.7",
+    "ulid": "^2.3.0",
+    "winston": "^3.8.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.36",

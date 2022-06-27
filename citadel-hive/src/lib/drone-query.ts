@@ -1,6 +1,9 @@
 import axios, { Method } from 'axios';
 import * as Bluebird from 'bluebird';
 import Server from '../models/server';
+import makeLogger from '../lib/logger';
+
+const logger = makeLogger(module);
 
 const queryDrone = async (
   { url, publicIp, name }: Server,
@@ -21,7 +24,7 @@ const queryDrone = async (
 
     return { response: response.data[resultKey || apiInterface], server: { url, publicIp, name }, error: false };
   } catch (err) {
-    console.error('Cannot query drone', url, err.message, err.response?.data);
+    logger.error(`Cannot query drone, ${url}, ${err.message}, ${err.response?.data}`);
 
     return { response: undefined, code: err.response.status, error: err.response?.data?.message || err };
   }

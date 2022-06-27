@@ -1,6 +1,9 @@
 import { createHash } from 'crypto';
 import { getModelForClass, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import makeLogger from '../lib/logger';
+
+const logger = makeLogger(module);
 
 class Account extends TimeStamps {
   @prop({ required: true, unique: true })
@@ -14,7 +17,7 @@ class Account extends TimeStamps {
       return `${process.env.PASSWORD_SALT}${pass}`;
     }
 
-    console.warn('No salt configured for password, this can be a security breach');
+    logger.warn('No salt configured for password, this can be a security breach');
     return pass;
   }
 
