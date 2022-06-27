@@ -68,7 +68,9 @@ class DockerProvider implements BaseProvider {
       volumes: await Bluebird.Promise.map<{ Source: string; Destination: string }, InstanceVolume>(
         containerInfo.Mounts,
         async (mount) => ({
-          file: !(await lstat(mount.Source)).isDirectory(),
+          file: await lstat(mount.Source)
+            .then((file) => !file.isDirectory())
+            .catch(() => false),
           from: mount.Source,
           to: mount.Destination,
         })
