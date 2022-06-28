@@ -6,6 +6,7 @@ import { Dialog, Transition, Listbox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faCaretDown, faCaretRight, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Button from '../components/button';
+import RangeSlider from '../components/range-slider';
 import useApiQuery from '../lib/useApiQuery';
 import useApiAction from '../lib/useApiAction';
 import cloudHosted from '../statics/undraw_secure_server_re.svg';
@@ -21,6 +22,12 @@ function CreateInstance({ isOpen, onClose }) {
   const [portsBinding, setPortsBinding] = useState({});
   const [volumesBinding, setVolumesBinding] = useState([]);
   const [envVars, setEnvVars] = useState({});
+  const [resourceRam, setResourceRam] = useState(1);
+  const [resourceCpu, setResourceCpu] = useState(1);
+
+  // TODO: This has to move to database, when the drone registers
+  const maxRam = 8;
+  const maxCpu = 6;
 
   if (!gameSelected && images) {
     setGameSelected(images[0]);
@@ -259,6 +266,24 @@ function CreateInstance({ isOpen, onClose }) {
                       </div>
                     </Listbox>
                   )}
+                  <p className='dark:text-white mt-5'>Select instance resources</p>
+                  <p className='text-gray-400'>RAM</p>
+                  <RangeSlider
+                    prefix='ram-slider'
+                    value={resourceRam}
+                    min={1}
+                    max={maxRam}
+                    onChange={(newValue) => setResourceRam(newValue)}
+                  />
+                  <p className='text-gray-400'>CPU core number</p>
+                  <RangeSlider
+                    prefix='cpu-slider'
+                    value={resourceCpu}
+                    min={1}
+                    max={maxCpu}
+                    onChange={(newValue) => setResourceCpu(newValue)}
+                  />
+
                   {cloudProvided === false && (
                     <>
                       <p className='dark:text-white mt-5'>Mapped ports</p>
