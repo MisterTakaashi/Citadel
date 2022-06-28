@@ -26,7 +26,6 @@ function CreateInstance({ isOpen, onClose }) {
   const [resourceCpu, setResourceCpu] = useState(1);
 
   // TODO: This has to move to database, when the drone registers
-  const maxRam = 8;
   const maxCpu = 6;
 
   if (!gameSelected && images) {
@@ -267,21 +266,26 @@ function CreateInstance({ isOpen, onClose }) {
                     </Listbox>
                   )}
                   <p className='dark:text-white mt-5'>Select instance resources</p>
-                  <p className='text-gray-400'>RAM</p>
-                  <RangeSlider
-                    prefix='ram-slider'
-                    value={resourceRam}
-                    min={1}
-                    max={maxRam}
-                    onChange={(newValue) => setResourceRam(newValue)}
-                  />
-                  <p className='text-gray-400'>CPU core number</p>
+                  <p className='text-gray-400'>Dedicated CPU Cores</p>
                   <RangeSlider
                     prefix='cpu-slider'
                     value={resourceCpu}
                     min={1}
                     max={maxCpu}
-                    onChange={(newValue) => setResourceCpu(newValue)}
+                    onChange={(newValue) => {
+                      setResourceCpu(newValue);
+                      if (resourceRam > newValue * 5) {
+                        setResourceRam(newValue * 5);
+                      }
+                    }}
+                  />
+                  <p className='text-gray-400'>Dedicated RAM</p>
+                  <RangeSlider
+                    prefix='ram-slider'
+                    value={resourceRam}
+                    min={1}
+                    max={resourceCpu * 5}
+                    onChange={(newValue) => setResourceRam(newValue)}
                   />
 
                   {cloudProvided === false && (
