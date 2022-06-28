@@ -114,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"image\": \"gmod-4000\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\",\n    \"config\": {\n        \"portsMapping\": {\"27015/udp\": \"27015\"},\n        \"volumes\": [\n            {\n                \"from\": \"/home/pauld/Desktop/pouet/sv.db\",\n                \"to\": \"gmod_sv_db\",\n                \"file\": true\n            }\n        ],\n        \"environmentVariables\": {\n            \"pouet\": \"valid\"\n        }\n    }\n}",
+							"raw": "{\n    \"image\": \"gmod-4000\",\n    \"name\": \"gmod\",\n    \"drone\": \"angry beetle\",\n    \"config\": {\n        \"portsMapping\": {\"27015/udp\": \"27015\"},\n        \"volumes\": [\n            {\n                \"from\": \"/home/pauld/Desktop/pouet/sv.db\",\n                \"to\": \"gmod_sv_db\",\n                \"file\": true\n            }\n        ],\n        \"environmentVariables\": {\n            \"pouet\": \"valid\"\n        },\n        \"resources\": {\n            \"cpu\": 2,\n            \"ram\": 5\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -275,6 +275,66 @@
 							"port": "3000",
 							"path": [
 								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get session",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/sessions/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvYXBtY3RyYXZpY2hAZ21haWwuY29tIiwiaWF0IjoxNjU0OTU2M",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"sessions",
+								"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvYXBtY3RyYXZpY2hAZ21haWwuY29tIiwiaWF0IjoxNjU0OTU2M"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"email\": \"soapmctravich@gmail.com\", \"password\": \"gougougou\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/sessions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"sessions"
 							]
 						}
 					},

@@ -5,7 +5,7 @@ import * as path from 'path';
 import { InstanceInfo, InstanceState, InstanceVolume } from 'citadel-lib';
 import * as Docker from 'dockerode';
 import * as Bluebird from 'bluebird';
-import { omit } from 'lodash';
+import { isNumber, omit } from 'lodash';
 import BaseProvider from './base';
 import makeLogger from '../lib/logger';
 
@@ -108,6 +108,7 @@ class DockerProvider implements BaseProvider {
       portsMapping: { [name: string]: string };
       volumes: InstanceVolume[];
       environmentVariables: { [name: string]: string };
+      resources: { ram: number; cpu: number };
     }
   ): Promise<string> {
     const defaultName = `${image.replace('citadel-', '').replace('-', '_').split('/')[1].split(':')[0]}`;
@@ -134,6 +135,8 @@ class DockerProvider implements BaseProvider {
         Tty: true,
         User: `${user.uid}:${user.gid}`,
         HostConfig: {
+          CpuQuota: isNumber(config.resources.cpu) ? Math.floor(config.resources.cpu) * 100000 : null,
+          Memory: isNumber(config.resources.ram) ? Math.floor(config.resources.ram) * 1000000000 : 0,
           PortBindings: config
             ? Object.entries(config.portsMapping).reduce((acc, portMapping) => {
                 const regex = /(udp)|(tcp)/;

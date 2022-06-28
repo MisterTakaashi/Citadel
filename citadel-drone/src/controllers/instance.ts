@@ -22,10 +22,14 @@ class InstanceController extends commonControllers.ApplicationController {
         portsMapping: { [name: string]: string };
         volumes: InstanceVolume[];
         environmentVariables: { [name: string]: string };
+        resources: {
+          ram: number;
+          cpu: number;
+        };
       };
     };
 
-    const { portsMapping, volumes, environmentVariables } = config;
+    const { portsMapping, volumes, environmentVariables, resources } = config;
     console.log(portsMapping, volumes, environmentVariables);
 
     const provider = new DockerProvider(new Docker());
@@ -38,6 +42,7 @@ class InstanceController extends commonControllers.ApplicationController {
         []
       ),
       environmentVariables,
+      resources,
     });
     await provider.startInstance(instanceName);
 
