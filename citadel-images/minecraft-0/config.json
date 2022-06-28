@@ -18,5 +18,12 @@
       "path": "/etc/minecraft/server.properties",
       "type": "save_file"
     }
+  ],
+  "slots": [
+    {"number": 2, "ram": 1, "cpu": 1},
+    {"number": 6, "ram": 1, "cpu": 1},
+    {"number": 12, "ram": 3, "cpu": 1},
+    {"number": 24, "ram": 6, "cpu": 2},
+    {"number": 32, "ram": 8, "cpu": 2}
   ]
 }
