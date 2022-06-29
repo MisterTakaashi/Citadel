@@ -1,0 +1,18 @@
+[package]
+name = "citadel-hive"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+redis = "0.21.5"
+
+[dependencies.rocket]
+version = "0.5.0-rc.2"
+features = ["json"]
+
+[dependencies.rocket_db_pools]
+version = "0.1.0-rc.2"
+features = ["deadpool_redis"]
+#serde = "1.0.137"
+#serde_json = "1.0.81"
