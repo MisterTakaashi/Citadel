@@ -1,7 +1,7 @@
 import { commonControllers } from 'citadel-lib';
 import { ServerModel } from '../models/server';
 import { Context } from 'koa';
-import { queryDrone } from '../lib/drone-query';
+import { ulid } from 'ulid';
 import generateName from '../lib/name-generator';
 
 class ServerController extends commonControllers.ApplicationController {
@@ -14,19 +14,52 @@ class ServerController extends commonControllers.ApplicationController {
 
   // POST /servers
   async create(ctx: Context) {
-    const { url } = ctx.request.body;
+    const { session } = ctx;
 
-    const { response, error } = await queryDrone({ url, publicIp: '', name: '', selfHosted: true }, 'ping', 'ip');
+    const newServer = new ServerModel({
+      name: 'unregistered',
+      token: ulid(),
+      selfHosted: true,
+      publicIp: '0.0.0.0',
+      owner: session.account,
+    });
 
-    if (error) {
-      this.renderError(ctx, 400, 'Cannot contact the drone to get its public IP');
+    this.renderSuccess(ctx, {
+      token: (await newServer.save()).token,
+    });
+  }
+
+  // POST /servers/register
+  async register(ctx: Context) {
+    const { token } = ctx.request.body;
+
+    const server = await ServerModel.findOne({ token });
+
+    if (!server) {
+      this.renderError(ctx, 401, 'Cannot register server with this token');
       return;
     }
 
-    const newServer = new ServerModel({ url, publicIp: response, name: generateName(), selfHosted: true });
+    if (server.registered) {
+      this.renderError(ctx, 400, 'Server already registered');
+      return;
+    }
+
+    const existingServers = (await ServerModel.find({ owner: server.owner }))
+      .filter((currentServer) => currentServer.name !== 'unregistered')
+      .reverse();
+
+    let lastNameUsed = null;
+    if (existingServers.length > 0) {
+      lastNameUsed = existingServers[0].name;
+    }
+
+    server.publicIp = ctx.request.ip;
+    server.name = generateName(lastNameUsed);
+    server.registered = true;
 
     this.renderSuccess(ctx, {
-      server: await newServer.save(),
+      server: await server.save(),
     });
   }
 }

@@ -1,18 +1,25 @@
-import { getModelForClass, prop } from '@typegoose/typegoose';
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import Account from './account';
 
 class Server extends TimeStamps {
   @prop({ required: true })
   public name: string;
 
   @prop({ required: true, unique: true })
-  public url: string;
+  public token: string;
+
+  @prop({ required: true, default: false })
+  public registered = false;
 
   @prop({ required: true })
   public publicIp: string;
 
-  @prop({ require: true, default: true })
+  @prop({ required: true, default: true })
   public selfHosted: boolean;
+
+  @prop({ ref: 'Account', required: true })
+  public owner: Ref<Account>;
 }
 
 const ServerModel = getModelForClass(Server);

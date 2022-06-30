@@ -6,13 +6,14 @@ import makeLogger from '../lib/logger';
 const logger = makeLogger(module);
 
 const queryDrone = async (
-  { url, publicIp, name }: Server,
+  { publicIp, name }: Server,
   apiInterface: string,
   resultKey?: string,
   method: Method = 'get',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: any
 ) => {
+  const url = 'fakeUrl';
   try {
     const result = await axios({ url: `${url}/${apiInterface}`, method, data: body });
 

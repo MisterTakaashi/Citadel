@@ -5,6 +5,7 @@ import InstanceController from './controllers/instance';
 import ImageController from './controllers/image';
 import AccountController from './controllers/account';
 import SessionController from './controllers/session';
+import validateAuthentication from './lib/auth-middleware';
 
 const router = new Router();
 
@@ -42,8 +43,12 @@ router.get('/servers', async (ctx) => {
   await new ServerController().index(ctx);
 });
 
-router.post('/servers', async (ctx) => {
+router.post('/servers', validateAuthentication, async (ctx) => {
   await new ServerController().create(ctx);
+});
+
+router.post('/servers/register', async (ctx) => {
+  await new ServerController().register(ctx);
 });
 
 // Images
