@@ -44,7 +44,7 @@ class InstanceController extends commonControllers.ApplicationController {
         config: { ...config, volumes },
       },
     });
-    job.save();
+    await job.save();
 
     this.renderSuccess(ctx, {
       job,
@@ -54,22 +54,17 @@ class InstanceController extends commonControllers.ApplicationController {
   // DELETE /instances/:name
   async remove(ctx: Context) {
     const { name } = ctx.params;
-    const instances = await queryDrones(await ServerModel.find(), 'instances');
 
-    const instance = instances.find((currentInstance) => currentInstance.name === name);
-    if (!instance) {
-      this.renderError(ctx, 401, `Cannot find instance named "${name}"`);
-      return;
-    }
+    const job = new JobModel({
+      jobType: JobType.DELETE_INSTANCE,
+      status: JobStatus.CREATED,
+      parameters: {
+        name,
+      },
+    });
+    await job.save();
 
-    const server = await ServerModel.findOne({ name: instance.server.name });
-
-    const result = await queryDrone(server, `instances/${name}`, 'instances', 'delete');
-    if (result.code >= 400) {
-      return this.renderError(ctx, result.code, result.error);
-    }
-
-    this.renderSuccess(ctx, {});
+    this.renderSuccess(ctx, job);
   }
 
   // GET /instances/:name
@@ -94,36 +89,28 @@ class InstanceController extends commonControllers.ApplicationController {
   async start(ctx: Context) {
     const { name } = ctx.params as { name: string };
 
-    const instances = await queryDrones(await ServerModel.find(), 'instances');
+    const job = new JobModel({
+      jobType: JobType.START_INSTANCE,
+      status: JobStatus.CREATED,
+      parameters: { name },
+    });
+    await job.save();
 
-    const instance = instances.find((currentInstance) => currentInstance.name === name);
-
-    const result = await queryDrone(instance.server, `instances/${name}/start`, 'instance', 'post');
-
-    if (result.error) {
-      this.renderError(ctx, result.code, result.error);
-      return;
-    }
-
-    this.renderSuccess(ctx, result);
+    this.renderSuccess(ctx, job);
   }
 
   // POST /instances/:name/stop
   async stop(ctx: Context) {
     const { name } = ctx.params as { name: string };
 
-    const instances = await queryDrones(await ServerModel.find(), 'instances');
+    const job = new JobModel({
+      jobType: JobType.STOP_INSTANCE,
+      status: JobStatus.CREATED,
+      parameters: { name },
+    });
+    await job.save();
 
-    const instance = instances.find((currentInstance) => currentInstance.name === name);
-
-    const result = await queryDrone(instance.server, `instances/${name}/stop`, 'instance', 'post');
-
-    if (result.error) {
-      this.renderError(ctx, result.code, result.error);
-      return;
-    }
-
-    this.renderSuccess(ctx, result);
+    this.renderSuccess(ctx, job);
   }
 
   // GET /instances/:name/logs
