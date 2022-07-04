@@ -1,8 +1,9 @@
-import { commonControllers, InstanceVolume } from 'citadel-lib';
+import { commonControllers, InstanceVolume, JobStatus, JobType } from 'citadel-lib';
 import { ServerModel } from '../models/server';
 import { Context } from 'koa';
 import { queryDrone, queryDrones } from '../lib/drone-query';
 import { getImageConfig } from '../lib/config-query';
+import { JobModel } from '../models/job';
 
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
@@ -34,19 +35,19 @@ class InstanceController extends commonControllers.ApplicationController {
         return volume;
       }) || [];
 
-    const instance = await queryDrone(server, 'instances', 'instance', 'post', {
-      image: imageConfig.docker.image,
-      name,
-      config: { ...config, volumes },
+    const job = new JobModel({
+      jobType: JobType.CREATE_INSTANCE,
+      status: JobStatus.CREATED,
+      parameters: {
+        image: imageConfig.docker.image,
+        name,
+        config: { ...config, volumes },
+      },
     });
-
-    if (!instance) {
-      this.renderError(ctx, 401, `Cannot create instance on drone "${drone}"`);
-      return;
-    }
+    job.save();
 
     this.renderSuccess(ctx, {
-      instance,
+      job,
     });
   }
 
