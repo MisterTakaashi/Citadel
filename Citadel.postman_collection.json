@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4487f026-9b5a-42ca-90b7-16a76a706c93",
+		"_postman_id": "095c222e-ebb5-4c3f-870e-6be01a7c2bfc",
 		"name": "Citadel",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -81,6 +81,25 @@
 							"path": [
 								"instances",
 								"citadel_redis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/jobs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"jobs"
 							]
 						}
 					},
@@ -198,6 +217,16 @@
 				{
 					"name": "Create server",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvYXBtY3RyYXZpY2hAZ21haWwuY29tIiwiaWF0IjoxNjU2OTQwOTEyfQ.iXesg61OOfYUECqYOE2v1nGguea7C9AAEtfAUt1XO4Y",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -218,6 +247,35 @@
 							"port": "3000",
 							"path": [
 								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register server",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"token\": \"01G74P0F5SNSZSE295JTEYK9HZ\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/servers/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"servers",
+								"register"
 							]
 						}
 					},

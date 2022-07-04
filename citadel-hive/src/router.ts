@@ -5,6 +5,7 @@ import InstanceController from './controllers/instance';
 import ImageController from './controllers/image';
 import AccountController from './controllers/account';
 import SessionController from './controllers/session';
+import JobController from './controllers/job';
 import validateAuthentication from './lib/auth-middleware';
 
 const router = new Router();
@@ -72,6 +73,11 @@ router.get('/sessions/:token', async (ctx) => {
 
 router.post('/sessions', async (ctx) => {
   await new SessionController().create(ctx);
+});
+
+// Jobs
+router.get('/jobs', async (ctx) => {
+  await new JobController().index(ctx);
 });
 
 export default router;
