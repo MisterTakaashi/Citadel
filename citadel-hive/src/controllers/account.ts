@@ -2,10 +2,15 @@ import { commonControllers } from 'citadel-lib';
 import { Context } from 'koa';
 import Account, { AccountModel } from '../models/account';
 
+interface AccountCreateRequest {
+  email: string;
+  password: string;
+}
+
 class AccountController extends commonControllers.ApplicationController {
   // POST /accounts
   async create(ctx: Context) {
-    const { email, password } = ctx.request.body;
+    const { email, password } = ctx.request.body as AccountCreateRequest;
 
     if (!email) {
       this.renderError(ctx, 400, 'You must specify an email');

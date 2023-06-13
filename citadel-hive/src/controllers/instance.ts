@@ -5,6 +5,13 @@ import { queryDrone, queryDrones } from '../lib/drone-query';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';
 
+interface InstanceCreateRequest {
+  drone: string;
+  image: string;
+  name: string;
+  config: any;
+}
+
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
@@ -17,7 +24,7 @@ class InstanceController extends commonControllers.ApplicationController {
 
   // POST /instances
   async create(ctx: Context) {
-    const { drone, image, name, config } = ctx.request.body;
+    const { drone, image, name, config } = ctx.request.body as InstanceCreateRequest;
     const server = await ServerModel.findOne({ name: drone });
     if (!server) {
       this.renderError(ctx, 404, `Cannot find drone "${drone}"`);

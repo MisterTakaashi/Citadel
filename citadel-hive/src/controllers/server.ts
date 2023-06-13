@@ -4,6 +4,10 @@ import { Context } from 'koa';
 import { ulid } from 'ulid';
 import generateName from '../lib/name-generator';
 
+interface RegisterRequestBody {
+  token: string;
+}
+
 class ServerController extends commonControllers.ApplicationController {
   // GET /servers
   async index(ctx: Context) {
@@ -31,7 +35,7 @@ class ServerController extends commonControllers.ApplicationController {
 
   // POST /servers/register
   async register(ctx: Context) {
-    const { token } = ctx.request.body;
+    const { token } = ctx.request.body as RegisterRequestBody;
 
     const server = await ServerModel.findOne({ token });
 

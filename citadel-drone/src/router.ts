@@ -1,4 +1,4 @@
-import * as Router from 'koa-router';
+import Router from 'koa-router';
 import { Context } from 'koa';
 
 import PingController from './controllers/ping';

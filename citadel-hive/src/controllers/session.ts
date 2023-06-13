@@ -4,6 +4,11 @@ import { sign } from 'jsonwebtoken';
 import Account, { AccountModel } from '../models/account';
 import { SessionModel } from '../models/session';
 
+interface SessionCreateRequest {
+  email: string;
+  password: string;
+}
+
 class SessionController extends commonControllers.ApplicationController {
   // GET /sessions/:token
   async details(ctx: Context) {
@@ -22,7 +27,7 @@ class SessionController extends commonControllers.ApplicationController {
 
   // POST /sessions
   async create(ctx: Context) {
-    const { email, password } = ctx.request.body;
+    const { email, password } = ctx.request.body as SessionCreateRequest;
 
     const account = await AccountModel.findOne({
       email,

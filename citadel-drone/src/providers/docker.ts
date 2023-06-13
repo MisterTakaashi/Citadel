@@ -4,7 +4,7 @@ import { writeFile, mkdir, lstat } from 'fs/promises';
 import * as path from 'path';
 import { InstanceInfo, InstanceState, InstanceVolume } from 'citadel-lib';
 import * as Docker from 'dockerode';
-import * as Bluebird from 'bluebird';
+import Bluebird from 'bluebird';
 import { isNumber, omit } from 'lodash';
 import BaseProvider from './base';
 import makeLogger from '../lib/logger';

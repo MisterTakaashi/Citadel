@@ -1,6 +1,6 @@
-import * as koa from 'koa';
-import * as koaJson from 'koa-json';
-import * as koaBodyParser from 'koa-bodyparser';
+import koa from 'koa';
+import koaJson from 'koa-json';
+import koaBodyParser from 'koa-bodyparser';
 import { ulid } from 'ulid';
 import makeLogger from './lib/logger';
 

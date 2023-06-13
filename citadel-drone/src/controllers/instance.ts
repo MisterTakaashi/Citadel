@@ -1,4 +1,4 @@
-import * as Docker from 'dockerode';
+import Docker from 'dockerode';
 import { Context } from 'koa';
 import { commonControllers, InstanceVolume } from 'citadel-lib';
 import DockerProvider from '../providers/docker';
