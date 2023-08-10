@@ -6,7 +6,7 @@ import ImageController from './controllers/image';
 import AccountController from './controllers/account';
 import SessionController from './controllers/session';
 import JobController from './controllers/job';
-import validateAuthentication from './lib/auth-middleware';
+import { validateAuthentication, validateServerAuthentication } from './lib/auth-middleware';
 
 const router = new Router();
 
@@ -48,7 +48,7 @@ router.post('/servers', validateAuthentication, async (ctx) => {
   await new ServerController().create(ctx);
 });
 
-router.post('/servers/register', async (ctx) => {
+router.post('/servers/register', validateServerAuthentication, async (ctx) => {
   await new ServerController().register(ctx);
 });
 

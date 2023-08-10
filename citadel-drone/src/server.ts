@@ -2,11 +2,17 @@ import koa from 'koa';
 import koaJson from 'koa-json';
 import koaBodyParser from 'koa-bodyparser';
 import { ulid } from 'ulid';
+import dotenv from 'dotenv';
 import makeLogger from './lib/logger';
+import connectToHive from './lib/hive';
 
 import router from './router';
 
 (async () => {
+  dotenv.config();
+
+  connectToHive();
+
   const logger = makeLogger(module);
 
   const port = process.env.PORT || 3001;

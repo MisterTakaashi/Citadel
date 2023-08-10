@@ -1,5 +1,7 @@
 import { Context, Next } from 'koa';
 import { SessionModel } from '../models/session';
+import { IncomingHttpHeaders } from 'http';
+import { ServerModel } from '../models/server';
 
 const makeBadAuthentification = (ctx: Context) => {
   ctx.status = 401;
@@ -8,6 +10,28 @@ const makeBadAuthentification = (ctx: Context) => {
     error: true,
     message: 'Bad authorization',
   };
+};
+
+interface AuthenticatedRequestHeadersAddons {
+  'x-api-key': string;
+}
+
+type AuthenticatedRequestHeaders = IncomingHttpHeaders & AuthenticatedRequestHeadersAddons;
+
+const validateServerAuthentication = async (ctx: Context, next: Next) => {
+  const { 'x-api-key': token } = ctx.request.headers as AuthenticatedRequestHeaders;
+
+  const server = await ServerModel.findOne({ token });
+
+  if (!server) {
+    makeBadAuthentification(ctx);
+
+    return;
+  }
+
+  ctx.server = server;
+
+  await next();
 };
 
 const validateAuthentication = async (ctx: Context, next: Next) => {
@@ -33,4 +57,4 @@ const validateAuthentication = async (ctx: Context, next: Next) => {
   await next();
 };
 
-export default validateAuthentication;
+export { validateAuthentication, validateServerAuthentication };

@@ -13,9 +13,11 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "dependencies": {
+    "axios": "^1.4.0",
     "bluebird": "^3.7.2",
     "citadel-lib": "*",
     "dockerode": "^3.3.1",
+    "dotenv": "^16.3.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
