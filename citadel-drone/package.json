@@ -8,6 +8,9 @@
     "start": "yarn build && node dist/server.js",
     "dev": "nodemon"
   },
+  "bin": {
+    "citadel-drone": "./dist/server.js"
+  },
   "repository": "https://github.com/MisterTakaashi/Citadel",
   "author": "MisterTakaashi",
   "license": "GPL-3.0-or-later",
@@ -25,7 +28,8 @@
     "lodash": "^4.17.21",
     "public-ip": "6.0.1",
     "ulid": "^2.3.0",
-    "winston": "^3.8.0"
+    "winston": "^3.8.0",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.1",
@@ -35,6 +39,7 @@
     "@types/koa-json": "^2.0.20",
     "@types/koa-router": "^7.4.4",
     "@types/node": "^20.3.1",
+    "@types/yargs": "^17.0.24",
     "eslint": "^8.7.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.3.0",

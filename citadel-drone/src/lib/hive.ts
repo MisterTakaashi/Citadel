@@ -1,12 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
-const connectToHive = async () => {
-  const { HIVE_URL, HIVE_API_KEY } = process.env;
-
+const connectToHive = async (host: string, token: string) => {
   try {
-    await axios.post(`${HIVE_URL}/servers/register`, {}, { headers: { 'X-Api-Key': HIVE_API_KEY } });
+    await axios.post(`${host}/servers/register`, {}, { headers: { 'X-Api-Key': token } });
   } catch (e) {
-    throw new Error('Cannot connect to the hive');
+    throw new Error(`Cannot connect to the hive (${e.response.data.message})`);
   }
 };
 

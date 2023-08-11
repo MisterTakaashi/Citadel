@@ -1,34 +1,40 @@
-import koa from 'koa';
-import koaJson from 'koa-json';
-import koaBodyParser from 'koa-bodyparser';
-import { ulid } from 'ulid';
 import dotenv from 'dotenv';
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 import makeLogger from './lib/logger';
 import connectToHive from './lib/hive';
 
-import router from './router';
+dotenv.config();
+
+const logger = makeLogger(module);
 
 (async () => {
-  dotenv.config();
+  const { CITADEL_HIVE_HOST: envHost, CITADEL_HIVE_TOKEN: envToken } = process.env;
 
-  connectToHive();
+  const yargsBuilder = yargs(hideBin(process.argv))
+    .option('host', {
+      alias: 'h',
+      type: 'string',
+      description: 'The host url of the hive. Can also be provided with env variable "CITADEL_HIVE_HOST"',
+    })
+    .option('token', {
+      alias: 't',
+      type: 'string',
+      description:
+        'The authentication token to connect to the hive. Can also be provided with env variable "CITADEL_HIVE_TOKEN"',
+    });
 
-  const logger = makeLogger(module);
+  if (!envHost) yargsBuilder.demandOption('host');
+  if (!envToken) yargsBuilder.demandOption('token');
 
-  const port = process.env.PORT || 3001;
+  const { host: argvHost, token: argvToken } = await yargsBuilder.parse();
 
-  const app = new koa();
-  app.use(koaJson());
-  app.use(koaBodyParser());
-  app.use(async (ctx, next) => {
-    const requestId = ulid();
-    logger.info(`${ctx.method}[${requestId}] ${ctx.path}`);
-    await next();
-    logger.info(`${ctx.method}[${requestId}] ${ctx.path} ${ctx.res.statusCode}`);
-  });
-  app.use(router.routes());
+  const host = argvHost ?? envHost;
+  const token = argvToken ?? envToken;
 
-  app.listen(port, () => {
-    logger.info(`Server listening on port ${port}`);
-  });
+  logger.info(`🐝 Launching the Drone...`);
+
+  await connectToHive(host, token);
+
+  logger.info(`🐝 Connected to Hive: ${host}.`);
 })();
