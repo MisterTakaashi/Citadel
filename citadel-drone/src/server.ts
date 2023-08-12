@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
+import PromiseBB from 'bluebird';
 import makeLogger from './lib/logger';
-import connectToHive from './lib/hive';
+import { connectToHive, pollNextJob } from './lib/hive';
 
 dotenv.config();
 
@@ -37,4 +38,9 @@ const logger = makeLogger(module);
   await connectToHive(host, token);
 
   logger.info(`🐝 Connected to Hive: ${host}.`);
+
+  while (true) {
+    await PromiseBB.delay(1000);
+    await pollNextJob(host, token);
+  }
 })();
