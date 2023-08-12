@@ -41,7 +41,7 @@ class ServerController extends commonControllers.ApplicationController {
     }
 
     if (server.registered) {
-      this.renderError(ctx, 400, 'Server already registered');
+      this.renderSuccess(ctx, { server });
       return;
     }
 
