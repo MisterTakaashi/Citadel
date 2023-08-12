@@ -42,6 +42,7 @@ class InstanceController extends commonControllers.ApplicationController {
     const job = new JobModel({
       jobType: JobType.CREATE_INSTANCE,
       status: JobStatus.CREATED,
+      drone: server,
       parameters: {
         image: imageConfig.docker.image,
         name,

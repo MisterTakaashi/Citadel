@@ -76,7 +76,7 @@ router.post('/sessions', async (ctx) => {
 });
 
 // Jobs
-router.get('/jobs', async (ctx) => {
+router.get('/jobs', validateServerAuthentication, async (ctx) => {
   await new JobController().index(ctx);
 });
 

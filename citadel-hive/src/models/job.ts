@@ -10,7 +10,7 @@ class Job extends TimeStamps implements IJob {
   @prop({ required: true, type: String })
   public status = JobStatus.CREATED;
 
-  @prop()
+  @prop({ required: true, ref: Server })
   public drone: Ref<Server>;
 
   @prop()
