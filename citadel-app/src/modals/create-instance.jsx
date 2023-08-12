@@ -63,7 +63,8 @@ function CreateInstance({ isOpen, onClose }) {
         config: {
           portsMapping,
           volumes: volumesBinding,
-          environmentVariables: envVars,
+          environmentVariables: envVars ?? [],
+          resources: { cpu: resourceCpu, ram: resourceRam },
         },
       };
     },
@@ -362,7 +363,7 @@ function CreateInstance({ isOpen, onClose }) {
                         <div
                           className={`flex items-center gap-4 ${index > 0 ? 'mt-3' : ''}`}
                           // eslint-disable-next-line
-                    key={`${gameSelected.name}-${index}`}
+                          key={`${gameSelected.name}-${index}`}
                         >
                           <div className='basis-1/2'>
                             <input
