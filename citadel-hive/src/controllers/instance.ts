@@ -1,7 +1,6 @@
 import { commonControllers, InstanceVolume, JobStatus, JobType } from 'citadel-lib';
 import { ServerModel } from '../models/server';
 import { Context } from 'koa';
-import { queryDrone, queryDrones } from '../lib/drone-query';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';
 
@@ -15,10 +14,8 @@ interface InstanceCreateRequest {
 class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
-    const instances = await queryDrones(await ServerModel.find(), 'instances');
-
     this.renderSuccess(ctx, {
-      instances,
+      instances: [],
     });
   }
 
@@ -66,7 +63,7 @@ class InstanceController extends commonControllers.ApplicationController {
       jobType: JobType.DELETE_INSTANCE,
       status: JobStatus.CREATED,
       parameters: {
-        name,
+        instance: name,
       },
     });
     await job.save();
@@ -78,9 +75,7 @@ class InstanceController extends commonControllers.ApplicationController {
   async details(ctx: Context) {
     const { name } = ctx.params;
 
-    const instances = await queryDrones(await ServerModel.find(), 'instances');
-
-    const instance = instances.find((currentInstance) => currentInstance.name === name);
+    const instance = null;
 
     if (!instance) {
       this.renderError(ctx, 404, `Cannot find instance "${name}"`);
@@ -99,7 +94,7 @@ class InstanceController extends commonControllers.ApplicationController {
     const job = new JobModel({
       jobType: JobType.START_INSTANCE,
       status: JobStatus.CREATED,
-      parameters: { name },
+      parameters: { instance: name },
     });
     await job.save();
 
@@ -113,7 +108,7 @@ class InstanceController extends commonControllers.ApplicationController {
     const job = new JobModel({
       jobType: JobType.STOP_INSTANCE,
       status: JobStatus.CREATED,
-      parameters: { name },
+      parameters: { instance: name },
     });
     await job.save();
 
@@ -124,13 +119,9 @@ class InstanceController extends commonControllers.ApplicationController {
   async logs(ctx: Context) {
     const { name } = ctx.params as { name: string };
 
-    const instances = await queryDrones(await ServerModel.find(), 'instances');
+    const instance = null;
 
-    const instance = instances.find((currentInstance) => currentInstance.name === name);
-
-    const result = await queryDrone(instance.server, `instances/${name}/logs`, 'logs', 'get');
-
-    this.renderSuccess(ctx, result);
+    this.renderSuccess(ctx, []);
   }
 }
 

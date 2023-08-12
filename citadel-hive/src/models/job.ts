@@ -1,9 +1,9 @@
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { JobStatus, JobType } from 'citadel-lib';
+import { JobStatus, JobType, IJob } from 'citadel-lib';
 import Server from './server';
 
-class Job extends TimeStamps {
+class Job extends TimeStamps implements IJob {
   @prop({ required: true, type: String })
   public jobType: JobType;
 

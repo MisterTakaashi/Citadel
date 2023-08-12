@@ -1,15 +1,8 @@
-import type InstanceInfo from './InstanceInfo';
-import type { InstanceState } from './InstanceInfo';
-import type InstanceVolume from './InstanceVolume';
-import { JobType, JobStatus } from './Job';
+import type InstanceInfo from "./InstanceInfo";
+import type { InstanceState } from "./InstanceInfo";
+import type InstanceVolume from "./InstanceVolume";
+import { JobType, JobStatus, IJob } from "./Job";
 
-export type { 
-  InstanceInfo, 
-  InstanceState, 
-  InstanceVolume,
-};
+export type { InstanceInfo, InstanceState, InstanceVolume };
 
-export {
-  JobStatus,
-  JobType,
-};
+export { JobStatus, JobType, IJob };
