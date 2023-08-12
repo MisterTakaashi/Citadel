@@ -7,6 +7,7 @@ enum JobType {
 
 enum JobStatus {
   CREATED = "created",
+  DELIVERED = "delivered",
   IN_PROGRESS = "in_progress",
   DONE = "done",
   FAILED = "failed",

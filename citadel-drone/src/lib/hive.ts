@@ -14,14 +14,14 @@ const connectToHive = async (host: string, token: string) => {
 };
 
 const pollNextJob = async (host: string, token: string) => {
-  const { status, data: apiResponse } = await axios.get<{ data: { jobs: IJob[] } }>(`${host}/jobs`, {
+  const { status, data: apiResponse } = await axios.get<{ data: { job: IJob } }>(`${host}/jobs`, {
     headers: { 'X-Api-Key': token },
   });
 
   if (status === 201) return;
-  if (apiResponse.data?.jobs !== undefined && apiResponse.data.jobs.length <= 0) return;
+  if (apiResponse.data?.job === undefined || apiResponse.data.job === null) return;
 
-  const job = apiResponse.data.jobs[0];
+  const { job } = apiResponse.data;
 
   logger.info(`New job polled (${job.jobType}) (${job.status})`);
 
