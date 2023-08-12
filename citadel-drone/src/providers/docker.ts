@@ -176,7 +176,32 @@ class DockerProvider implements BaseProvider {
 
     await (() =>
       new Promise((resolve, reject) => {
-        const onDownloadProgress = () => {};
+        let currentId = '';
+        let currentPercentage = 0;
+
+        const onDownloadProgress = ({
+          status,
+          progressDetail,
+          id,
+        }: {
+          status: string;
+          progressDetail: { current?: number; total?: number };
+          progress?: string;
+          id: string;
+        }) => {
+          let percentage = 0;
+          if (progressDetail?.total && progressDetail?.current) {
+            percentage = Math.floor((progressDetail.current * 100) / progressDetail.total);
+
+            if (currentId != id || Math.floor(percentage / 10) > currentPercentage) {
+              currentPercentage = Math.floor(percentage / 10);
+              currentId = id;
+              logger.info(`${status} image ${id} (${percentage}%)`);
+            }
+          } else {
+            logger.info(`${status} image ${id}`);
+          }
+        };
 
         const onDownloadFinished = (err: Error) => {
           logger.info(`Image ${repoTag} pulled from Docker registry`);
