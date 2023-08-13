@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc --build",
     "start": "yarn build && node dist/server.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "seed": "yarn build && node dist/seed.js"
   },
   "repository": "https://github.com/MisterTakaashi/Citadel",
   "author": "MisterTakaashi",
