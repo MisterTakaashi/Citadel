@@ -4,6 +4,7 @@ import { hideBin } from 'yargs/helpers';
 import PromiseBB from 'bluebird';
 import makeLogger from './lib/logger';
 import { connectToHive, pollNextJob } from './lib/hive';
+import syncToHive from './lib/sync';
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ const logger = makeLogger(module);
 
   while (true) {
     await PromiseBB.delay(1000);
-    await pollNextJob(host, token);
+    await pollNextJob();
+    await syncToHive();
   }
 })();

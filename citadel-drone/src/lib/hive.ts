@@ -5,18 +5,30 @@ import dispatcher from '../dispatcher';
 
 const logger = makeLogger(module);
 
+let HOST: string, TOKEN: string;
+
+const queryHive = async <T>(endpoint: string, method: 'POST' | 'PUT' | 'GET' | 'PATCH' | 'DELETE', data?: unknown) => {
+  return axios<T>({
+    baseURL: HOST,
+    headers: { 'X-Api-Key': TOKEN },
+    url: endpoint,
+    method,
+    data,
+  });
+};
+
 const connectToHive = async (host: string, token: string) => {
   try {
     await axios.post(`${host}/servers/register`, {}, { headers: { 'X-Api-Key': token } });
+    HOST = host;
+    TOKEN = token;
   } catch (e) {
     throw new Error(`Cannot connect to the hive (${e.response.data.message})`);
   }
 };
 
-const pollNextJob = async (host: string, token: string) => {
-  const { status, data: apiResponse } = await axios.get<{ data: { job: IJob } }>(`${host}/jobs`, {
-    headers: { 'X-Api-Key': token },
-  });
+const pollNextJob = async () => {
+  const { status, data: apiResponse } = await queryHive<{ data: { job: IJob } }>('/jobs', 'GET');
 
   if (status === 201) return;
   if (apiResponse.data?.job === undefined || apiResponse.data.job === null) return;
@@ -28,4 +40,4 @@ const pollNextJob = async (host: string, token: string) => {
   dispatcher(job);
 };
 
-export { connectToHive, pollNextJob };
+export { connectToHive, pollNextJob, queryHive };

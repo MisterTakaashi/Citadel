@@ -20,6 +20,9 @@ class Server extends TimeStamps {
 
   @prop({ ref: 'Account', required: true })
   public owner: Ref<Account>;
+
+  @prop()
+  public lastSync?: Date;
 }
 
 const ServerModel = getModelForClass(Server);

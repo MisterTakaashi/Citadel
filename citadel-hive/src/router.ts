@@ -52,6 +52,10 @@ router.post('/servers/register', validateServerAuthentication, async (ctx) => {
   await new ServerController().register(ctx);
 });
 
+router.put('/sync', validateServerAuthentication, async (ctx) => {
+  await new ServerController().sync(ctx as any);
+});
+
 // Images
 router.get('/images', async (ctx) => {
   await new ImageController().index(ctx);

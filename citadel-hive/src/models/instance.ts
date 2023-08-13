@@ -1,12 +1,17 @@
-import { getModelForClass, prop } from '@typegoose/typegoose';
+import { Ref, getModelForClass, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import Server from './server';
+import { InstanceInfo } from 'citadel-lib';
 
 class Instance extends TimeStamps {
-  @prop()
-  public ip: string;
+  @prop({ required: true })
+  public name: string;
 
-  @prop()
-  public port: string;
+  @prop({ required: true, ref: Server })
+  public drone: Ref<Server>;
+
+  @prop({ required: true })
+  public infos: InstanceInfo;
 }
 
 const InstanceModel = getModelForClass(Instance);

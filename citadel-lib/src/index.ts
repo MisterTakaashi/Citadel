@@ -7,6 +7,7 @@ import {
   JobStatus,
   JobType,
   IJob,
+  SyncMessage,
 } from "./models";
 
 export { commonControllers };
@@ -17,5 +18,6 @@ export {
   JobStatus,
   JobType,
   IJob,
+  SyncMessage,
 };
 export { games, Providers };
