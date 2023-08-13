@@ -8,10 +8,10 @@ function InstanceConsole() {
   const { name } = useParams();
 
   const {
-    response: logs,
+    logs,
     loading: loadingLogs,
     refetch: refetchLogs,
-  } = useApiQuery(`/instances/${name}/logs`, 'response');
+  } = useApiQuery(`/instances/${name}/logs`, 'logs');
 
   return (
     <div className='container mx-auto flex items-start gap-10 px-5 sm:px-0'>

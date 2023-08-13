@@ -77,7 +77,7 @@ class InstanceController extends commonControllers.ApplicationController {
   async details(ctx: Context) {
     const { name } = ctx.params;
 
-    const instance = null;
+    const instance = await InstanceModel.findOne({ name }).populate('drone');
 
     if (!instance) {
       this.renderError(ctx, 404, `Cannot find instance "${name}"`);
@@ -119,11 +119,7 @@ class InstanceController extends commonControllers.ApplicationController {
 
   // GET /instances/:name/logs
   async logs(ctx: Context) {
-    const { name } = ctx.params as { name: string };
-
-    const instance = null;
-
-    this.renderSuccess(ctx, []);
+    this.renderSuccess(ctx, { logs: [] });
   }
 }
 

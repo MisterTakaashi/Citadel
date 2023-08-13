@@ -107,7 +107,7 @@ function Dashboard() {
                     </div>
 
                     <p className='dark:text-gray-400 px-3 pb-3'>
-                      <FontAwesomeIcon icon={faTag} /> {instance.image}
+                      <FontAwesomeIcon icon={faTag} /> {instance.infos.image}
                     </p>
 
                     <div className='mx-3'>

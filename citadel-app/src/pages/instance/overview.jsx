@@ -19,10 +19,10 @@ function InstanceOverview() {
     refetch: refetchInstance,
   } = useApiQuery(`/instances/${name}`, 'instance');
   const {
-    response: logs,
+    logs,
     loading: loadingLogs,
     refetch: refetchLogs,
-  } = useApiQuery(`/instances/${name}/logs`, 'response');
+  } = useApiQuery(`/instances/${name}/logs`, 'logs');
   const [startServer, { loading: loadingStart }] = useApiAction(
     `/instances/${name}/start`,
     'instance',
@@ -49,25 +49,29 @@ function InstanceOverview() {
             <p className='basis-1/3 text-gray-400'>Status</p>
             <div className='basis-2/3'>
               {!loading && (
-                <ServerStatus bullet={false} className='align-center' state={instance.state} />
+                <ServerStatus
+                  bullet={false}
+                  className='align-center'
+                  state={instance.infos.state}
+                />
               )}
             </div>
           </div>
           <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>Image</p>
-            <p className='basis-2/3'>{!loading && instance.image}</p>
+            <p className='basis-2/3'>{!loading && instance.infos.image}</p>
           </div>
           <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>Drone URL</p>
             <p className='basis-2/3'>
-              {!loading && instance.server.url} {/* eslint-disable-next-line no-undef */}
+              {!loading && instance.drone.url} {/* eslint-disable-next-line no-undef */}
               {window.navigator?.clipboard && (
                 <FontAwesomeIcon
                   icon={faCopy}
                   className='text-gray-500 cursor-pointer'
                   onClick={() => {
                     // eslint-disable-next-line no-undef
-                    navigator.clipboard.writeText(instance.server.url);
+                    navigator.clipboard.writeText(instance.drone.url);
                   }}
                 />
               )}
@@ -76,14 +80,14 @@ function InstanceOverview() {
           <div className='flex flex-col sm:flex-row mb-4'>
             <p className='basis-1/3 text-gray-400'>IP</p>
             <p className='basis-2/3'>
-              {!loading && instance.server.publicIp} {/* eslint-disable-next-line no-undef */}
+              {!loading && instance.drone.publicIp} {/* eslint-disable-next-line no-undef */}
               {window.navigator?.clipboard && (
                 <FontAwesomeIcon
                   icon={faCopy}
                   className='text-gray-500 cursor-pointer'
                   onClick={() => {
                     // eslint-disable-next-line no-undef
-                    navigator.clipboard.writeText(instance.server.publicIp);
+                    navigator.clipboard.writeText(instance.drone.publicIp);
                   }}
                 />
               )}
@@ -92,14 +96,14 @@ function InstanceOverview() {
           <div className='flex flex-col sm:flex-row flex-col mb-4'>
             <p className='basis-1/3 text-gray-400'>Ports Mapping</p>
             {!loading &&
-              Object.entries(instance.portsMapping).map((ports) => (
+              Object.entries(instance.infos.portsMapping).map((ports) => (
                 <div className='basis-2/3 flex items-center gap-4' key={`${ports}`}>
                   <p>{ports[0]}</p>
                   <FontAwesomeIcon icon={faCaretRight} className='text-gray-400' />
                   <p>{ports[1]}</p>
                 </div>
               ))}
-            {!loading && instance.state !== 'running' && (
+            {!loading && instance.infos.state !== 'running' && (
               <p className='text-orange-400 text-sm'>
                 The instance must be running to retrieve ports mapping
               </p>
@@ -108,7 +112,7 @@ function InstanceOverview() {
           <div className='flex flex-col flex-col mb-4'>
             <p className='text-gray-400'>Volumes</p>
             {!loading &&
-              instance.volumes.map((volume) => (
+              instance.infos.volumes.map((volume) => (
                 <div className='flex flex-col gap-1 break-all' key={`${volume.from}-${volume.to}`}>
                   <p>{volume.from}</p>
                   <div className='flex items-center justify-center gap-4 text-gray-400'>
@@ -124,7 +128,7 @@ function InstanceOverview() {
             <p className='text-gray-400'>Environment variables</p>
             <div className='flex flex-col gap-1'>
               {!loading &&
-                instance.environmentVariables.map((envVar) => (
+                instance.infos.environmentVariables.map((envVar) => (
                   <div className='break-all' key={`${envVar}`}>
                     <p>{envVar}</p>
                   </div>
@@ -132,20 +136,21 @@ function InstanceOverview() {
             </div>
           </div>
           <div className='flex mt-3'>
-            {!loading && (instance.state === 'exited' || instance.state === 'created') && (
-              <Button
-                disabled={loading || loadingStop || loadingStart}
-                color='green'
-                className='mr-2'
-                onClick={() => {
-                  startServer();
-                }}
-                loading={loadingStart}
-              >
-                Start instance
-              </Button>
-            )}
-            {!loading && instance.state === 'running' && (
+            {!loading &&
+              (instance.infos.state === 'exited' || instance.infos.state === 'created') && (
+                <Button
+                  disabled={loading || loadingStop || loadingStart}
+                  color='green'
+                  className='mr-2'
+                  onClick={() => {
+                    startServer();
+                  }}
+                  loading={loadingStart}
+                >
+                  Start instance
+                </Button>
+              )}
+            {!loading && instance.infos.state === 'running' && (
               <Button
                 disabled={loading || loadingStop || loadingStart}
                 color='red'

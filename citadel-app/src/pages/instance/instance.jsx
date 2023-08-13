@@ -24,9 +24,9 @@ function Instance() {
           {!loading && (
             <div className='flex flex-col sm:flex-row sm:gap-8 items-baseline'>
               <p className='dark:text-gray-400'>
-                <FontAwesomeIcon icon={faTag} /> {instance.image}
+                <FontAwesomeIcon icon={faTag} /> {instance.infos.image}
               </p>
-              <ServerStatus state={instance.state} />
+              <ServerStatus state={instance.infos.state} />
             </div>
           )}
 
