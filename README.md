@@ -26,7 +26,9 @@ The dashboard allows to create game instances with a simple UI
 ## Getting started
 1. Pull the repository
 2. Run `yarn install` to install dependencies
-3. In 3 consoles, run:
+3. Run `docker compose up -d` to run the mongo database or run a mongo on your own
+4. Run `yarn hive seed` to seed the running database
+5. In 3 consoles, run:
     - `yarn hive dev`
     - `yarn drone dev` 
     - `yarn app start`
