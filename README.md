@@ -24,14 +24,30 @@ The dashboard allows to create game instances with a simple UI
 ![image](https://user-images.githubusercontent.com/2706559/161236403-2b2ecd27-f67f-40ab-84e2-09c3036c2081.png)
 
 ## Getting started
+
+**The software uses the LTS version of Node.JS (Currently Node 18)**
+
 1. Pull the repository
 2. Run `yarn install` to install dependencies
 3. Run `docker compose up -d` to run the mongo database or run a mongo on your own
-4. Run `yarn hive seed` to seed the running database
-5. In 3 consoles, run:
+4. Create a *.env* file under `citadel-hive/.env` with this content:  
+```bash
+JWT_SECRET=secretsecret
+PASSWORD_SALT=citadelsalt
+```
+5. Create a *.env* file under `citadel-drone/.env` with this content:  
+```bash
+CITADEL_HIVE_TOKEN=01H7G0A9JK6P5430N8PBTEJ9PH
+CITADEL_HIVE_HOST=http://localhost:3000
+```
+6. Run `yarn hive seed` to seed the running database
+7. In 3 differents consoles, run:
     - `yarn hive dev`
     - `yarn drone dev` 
     - `yarn app start`
+8. You can open the Citadel UI in your browser with [http://localhost:3002]() and connect with these credentials:
+    - username: `dev@citadel.io`
+    - password: `password`
  
 ## Contributing
 There is still no contribution guide or issue template.
