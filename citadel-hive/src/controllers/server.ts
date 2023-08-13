@@ -13,7 +13,7 @@ class ServerController extends commonControllers.ApplicationController {
   // GET /servers
   async index(ctx: Context) {
     this.renderSuccess(ctx, {
-      servers: await ServerModel.find(),
+      servers: await ServerModel.find({}),
     });
   }
 
@@ -88,13 +88,16 @@ class ServerController extends commonControllers.ApplicationController {
     server.lastSync = new Date();
     await server.save();
 
-    await PromiseBB.each(instances, async (instance: InstanceInfo) => {
+    await PromiseBB.each(instances, async (instance) => {
       const existingInstance = await InstanceModel.findOne({ name: instance.name, drone: server });
 
       if (!existingInstance) {
         logger.info(`Server (${server.name}) registered a new instance (${instance.name})`);
         await InstanceModel.create({ drone: server, name: instance.name, infos: instance });
       }
+
+      existingInstance.infos = instance;
+      await existingInstance.save();
     });
 
     this.renderSuccess(ctx, {});

@@ -3,6 +3,7 @@ import { ServerModel } from '../models/server';
 import { Context } from 'koa';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';
+import { InstanceModel } from '../models/instance';
 
 interface InstanceCreateRequest {
   drone: string;
@@ -15,7 +16,7 @@ class InstanceController extends commonControllers.ApplicationController {
   // GET /instances
   async index(ctx: Context) {
     this.renderSuccess(ctx, {
-      instances: [],
+      instances: await InstanceModel.find({}),
     });
   }
 
