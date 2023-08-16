@@ -127,6 +127,8 @@ class DockerProvider implements BaseProvider {
     });
 
     const user = userInfo();
+    user.uid = user.uid === -1 ? 0 : user.uid;
+    user.gid = user.gid === -1 ? 0 : user.gid;
 
     try {
       await this.docker.createContainer({
