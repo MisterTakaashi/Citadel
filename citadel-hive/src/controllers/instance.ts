@@ -107,11 +107,19 @@ class InstanceController extends commonControllers.ApplicationController {
   async stop(ctx: Context) {
     const { name } = ctx.params as { name: string };
 
+    const { session } = ctx;
+
+    const userDrones = await ServerModel.find({ owner: session.account });
+
+    const instance = await InstanceModel.findOne({ name, drone: { $in: userDrones } });
+
     const job = new JobModel({
       jobType: JobType.STOP_INSTANCE,
       status: JobStatus.CREATED,
       parameters: { instance: name },
+      drone: instance.drone,
     });
+
     await job.save();
 
     this.renderSuccess(ctx, job);
