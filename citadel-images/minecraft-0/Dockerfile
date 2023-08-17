@@ -19,14 +19,16 @@ COPY ./eula.txt /etc/minecraft/eula.txt
 # Install dependencies, fetch Minecraft server jar file and chown files
 ARG JAR_URL=https://launcher.mojang.com/v1/objects/${MC_JAR_SHA1}/server.jar
 RUN apk add --update ca-certificates nss tzdata wget \
-    && apk add openjdk17-jre-headless \
-    && wget -O /opt/minecraft/minecraft_server.jar ${JAR_URL} \
-    && apk del --purge wget && rm -rf /var/cache/apk/* \
-    && chown -R minecraft:minecraft /etc/minecraft /opt/minecraft
+  && apk add openjdk17-jre-headless \
+  && wget -O /opt/minecraft/minecraft_server.jar ${JAR_URL} \
+  && apk del --purge wget && rm -rf /var/cache/apk/* \
+  && chown -R minecraft:minecraft /etc/minecraft /opt/minecraft
 
 # Define volumes
-VOLUME /etc/minecraft/server.properties
 VOLUME /etc/minecraft/world
+
+RUN mkdir /etc/minecraft/world
+RUN chown minecraft:minecraft /etc/minecraft/world
 
 # Expose port
 EXPOSE 25565
