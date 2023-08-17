@@ -40,4 +40,12 @@ const pollNextJob = async () => {
   dispatcher(job);
 };
 
-export { connectToHive, pollNextJob, queryHive };
+const tryPollNextJob = async () => {
+  try {
+    await pollNextJob();
+  } catch (e) {
+    logger.error(`Error while polling next job: ${e}`);
+  }
+};
+
+export { connectToHive, pollNextJob, tryPollNextJob, queryHive };
