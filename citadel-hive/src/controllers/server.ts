@@ -100,6 +100,8 @@ class ServerController extends commonControllers.ApplicationController {
       await existingInstance.save();
     });
 
+    await InstanceModel.deleteMany({ drone: server, name: { $nin: instances.map((instance) => instance.name) } });
+
     this.renderSuccess(ctx, {});
   }
 }
