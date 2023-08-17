@@ -3,8 +3,8 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import PromiseBB from 'bluebird';
 import makeLogger from './lib/logger';
-import { connectToHive, pollNextJob } from './lib/hive';
-import syncToHive from './lib/sync';
+import { connectToHive, tryPollNextJob } from './lib/hive';
+import { trySyncToHive } from './lib/sync';
 
 dotenv.config();
 
@@ -42,7 +42,7 @@ const logger = makeLogger(module);
 
   while (true) {
     await PromiseBB.delay(1000);
-    await pollNextJob();
-    await syncToHive();
+    await tryPollNextJob();
+    await trySyncToHive();
   }
 })();
