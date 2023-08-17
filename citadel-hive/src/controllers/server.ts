@@ -94,10 +94,10 @@ class ServerController extends commonControllers.ApplicationController {
       if (!existingInstance) {
         logger.info(`Server (${server.name}) registered a new instance (${instance.name})`);
         await InstanceModel.create({ drone: server, name: instance.name, infos: instance });
+      } else {
+        existingInstance.infos = instance;
+        await existingInstance.save();
       }
-
-      existingInstance.infos = instance;
-      await existingInstance.save();
     });
 
     await InstanceModel.deleteMany({ drone: server, name: { $nin: instances.map((instance) => instance.name) } });
