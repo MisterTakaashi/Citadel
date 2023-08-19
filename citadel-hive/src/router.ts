@@ -31,7 +31,7 @@ router.post('/instances/:name/start', async (ctx) => {
   await new InstanceController().start(ctx);
 });
 
-router.post('/instances/:name/stop', async (ctx) => {
+router.post('/instances/:name/stop', validateAuthentication, async (ctx) => {
   await new InstanceController().stop(ctx);
 });
 

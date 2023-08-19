@@ -4,16 +4,16 @@ import makeLogger from '../lib/logger';
 
 const logger = makeLogger(module);
 
-export default async ({ name }: { name: string }) => {
-  logger.info(`Stopping instance (${name})...`);
+export default async ({ instance }: { instance: string }) => {
+  logger.info(`Stopping instance (${instance})...`);
 
   const provider = new DockerProvider(new Docker());
   try {
-    await provider.stopInstance(name);
+    await provider.stopInstance(instance);
   } catch (err) {
     logger.error(`Cannot stop instance: ${err.reason}`);
     return;
   }
 
-  logger.info(`Instance (${name}) stopped`);
+  logger.info(`Instance (${instance}) stopped`);
 };
