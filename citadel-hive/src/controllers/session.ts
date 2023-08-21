@@ -1,5 +1,5 @@
-import { commonControllers } from 'citadel-lib';
-import { Context } from 'koa';
+import { Request, Response } from 'express';
+import { renderError, renderSuccess } from 'citadel-lib';
 import { sign } from 'jsonwebtoken';
 import Account, { AccountModel } from '../models/account';
 import { SessionModel } from '../models/session';
@@ -9,25 +9,25 @@ interface SessionCreateRequest {
   password: string;
 }
 
-class SessionController extends commonControllers.ApplicationController {
+class SessionController {
   // GET /sessions/:token
-  async details(ctx: Context) {
-    const { token } = ctx.params;
+  async details(req: Request, res: Response) {
+    const { token } = req.params;
 
     const session = await SessionModel.findOne({ token }).populate('account');
     if (!session) {
-      this.renderError(ctx, 404, 'Cannot find token');
+      renderError(res, 404, 'Cannot find token');
       return;
     }
 
     const account = session.account as Account;
 
-    this.renderSuccess(ctx, { account: { email: account.email } });
+    renderSuccess(res, { account: { email: account.email } });
   }
 
   // POST /sessions
-  async create(ctx: Context) {
-    const { email, password } = ctx.request.body as SessionCreateRequest;
+  async create(req: Request, res: Response) {
+    const { email, password } = req.body as SessionCreateRequest;
 
     const account = await AccountModel.findOne({
       email,
@@ -35,7 +35,7 @@ class SessionController extends commonControllers.ApplicationController {
     });
 
     if (!account) {
-      this.renderError(ctx, 403, 'Cannot find an account with this email/password');
+      renderError(res, 403, 'Cannot find an account with this email/password');
       return;
     }
 
@@ -43,7 +43,7 @@ class SessionController extends commonControllers.ApplicationController {
 
     await SessionModel.create({ account, token, lastConnection: new Date() });
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       token,
     });
   }

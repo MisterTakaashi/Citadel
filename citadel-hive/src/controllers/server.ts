@@ -1,25 +1,26 @@
-import { InstanceInfo, SyncMessage, commonControllers } from 'citadel-lib';
+import { InstanceInfo, SyncMessage, renderError, renderSuccess } from 'citadel-lib';
+import { Request, Response } from 'express';
 import Server, { ServerModel } from '../models/server';
-import { Context } from 'koa';
 import { ulid } from 'ulid';
 import generateName from '../lib/name-generator';
 import { InstanceModel } from '../models/instance';
 import { Promise as PromiseBB } from 'bluebird';
 import makeLogger from '../lib/logger';
+import Session from '../models/session';
 
 const logger = makeLogger(module);
 
-class ServerController extends commonControllers.ApplicationController {
+class ServerController {
   // GET /servers
-  async index(ctx: Context) {
-    this.renderSuccess(ctx, {
+  async index(req: Request, res: Response) {
+    renderSuccess(res, {
       servers: await ServerModel.find({}),
     });
   }
 
   // POST /servers
-  async create(ctx: Context) {
-    const { session } = ctx;
+  async create(req: Request & { session: Session }, res: Response) {
+    const { session } = req;
 
     const newServer = new ServerModel({
       name: 'unregistered',
@@ -29,24 +30,24 @@ class ServerController extends commonControllers.ApplicationController {
       owner: session.account,
     });
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       token: (await newServer.save()).token,
     });
   }
 
   // POST /servers/register
-  async register(ctx: Context) {
-    const { token } = ctx.server;
+  async register(req: Request & { server: Server }, res: Response) {
+    const { token } = req.server;
 
     const server = await ServerModel.findOne({ token });
 
     if (!server) {
-      this.renderError(ctx, 401, 'Cannot register server with this token');
+      renderError(res, 401, 'Cannot register server with this token');
       return;
     }
 
     if (server.registered) {
-      this.renderSuccess(ctx, { server });
+      renderSuccess(res, { server });
       return;
     }
 
@@ -59,29 +60,29 @@ class ServerController extends commonControllers.ApplicationController {
       lastNameUsed = existingServers[0].name;
     }
 
-    server.publicIp = ctx.request.ip;
+    server.publicIp = req.ip;
     server.name = generateName(lastNameUsed);
     server.registered = true;
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       server: await server.save(),
     });
   }
 
   // PUT /servers/sync
-  async sync(ctx: Context & { server: Server; request: { body: SyncMessage } }) {
-    const { token } = ctx.server;
-    const { instances } = ctx.request.body;
+  async sync(req: Request & { server: Server }, res: Response & { server: Server; request: { body: SyncMessage } }) {
+    const { token } = req.server;
+    const { instances } = req.body as { instances: InstanceInfo[] };
 
     const server = await ServerModel.findOne({ token });
 
     if (!server) {
-      this.renderError(ctx, 401, 'Cannot register server with this token');
+      renderError(res, 401, 'Cannot register server with this token');
       return;
     }
 
     if (!server.registered) {
-      this.renderError(ctx, 400, 'Server not yet registered to the Hive');
+      renderError(res, 400, 'Server not yet registered to the Hive');
       return;
     }
 
@@ -102,7 +103,7 @@ class ServerController extends commonControllers.ApplicationController {
 
     await InstanceModel.deleteMany({ drone: server, name: { $nin: instances.map((instance) => instance.name) } });
 
-    this.renderSuccess(ctx, {});
+    renderSuccess(res, {});
   }
 }
 

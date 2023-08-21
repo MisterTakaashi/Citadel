@@ -1,5 +1,5 @@
-import { commonControllers } from 'citadel-lib';
-import { Context } from 'koa';
+import { Request, Response } from 'express';
+import { renderError, renderSuccess } from 'citadel-lib';
 import Account, { AccountModel } from '../models/account';
 
 interface AccountCreateRequest {
@@ -7,18 +7,18 @@ interface AccountCreateRequest {
   password: string;
 }
 
-class AccountController extends commonControllers.ApplicationController {
+class AccountController {
   // POST /accounts
-  async create(ctx: Context) {
-    const { email, password } = ctx.request.body as AccountCreateRequest;
+  async create(req: Request, res: Response) {
+    const { email, password } = req.body as AccountCreateRequest;
 
     if (!email) {
-      this.renderError(ctx, 400, 'You must specify an email');
+      renderError(res, 400, 'You must specify an email');
       return;
     }
 
     if (!password || password.length <= 8) {
-      this.renderError(ctx, 400, 'You must specify a password with more than 8 characters');
+      renderError(res, 400, 'You must specify a password with more than 8 characters');
       return;
     }
 
@@ -27,7 +27,7 @@ class AccountController extends commonControllers.ApplicationController {
       password: Account.hashPassword(Account.saltPassword(password)),
     });
 
-    this.renderSuccess(ctx, { account: await newAccount.save() });
+    renderSuccess(res, { account: await newAccount.save() });
   }
 }
 

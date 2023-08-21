@@ -1,4 +1,4 @@
-import * as commonControllers from "./common_controllers";
+import { renderError, renderSuccess } from "./render";
 import games, { Providers } from "./games";
 import {
   InstanceInfo,
@@ -10,7 +10,7 @@ import {
   SyncMessage,
 } from "./models";
 
-export { commonControllers };
+export { renderSuccess, renderError };
 export {
   InstanceState,
   InstanceInfo,
