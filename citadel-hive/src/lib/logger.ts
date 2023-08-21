@@ -16,8 +16,8 @@ const getLabel = (callingModule: NodeModule) => {
   return undefined;
 };
 
-const makeLogger = (callingModule: NodeModule) =>
-  createLogger({
+const makeLogger = (callingModule: NodeModule) => {
+  const logger = createLogger({
     format: format.combine(
       format.colorize(),
       format.splat(),
@@ -38,5 +38,25 @@ const makeLogger = (callingModule: NodeModule) =>
     ),
     transports: [new transports.Console()],
   });
+
+  (logger as unknown as { stream: { write: (message: string) => void } }).stream = {
+    write: (message) => {
+      if (!message) {
+        return;
+      }
+
+      const metaIndex = message.indexOf('@@');
+      if (metaIndex >= 0) {
+        const meta = JSON.parse(message.substr(metaIndex + 2));
+        const newMessage = message.substr(0, metaIndex);
+        logger.info(newMessage.trim(), meta);
+      } else {
+        logger.info(message && message.trim());
+      }
+    },
+  };
+
+  return logger;
+};
 
 export default makeLogger;

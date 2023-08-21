@@ -21,7 +21,7 @@ import makeLogger from './lib/logger';
   app.use(cors({ origin: '*' }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(morgan('combined'));
+  app.use(morgan('combined', { stream: logger.stream as unknown as morgan.StreamOptions }));
   app.use(router);
 
   app.listen(port, () => {
