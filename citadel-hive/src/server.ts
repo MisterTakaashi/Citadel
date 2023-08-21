@@ -1,10 +1,9 @@
-import * as koa from 'koa';
-import * as koaJson from 'koa-json';
-import * as koaBodyParser from 'koa-bodyparser';
-import * as cors from '@koa/cors';
+import * as express from 'express';
+import * as cors from 'cors';
+import * as bodyParser from 'body-parser';
+import * as morgan from 'morgan';
 import { config } from 'dotenv';
 import { connect } from 'mongoose';
-import { ulid } from 'ulid';
 
 import router from './router';
 import makeLogger from './lib/logger';
@@ -18,17 +17,12 @@ import makeLogger from './lib/logger';
 
   const port = process.env.PORT || 3000;
 
-  const app = new koa();
+  const app = express();
   app.use(cors({ origin: '*' }));
-  app.use(koaJson());
-  app.use(koaBodyParser());
-  app.use(async (ctx, next) => {
-    const requestId = ulid();
-    logger.info(`${ctx.method}[${requestId}] ${ctx.path}`);
-    await next();
-    logger.info(`${ctx.method}[${requestId}] ${ctx.path} ${ctx.res.statusCode}`);
-  });
-  app.use(router.routes());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(morgan('combined', { stream: logger.stream as unknown as morgan.StreamOptions }));
+  app.use(router);
 
   app.listen(port, () => {
     logger.info(`Server listening on port ${port}`);

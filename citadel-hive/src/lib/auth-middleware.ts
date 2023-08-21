@@ -1,15 +1,14 @@
-import { Context, Next } from 'koa';
-import { SessionModel } from '../models/session';
 import { IncomingHttpHeaders } from 'http';
-import { ServerModel } from '../models/server';
+import { Request, Response, NextFunction } from 'express';
+import Session, { SessionModel } from '../models/session';
+import Server, { ServerModel } from '../models/server';
 
-const makeBadAuthentification = (ctx: Context) => {
-  ctx.status = 401;
-
-  ctx.body = {
+const makeBadAuthentification = (res: Response) => {
+  res.status(401);
+  res.json({
     error: true,
     message: 'Bad authorization',
-  };
+  });
 };
 
 interface AuthenticatedRequestHeadersAddons {
@@ -18,27 +17,27 @@ interface AuthenticatedRequestHeadersAddons {
 
 type AuthenticatedRequestHeaders = IncomingHttpHeaders & AuthenticatedRequestHeadersAddons;
 
-const validateServerAuthentication = async (ctx: Context, next: Next) => {
-  const { 'x-api-key': token } = ctx.request.headers as AuthenticatedRequestHeaders;
+const validateServerAuthentication = async (req: Request & { server: Server }, res: Response, next: NextFunction) => {
+  const { 'x-api-key': token } = req.headers as AuthenticatedRequestHeaders;
 
   const server = await ServerModel.findOne({ token });
 
   if (!server) {
-    makeBadAuthentification(ctx);
+    makeBadAuthentification(res);
 
     return;
   }
 
-  ctx.server = server;
+  req.server = server;
 
-  await next();
+  next();
 };
 
-const validateAuthentication = async (ctx: Context, next: Next) => {
-  const { authorization } = ctx.request.headers;
+const validateAuthentication = async (req: Request & { session: Session }, res: Response, next: NextFunction) => {
+  const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    makeBadAuthentification(ctx);
+    makeBadAuthentification(res);
 
     return;
   }
@@ -47,14 +46,14 @@ const validateAuthentication = async (ctx: Context, next: Next) => {
   const session = await SessionModel.findOne({ token }).populate('account');
 
   if (!session) {
-    makeBadAuthentification(ctx);
+    makeBadAuthentification(res);
 
     return;
   }
 
-  ctx.session = session;
+  req.session = session;
 
-  await next();
+  next();
 };
 
 export { validateAuthentication, validateServerAuthentication };

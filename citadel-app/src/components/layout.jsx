@@ -3,29 +3,12 @@ import PropTypes from 'prop-types';
 import { faServer } from '@fortawesome/free-solid-svg-icons';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import useApiQuery from '../lib/useApiQuery';
+import { Link, useLocation } from 'react-router-dom';
+import useAuth from '../lib/useAuth';
 
 function Layout({ noNavbar, children }) {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  // eslint-disable-next-line no-undef
-  const token = localStorage.getItem('token');
-
-  if (!location.pathname.startsWith('/login') && !token) {
-    navigate('/login');
-  }
-
-  const { account, error } = useApiQuery(`/sessions/${token}`, 'account');
-
-  if (!location.pathname.startsWith('/login') && error) {
-    navigate('/login');
-  }
-
-  if (location.pathname.startsWith('/login') && account) {
-    navigate('/');
-  }
+  const { user } = useAuth();
 
   return (
     <div className='min-h-screen bg-white dark:bg-slate-900'>
@@ -93,7 +76,7 @@ function Layout({ noNavbar, children }) {
                           src='https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/42/422e893d9bf551cb26a7764dd20936f85c445a4e_full.jpg'
                           alt=''
                         />
-                        <span>{account && account.email}</span>
+                        <span>{user && user.email}</span>
                       </div>
                     </button>
                   </div>

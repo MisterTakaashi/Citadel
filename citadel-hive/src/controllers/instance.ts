@@ -1,9 +1,10 @@
-import { commonControllers, InstanceVolume, JobStatus, JobType } from 'citadel-lib';
+import { Request, Response } from 'express';
+import { renderError, renderSuccess, InstanceVolume, JobStatus, JobType } from 'citadel-lib';
 import { ServerModel } from '../models/server';
-import { Context } from 'koa';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';
 import { InstanceModel } from '../models/instance';
+import Session from '../models/session';
 
 interface InstanceCreateRequest {
   drone: string;
@@ -12,20 +13,20 @@ interface InstanceCreateRequest {
   config: any;
 }
 
-class InstanceController extends commonControllers.ApplicationController {
+class InstanceController {
   // GET /instances
-  async index(ctx: Context) {
-    this.renderSuccess(ctx, {
+  async index(_: Request, res: Response) {
+    renderSuccess(res, {
       instances: await InstanceModel.find({}),
     });
   }
 
   // POST /instances
-  async create(ctx: Context) {
-    const { drone, image, name, config } = ctx.request.body as InstanceCreateRequest;
+  async create(req: Request, res: Response) {
+    const { drone, image, name, config } = req.body as InstanceCreateRequest;
     const server = await ServerModel.findOne({ name: drone });
     if (!server) {
-      this.renderError(ctx, 404, `Cannot find drone "${drone}"`);
+      renderError(res, 404, `Cannot find drone "${drone}"`);
       return;
     }
 
@@ -52,14 +53,14 @@ class InstanceController extends commonControllers.ApplicationController {
     });
     await job.save();
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       job,
     });
   }
 
   // DELETE /instances/:name
-  async remove(ctx: Context) {
-    const { name } = ctx.params;
+  async remove(req: Request, res: Response) {
+    const { name } = req.params;
 
     const job = new JobModel({
       jobType: JobType.DELETE_INSTANCE,
@@ -70,28 +71,28 @@ class InstanceController extends commonControllers.ApplicationController {
     });
     await job.save();
 
-    this.renderSuccess(ctx, job);
+    renderSuccess(res, job);
   }
 
   // GET /instances/:name
-  async details(ctx: Context) {
-    const { name } = ctx.params;
+  async details(req: Request, res: Response) {
+    const { name } = req.params;
 
     const instance = await InstanceModel.findOne({ name }).populate('drone');
 
     if (!instance) {
-      this.renderError(ctx, 404, `Cannot find instance "${name}"`);
+      renderError(res, 404, `Cannot find instance "${name}"`);
       return;
     }
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       instance,
     });
   }
 
   // POST /instances/:name/start
-  async start(ctx: Context) {
-    const { name } = ctx.params as { name: string };
+  async start(req: Request, res: Response) {
+    const { name } = req.params as { name: string };
 
     const job = new JobModel({
       jobType: JobType.START_INSTANCE,
@@ -100,14 +101,14 @@ class InstanceController extends commonControllers.ApplicationController {
     });
     await job.save();
 
-    this.renderSuccess(ctx, job);
+    renderSuccess(res, job);
   }
 
   // POST /instances/:name/stop
-  async stop(ctx: Context) {
-    const { name } = ctx.params as { name: string };
+  async stop(req: Request & { session: Session }, res: Response) {
+    const { name } = req.params as { name: string };
 
-    const { session } = ctx;
+    const { session } = req;
 
     const userDrones = await ServerModel.find({ owner: session.account });
 
@@ -122,12 +123,12 @@ class InstanceController extends commonControllers.ApplicationController {
 
     await job.save();
 
-    this.renderSuccess(ctx, job);
+    renderSuccess(res, job);
   }
 
   // GET /instances/:name/logs
-  async logs(ctx: Context) {
-    this.renderSuccess(ctx, { logs: [] });
+  async logs(_: Request, res: Response) {
+    renderSuccess(res, { logs: [] });
   }
 }
 

@@ -1,14 +1,15 @@
-import { JobStatus, commonControllers } from 'citadel-lib';
-import { Context } from 'koa';
+import { Request, Response } from 'express';
+import { JobStatus, renderSuccess } from 'citadel-lib';
 import { JobModel } from '../models/job';
 import { Promise as PromiseBB } from 'bluebird';
+import Server from '../models/server';
 
-class JobController extends commonControllers.ApplicationController {
+class JobController {
   // TODO: this should not be the GET endpoint for /jobs, it should return all the jobs just as an information
   // We should add an expoint explicitly for the drone to query
   // GET /jobs !!WARNING this endpoint is a long poll endpoint!!
-  async index(ctx: Context) {
-    const { server } = ctx;
+  async index(req: Request & { server: Server }, res: Response) {
+    const { server } = req;
 
     const MAX_RETRIES = 10;
     const lookForJob = async (retry = 0) => {
@@ -29,7 +30,7 @@ class JobController extends commonControllers.ApplicationController {
 
     const job = await lookForJob();
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       job,
     });
   }

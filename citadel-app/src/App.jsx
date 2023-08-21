@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { ProvideAuth } from './lib/useAuth';
 import Dashboard from './pages/dashboard/dashboard';
 import Instance from './pages/instance/instance';
 import Login from './pages/login/login';
@@ -8,11 +9,13 @@ import Login from './pages/login/login';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path='/' element={<Dashboard />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/instances/:name/*' element={<Instance />} />
-      </Routes>
+      <ProvideAuth>
+        <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route path='/instances/:name/*' element={<Instance />} />
+          <Route path='/' element={<Dashboard />} />
+        </Routes>
+      </ProvideAuth>
     </Router>
   );
 }

@@ -1,20 +1,20 @@
-import { commonControllers, games } from 'citadel-lib';
-import { Context } from 'koa';
+import { Request, Response } from 'express';
+import { renderSuccess, games } from 'citadel-lib';
 import { getImageConfig } from '../lib/config-query';
 
-class ImageController extends commonControllers.ApplicationController {
+class ImageController {
   // GET /images
-  async index(ctx: Context) {
-    this.renderSuccess(ctx, {
+  async index(_: Request, res: Response) {
+    renderSuccess(res, {
       images: games,
     });
   }
 
   // GET /images/:image
-  async details(ctx: Context) {
-    const { image } = ctx.params;
+  async details(req: Request, res: Response) {
+    const { image } = req.params;
 
-    this.renderSuccess(ctx, {
+    renderSuccess(res, {
       image: await getImageConfig(image),
     });
   }

@@ -1,4 +1,4 @@
-import * as Router from 'koa-router';
+import { Router } from 'express';
 
 import ServerController from './controllers/server';
 import InstanceController from './controllers/instance';
@@ -8,80 +8,46 @@ import SessionController from './controllers/session';
 import JobController from './controllers/job';
 import { validateAuthentication, validateServerAuthentication } from './lib/auth-middleware';
 
-const router = new Router();
+const router = Router();
 
 // Instances
-router.get('/instances', async (ctx) => {
-  await new InstanceController().index(ctx);
-});
+router.get('/instances', validateAuthentication, new InstanceController().index);
 
-router.post('/instances', async (ctx) => {
-  await new InstanceController().create(ctx);
-});
+router.post('/instances', validateAuthentication, new InstanceController().create);
 
-router.get('/instances/:name', async (ctx) => {
-  await new InstanceController().details(ctx);
-});
+router.get('/instances/:name', validateAuthentication, new InstanceController().details);
 
-router.delete('/instances/:name', async (ctx) => {
-  await new InstanceController().remove(ctx);
-});
+router.delete('/instances/:name', validateAuthentication, new InstanceController().remove);
 
-router.post('/instances/:name/start', async (ctx) => {
-  await new InstanceController().start(ctx);
-});
+router.post('/instances/:name/start', validateAuthentication, new InstanceController().start);
 
-router.post('/instances/:name/stop', validateAuthentication, async (ctx) => {
-  await new InstanceController().stop(ctx);
-});
+router.post('/instances/:name/stop', validateAuthentication, new InstanceController().stop);
 
-router.get('/instances/:name/logs', async (ctx) => {
-  await new InstanceController().logs(ctx);
-});
+router.get('/instances/:name/logs', validateAuthentication, new InstanceController().logs);
 
 // Servers
-router.get('/servers', async (ctx) => {
-  await new ServerController().index(ctx);
-});
+router.get('/servers', validateAuthentication, new ServerController().index);
 
-router.post('/servers', validateAuthentication, async (ctx) => {
-  await new ServerController().create(ctx);
-});
+router.post('/servers', validateAuthentication, new ServerController().create);
 
-router.post('/servers/register', validateServerAuthentication, async (ctx) => {
-  await new ServerController().register(ctx);
-});
+router.post('/servers/register', validateServerAuthentication, new ServerController().register);
 
-router.put('/sync', validateServerAuthentication, async (ctx) => {
-  await new ServerController().sync(ctx as any);
-});
+router.put('/sync', validateServerAuthentication, new ServerController().sync);
 
 // Images
-router.get('/images', async (ctx) => {
-  await new ImageController().index(ctx);
-});
+router.get('/images', validateAuthentication, new ImageController().index);
 
-router.get('/images/:image', async (ctx) => {
-  await new ImageController().details(ctx);
-});
+router.get('/images/:image', validateAuthentication, new ImageController().details);
 
 // Accounts
-router.post('/accounts', async (ctx) => {
-  await new AccountController().create(ctx);
-});
+router.post('/accounts', validateAuthentication, new AccountController().create);
 
 // Sessions
-router.get('/sessions/:token', async (ctx) => {
-  await new SessionController().details(ctx);
-});
+router.get('/sessions/:token', validateAuthentication, new SessionController().details);
 
-router.post('/sessions', async (ctx) => {
-  await new SessionController().create(ctx);
-});
+router.post('/sessions', new SessionController().create);
 
 // Jobs
-router.get('/jobs', validateServerAuthentication, async (ctx) => {
-  await new JobController().index(ctx);
-});
+router.get('/jobs', validateServerAuthentication, new JobController().index);
 
 export default router;
