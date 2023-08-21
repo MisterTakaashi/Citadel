@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const initInterceptors = (csr) => {
+const initInterceptors = (csr, logout) => {
   axios.interceptors.request.use((config) => {
     config.headers.set('Authorization', `Bearer ${csr}`);
     return config;
@@ -10,7 +10,10 @@ const initInterceptors = (csr) => {
       return response;
     },
     (error) => {
-      // const errorStatus = error.response?.status;
+      const errorStatus = error.response?.status;
+      if (errorStatus === 401) {
+        logout();
+      }
       // console.log('ERRORSTATS', errorStatus, window.location.pathname);
 
       return Promise.reject(error);

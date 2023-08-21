@@ -8,15 +8,15 @@ import Login from './pages/login/login';
 
 function App() {
   return (
-    <ProvideAuth>
-      <Router>
+    <Router>
+      <ProvideAuth>
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/instances/:name/*' element={<Instance />} />
           <Route path='/' element={<Dashboard />} />
         </Routes>
-      </Router>
-    </ProvideAuth>
+      </ProvideAuth>
+    </Router>
   );
 }
 

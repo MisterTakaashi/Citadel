@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import initInterceptors from './interceptor';
@@ -17,33 +18,51 @@ const useAuth = () => useContext(authContext);
 const apiUrl = 'http://localhost:3000';
 
 const useProvideAuth = () => {
+  const navigate = useNavigate();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [user, setUser] = useState(null);
   // eslint-disable-next-line no-undef
   const [csr, setCsr] = useState(localStorage.getItem('csr'));
   initInterceptors(csr);
 
+  const logout = useCallback(() => {
+    // eslint-disable-next-line no-undef
+    localStorage.removeItem('user');
+    // eslint-disable-next-line no-undef
+    localStorage.removeItem('csr');
+
+    setUser(null);
+
+    navigate('/login');
+  }, [navigate]);
+
   const authenticate = useCallback(
-    async (authCsr) => {
+    async (authCsr, goToHome) => {
       if (isAuthenticating) return;
 
       setIsAuthenticating(true);
-      const { data: response } = await axios({ url: `${apiUrl}/sessions/${authCsr}` });
-
-      // eslint-disable-next-line no-undef
-      localStorage.setItem('user', JSON.stringify(response.data.account));
-      // eslint-disable-next-line no-undef
-      localStorage.setItem('csr', authCsr);
-
-      setUser(response.data.account);
-      setCsr(authCsr);
 
       axios.interceptors.request.clear();
       axios.interceptors.response.clear();
 
-      initInterceptors(authCsr);
+      initInterceptors(authCsr, logout);
+
+      try {
+        const { data: response } = await axios({ url: `${apiUrl}/sessions/${authCsr}` });
+        // eslint-disable-next-line no-undef
+        localStorage.setItem('user', JSON.stringify(response.data.account));
+        // eslint-disable-next-line no-undef
+        localStorage.setItem('csr', authCsr);
+
+        setUser(response.data.account);
+        setCsr(authCsr);
+
+        if (goToHome) navigate('/');
+      } catch (e) {
+        navigate('/login');
+      }
     },
-    [isAuthenticating]
+    [isAuthenticating, navigate, logout]
   );
 
   const login = async (email, password) => {
@@ -53,16 +72,7 @@ const useProvideAuth = () => {
       data: { email, password },
     });
 
-    authenticate(responseData.data.token);
-  };
-
-  const logout = () => {
-    // eslint-disable-next-line no-undef
-    localStorage.removeItem('user');
-    // eslint-disable-next-line no-undef
-    localStorage.removeItem('csr');
-
-    setUser(null);
+    authenticate(responseData.data.token, true);
   };
 
   useEffect(() => {
@@ -72,9 +82,11 @@ const useProvideAuth = () => {
 
       if (authCsr) {
         authenticate(authCsr);
+      } else {
+        navigate('/login');
       }
     }
-  }, [user, authenticate]);
+  }, [user, authenticate, navigate]);
 
   return { authenticate, login, logout, user, csr };
 };
