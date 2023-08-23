@@ -153,7 +153,6 @@ function Dashboard() {
           </div>
           <Card title='Drones' className='w-full md:basis-1/4 mt-5'>
             {drones &&
-              drones.length > 1 &&
               drones
                 .filter((drone) => drone.selfHosted)
                 .map((drone) => (
@@ -173,10 +172,12 @@ function Dashboard() {
                     <DroneStatus background bullet state='running' size='sm' />
                   </div>
                 ))}
-            <p className='text-gray-400'>
-              You don&apos;t have any self-hosted drone, you will only be able to launch instances
-              via public drones
-            </p>
+            {drones && drones.length <= 0 && (
+              <p className='text-gray-400'>
+                You don&apos;t have any self-hosted drone, you will only be able to launch instances
+                via public drones
+              </p>
+            )}
             <Button
               size='sm'
               color='green'
