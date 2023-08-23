@@ -47,9 +47,10 @@ function AddDrone({ isOpen, onClose }) {
               </Dialog.Title>
               <div className='mt-2'>
                 <p className='text-sm text-gray-400'>
-                  Adding a drone will allow you to create new instances. <br />
-                  The drone will run the game images, you can add your own drone or use one of the
-                  drone of Citadel when creating an instance.
+                  Adding a self hosted drone will allow you to create new instances. <br />
+                  The drones will be used to run the game images on you instances. You can use your
+                  own self hosted drones or one of the Citadel&apos;s hosted drones when creating an
+                  instance.
                 </p>
                 <p className='dark:text-white mt-5'>Drone address</p>
                 <input
