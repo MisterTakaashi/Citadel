@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
-import ServerController from './controllers/server';
+import DroneController from './controllers/drone';
 import InstanceController from './controllers/instance';
 import ImageController from './controllers/image';
 import AccountController from './controllers/account';
 import SessionController from './controllers/session';
 import JobController from './controllers/job';
-import { validateAuthentication, validateServerAuthentication } from './lib/auth-middleware';
+import { validateAuthentication, validateDroneAuthentication } from './lib/auth-middleware';
 
 const router = Router();
 
@@ -25,14 +25,14 @@ router.post('/instances/:name/stop', validateAuthentication, new InstanceControl
 
 router.get('/instances/:name/logs', validateAuthentication, new InstanceController().logs);
 
-// Servers
-router.get('/servers', validateAuthentication, new ServerController().index);
+// Drones
+router.get('/drones', validateAuthentication, new DroneController().index);
 
-router.post('/servers', validateAuthentication, new ServerController().create);
+router.post('/drones', validateAuthentication, new DroneController().create);
 
-router.post('/servers/register', validateServerAuthentication, new ServerController().register);
+router.post('/drones/register', validateDroneAuthentication, new DroneController().register);
 
-router.put('/sync', validateServerAuthentication, new ServerController().sync);
+router.put('/sync', validateDroneAuthentication, new DroneController().sync);
 
 // Images
 router.get('/images', validateAuthentication, new ImageController().index);
@@ -48,6 +48,6 @@ router.get('/sessions/:token', validateAuthentication, new SessionController().d
 router.post('/sessions', new SessionController().create);
 
 // Jobs
-router.get('/jobs', validateServerAuthentication, new JobController().index);
+router.get('/jobs', validateDroneAuthentication, new JobController().index);
 
 export default router;

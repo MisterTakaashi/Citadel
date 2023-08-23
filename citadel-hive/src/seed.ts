@@ -1,6 +1,6 @@
 import { connect } from 'mongoose';
 import Account, { AccountModel } from './models/account';
-import { ServerModel } from './models/server';
+import { DroneModel } from './models/drone';
 import { config } from 'dotenv';
 import makeLogger from './lib/logger';
 
@@ -17,7 +17,7 @@ const logger = makeLogger(module);
     email: 'dev@citadel.io',
     password: Account.hashPassword(Account.saltPassword('password')),
   });
-  await ServerModel.create({
+  await DroneModel.create({
     name: 'belligerent wasp',
     owner: user,
     token: '01H7G0A9JK6P5430N8PBTEJ9PH',

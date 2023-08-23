@@ -19,7 +19,7 @@ const queryHive = async <T>(endpoint: string, method: 'POST' | 'PUT' | 'GET' | '
 
 const connectToHive = async (host: string, token: string) => {
   try {
-    await axios.post(`${host}/servers/register`, {}, { headers: { 'X-Api-Key': token } });
+    await axios.post(`${host}/drones/register`, {}, { headers: { 'X-Api-Key': token } });
     HOST = host;
     TOKEN = token;
   } catch (e) {
