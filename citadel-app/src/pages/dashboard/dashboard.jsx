@@ -103,7 +103,7 @@ function Dashboard() {
                       <p className='text-xl font-bold truncate'>
                         {instance.name.replace(/\//g, '')}
                       </p>
-                      <DroneStatus state={instance.state} background size='xs' />
+                      <DroneStatus state={instance.infos.state} background size='xs' />
                     </div>
 
                     <p className='dark:text-gray-400 px-3 pb-3'>
@@ -112,7 +112,8 @@ function Dashboard() {
 
                     <div className='mx-3'>
                       <div className='h-px bg-gray-600' />
-                      {(instance.state === 'exited' || instance.state === 'created') && (
+                      {(instance.infos.state === 'exited' ||
+                        instance.infos.state === 'created') && (
                         <Button
                           color='green'
                           size='sm'
@@ -126,7 +127,7 @@ function Dashboard() {
                           Start instance
                         </Button>
                       )}
-                      {instance.state === 'running' && (
+                      {instance.infos.state === 'running' && (
                         <Button
                           color='red'
                           size='sm'
