@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { renderError, renderSuccess, InstanceVolume, JobStatus, JobType } from 'citadel-lib';
-import { ServerModel } from '../models/server';
+import { DroneModel } from '../models/drone';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';
 import { InstanceModel } from '../models/instance';
@@ -23,9 +23,9 @@ class InstanceController {
 
   // POST /instances
   async create(req: Request, res: Response) {
-    const { drone, image, name, config } = req.body as InstanceCreateRequest;
-    const server = await ServerModel.findOne({ name: drone });
-    if (!server) {
+    const { drone: droneName, image, name, config } = req.body as InstanceCreateRequest;
+    const drone = await DroneModel.findOne({ name: droneName });
+    if (!drone) {
       renderError(res, 404, `Cannot find drone "${drone}"`);
       return;
     }
@@ -44,7 +44,7 @@ class InstanceController {
     const job = new JobModel({
       jobType: JobType.CREATE_INSTANCE,
       status: JobStatus.CREATED,
-      drone: server,
+      drone: drone,
       parameters: {
         image: imageConfig.docker.image,
         name,
@@ -110,7 +110,7 @@ class InstanceController {
 
     const { session } = req;
 
-    const userDrones = await ServerModel.find({ owner: session.account });
+    const userDrones = await DroneModel.find({ owner: session.account });
 
     const instance = await InstanceModel.findOne({ name, drone: { $in: userDrones } });
 

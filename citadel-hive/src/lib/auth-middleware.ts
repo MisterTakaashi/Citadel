@@ -1,7 +1,7 @@
 import { IncomingHttpHeaders } from 'http';
 import { Request, Response, NextFunction } from 'express';
 import Session, { SessionModel } from '../models/session';
-import Server, { ServerModel } from '../models/server';
+import Drone, { DroneModel } from '../models/drone';
 
 const makeBadAuthentification = (res: Response) => {
   res.status(401);
@@ -17,18 +17,18 @@ interface AuthenticatedRequestHeadersAddons {
 
 type AuthenticatedRequestHeaders = IncomingHttpHeaders & AuthenticatedRequestHeadersAddons;
 
-const validateServerAuthentication = async (req: Request & { server: Server }, res: Response, next: NextFunction) => {
+const validateDroneAuthentication = async (req: Request & { drone: Drone }, res: Response, next: NextFunction) => {
   const { 'x-api-key': token } = req.headers as AuthenticatedRequestHeaders;
 
-  const server = await ServerModel.findOne({ token });
+  const drone = await DroneModel.findOne({ token });
 
-  if (!server) {
+  if (!drone) {
     makeBadAuthentification(res);
 
     return;
   }
 
-  req.server = server;
+  req.drone = drone;
 
   next();
 };
@@ -56,4 +56,4 @@ const validateAuthentication = async (req: Request & { session: Session }, res: 
   next();
 };
 
-export { validateAuthentication, validateServerAuthentication };
+export { validateAuthentication, validateDroneAuthentication };

@@ -1,7 +1,7 @@
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { JobStatus, JobType, IJob } from 'citadel-lib';
-import Server from './server';
+import Drone from './drone';
 
 class Job extends TimeStamps implements IJob {
   @prop({ required: true, type: String })
@@ -10,8 +10,8 @@ class Job extends TimeStamps implements IJob {
   @prop({ required: true, type: String })
   public status = JobStatus.CREATED;
 
-  @prop({ required: true, ref: Server })
-  public drone: Ref<Server>;
+  @prop({ required: true, ref: Drone })
+  public drone: Ref<Drone>;
 
   @prop()
   public parameters: unknown;

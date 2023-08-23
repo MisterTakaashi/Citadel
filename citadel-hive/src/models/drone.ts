@@ -2,7 +2,7 @@ import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import Account from './account';
 
-class Server extends TimeStamps {
+class Drone extends TimeStamps {
   @prop({ required: true })
   public name: string;
 
@@ -25,7 +25,7 @@ class Server extends TimeStamps {
   public lastSync?: Date;
 }
 
-const ServerModel = getModelForClass(Server);
+const DroneModel = getModelForClass(Drone);
 
-export default Server;
-export { ServerModel };
+export default Drone;
+export { DroneModel };

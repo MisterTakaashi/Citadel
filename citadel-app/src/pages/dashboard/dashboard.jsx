@@ -10,11 +10,11 @@ import Button from '../../components/button';
 import Card from '../../components/card';
 import useApiQuery from '../../lib/useApiQuery';
 import useApiAction from '../../lib/useApiAction';
-import ServerStatus from '../../components/server-status';
+import DroneStatus from '../../components/drone-status';
 
 function Dashboard() {
   const { instances, refetch } = useApiQuery('/instances', 'instances');
-  const { servers, refetch: refetchServers } = useApiQuery('/servers', 'servers');
+  const { drones, refetch: refetchDrones } = useApiQuery('/drones', 'drones');
 
   const [startInstance, { loading: startLoading }] = useApiAction(
     (instanceName) => `/instances/${instanceName}/start`,
@@ -47,7 +47,7 @@ function Dashboard() {
 
   function closeAddDroneModal() {
     setIsAddDroneModalOpen(false);
-    refetchServers();
+    refetchDrones();
   }
 
   function openCreateInstanceModal() {
@@ -103,7 +103,7 @@ function Dashboard() {
                       <p className='text-xl font-bold truncate'>
                         {instance.name.replace(/\//g, '')}
                       </p>
-                      <ServerStatus state={instance.state} background size='xs' />
+                      <DroneStatus state={instance.state} background size='xs' />
                     </div>
 
                     <p className='dark:text-gray-400 px-3 pb-3'>
@@ -151,25 +151,25 @@ function Dashboard() {
             </div>
           </div>
           <Card title='Drones' className='w-full md:basis-1/4 mt-5'>
-            {servers &&
-              servers.length > 1 &&
-              servers
-                .filter((server) => server.selfHosted)
-                .map((server) => (
+            {drones &&
+              drones.length > 1 &&
+              drones
+                .filter((drone) => drone.selfHosted)
+                .map((drone) => (
                   <div
                     className='flex flex-row md:flex-col xl:flex-row justify-between items-center sm:items-start xl:items-center'
-                    key={server.name}
+                    key={drone.name}
                   >
                     <div>
                       <p>
-                        {server.name
+                        {drone.name
                           .split(' ')
                           .map((namePart) => capitalize(namePart))
                           .join(' ')}
                       </p>
-                      <p className='text-sm text-gray-400'>{server.url}</p>
+                      <p className='text-sm text-gray-400'>{drone.url}</p>
                     </div>
-                    <ServerStatus background bullet state='running' size='sm' />
+                    <DroneStatus background bullet state='running' size='sm' />
                   </div>
                 ))}
             <p className='text-gray-400'>
@@ -182,7 +182,7 @@ function Dashboard() {
               className='mt-3 w-full'
               onClick={() => openAddDroneModal()}
             >
-              Add a server as drone
+              Add a drone as drone
             </Button>
           </Card>
         </div>

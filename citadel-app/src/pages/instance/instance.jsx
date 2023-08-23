@@ -5,7 +5,7 @@ import { Routes, Route, useParams, Link, useLocation } from 'react-router-dom';
 import Overview from './overview';
 import Console from './console';
 import Layout from '../../components/layout';
-import ServerStatus from '../../components/server-status';
+import DroneStatus from '../../components/drone-status';
 import useApiQuery from '../../lib/useApiQuery';
 
 function Instance() {
@@ -26,7 +26,7 @@ function Instance() {
               <p className='dark:text-gray-400'>
                 <FontAwesomeIcon icon={faTag} /> {instance.infos.image}
               </p>
-              <ServerStatus state={instance.infos.state} />
+              <DroneStatus state={instance.infos.state} />
             </div>
           )}
 

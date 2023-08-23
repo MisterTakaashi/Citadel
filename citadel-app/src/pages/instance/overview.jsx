@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams, useNavigate } from 'react-router-dom';
 import Card from '../../components/card';
 import Button from '../../components/button';
-import ServerStatus from '../../components/server-status';
+import DroneStatus from '../../components/drone-status';
 import useApiQuery from '../../lib/useApiQuery';
 import useApiAction from '../../lib/useApiAction';
 import Console from '../../components/console';
@@ -23,21 +23,21 @@ function InstanceOverview() {
     loading: loadingLogs,
     refetch: refetchLogs,
   } = useApiQuery(`/instances/${name}/logs`, 'logs');
-  const [startServer, { loading: loadingStart }] = useApiAction(
+  const [startDrone, { loading: loadingStart }] = useApiAction(
     `/instances/${name}/start`,
     'instance',
     'POST',
     null,
     () => refetchInstance()
   );
-  const [stopServer, { loading: loadingStop }] = useApiAction(
+  const [stopDrone, { loading: loadingStop }] = useApiAction(
     `/instances/${name}/stop`,
     'instance',
     'POST',
     null,
     () => refetchInstance()
   );
-  const [destroyServer] = useApiAction(`/instances/${name}`, 'instance', 'DELETE', null, () =>
+  const [destroyDrone] = useApiAction(`/instances/${name}`, 'instance', 'DELETE', null, () =>
     navigate('/')
   );
 
@@ -49,11 +49,7 @@ function InstanceOverview() {
             <p className='basis-1/3 text-gray-400'>Status</p>
             <div className='basis-2/3'>
               {!loading && (
-                <ServerStatus
-                  bullet={false}
-                  className='align-center'
-                  state={instance.infos.state}
-                />
+                <DroneStatus bullet={false} className='align-center' state={instance.infos.state} />
               )}
             </div>
           </div>
@@ -144,7 +140,7 @@ function InstanceOverview() {
                   color='green'
                   className='mr-2'
                   onClick={() => {
-                    startServer();
+                    startDrone();
                   }}
                   loading={loadingStart}
                 >
@@ -157,7 +153,7 @@ function InstanceOverview() {
                 color='red'
                 className='mr-2'
                 onClick={() => {
-                  stopServer();
+                  stopDrone();
                 }}
                 loading={loadingStop}
               >
@@ -169,7 +165,7 @@ function InstanceOverview() {
               color='slate'
               className='mx-2'
               onClick={() => {
-                destroyServer();
+                destroyDrone();
               }}
             >
               Destroy

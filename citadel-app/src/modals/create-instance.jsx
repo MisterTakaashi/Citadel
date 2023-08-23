@@ -14,10 +14,10 @@ import selfHosted from '../statics/undraw_server_re.svg';
 
 function CreateInstance({ isOpen, onClose }) {
   const { images } = useApiQuery('/images', 'images');
-  const { servers } = useApiQuery('/servers', 'servers');
+  const { drones } = useApiQuery('/drones', 'drones');
   const { image: imageConfig, refetch: refetchConfig } = useApiQuery('/images', 'image');
   const [cloudProvided, setCloudProvided] = useState(null);
-  const [serverSelected, setServerSelected] = useState();
+  const [droneSelected, setDroneSelected] = useState();
   const [gameSelected, setGameSelected] = useState();
   const [portsBinding, setPortsBinding] = useState({});
   const [volumesBinding, setVolumesBinding] = useState([]);
@@ -31,8 +31,8 @@ function CreateInstance({ isOpen, onClose }) {
   if (!gameSelected && images) {
     setGameSelected(images[0]);
   }
-  if (!serverSelected && servers && servers.length > 0) {
-    setServerSelected(servers[0]);
+  if (!droneSelected && drones && drones.length > 0) {
+    setDroneSelected(drones[0]);
   }
   if (Object.keys(portsBinding).length === 0 && imageConfig) {
     setPortsBinding(
@@ -59,7 +59,7 @@ function CreateInstance({ isOpen, onClose }) {
     ({ image, portsMapping }) => {
       return {
         image,
-        drone: serverSelected.name,
+        drone: droneSelected.name,
         config: {
           portsMapping,
           volumes: volumesBinding,
@@ -155,12 +155,12 @@ function CreateInstance({ isOpen, onClose }) {
                   {cloudProvided === false && (
                     <>
                       <p className='dark:text-white'>Select a drone</p>
-                      {serverSelected && (
-                        <Listbox value={serverSelected} onChange={setServerSelected}>
+                      {droneSelected && (
+                        <Listbox value={droneSelected} onChange={setDroneSelected}>
                           <div className='z-40 relative mt-1'>
                             <Listbox.Button className='relative w-full py-2 pl-3 pr-10 text-left bg-white rounded shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'>
                               <span className='block truncate'>
-                                {serverSelected.name
+                                {droneSelected.name
                                   .split(' ')
                                   .map((namePart) => capitalize(namePart))
                                   .join(' ')}
@@ -176,16 +176,16 @@ function CreateInstance({ isOpen, onClose }) {
                               leaveTo='opacity-0'
                             >
                               <Listbox.Options className='absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-                                {servers &&
-                                  servers.map((server) => (
+                                {drones &&
+                                  drones.map((drone) => (
                                     <Listbox.Option
-                                      key={server.name}
+                                      key={drone.name}
                                       className={({ active }) =>
                                         `cursor-default select-none relative py-2 pl-10 pr-4 ${
                                           active ? 'text-blue-900 bg-blue-100' : 'text-gray-900'
                                         }`
                                       }
-                                      value={server}
+                                      value={drone}
                                     >
                                       {({ selected }) => (
                                         <>
@@ -194,7 +194,7 @@ function CreateInstance({ isOpen, onClose }) {
                                               selected ? 'font-medium' : 'font-normal'
                                             }`}
                                           >
-                                            {server.name
+                                            {drone.name
                                               .split(' ')
                                               .map((namePart) => capitalize(namePart))
                                               .join(' ')}

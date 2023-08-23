@@ -8,8 +8,8 @@ function AddDrone({ isOpen, onClose }) {
   const [address, setAddress] = useState('http://localhost:3001');
 
   const [addDrone, { loading: loadingAdd }] = useApiAction(
-    `/servers`,
-    'server',
+    `/drones`,
+    'drone',
     'POST',
     ({ url }) => {
       return {
