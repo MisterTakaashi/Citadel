@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { renderError, renderSuccess } from 'citadel-lib';
+import { renderError, renderSuccess } from '@citadel/lib';
 import { sign } from 'jsonwebtoken';
 import Account, { AccountModel } from '../models/account';
 import { SessionModel } from '../models/session';

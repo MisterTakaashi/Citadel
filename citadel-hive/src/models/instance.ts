@@ -1,7 +1,7 @@
 import { Ref, getModelForClass, prop } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import Drone from './drone';
-import { InstanceInfo } from 'citadel-lib';
+import { InstanceInfo } from '@citadel/lib';
 
 class Instance extends TimeStamps {
   @prop({ required: true })

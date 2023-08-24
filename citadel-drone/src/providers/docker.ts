@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { userInfo } from 'os';
 import { writeFile, mkdir, lstat } from 'fs/promises';
 import * as path from 'path';
-import { InstanceInfo, InstanceState, InstanceVolume } from 'citadel-lib';
+import { InstanceInfo, InstanceState, InstanceVolume } from '@citadel/lib';
 import * as Docker from 'dockerode';
 import Bluebird from 'bluebird';
 import { isNumber, omit } from 'lodash';

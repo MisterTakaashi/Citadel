@@ -1,5 +1,5 @@
 import Docker from 'dockerode';
-import { InstanceVolume } from 'citadel-lib';
+import { InstanceVolume } from '@citadel/lib';
 import DockerProvider from '../providers/docker';
 import makeLogger from '../lib/logger';
 

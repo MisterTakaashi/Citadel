@@ -1,4 +1,4 @@
-import { IJob, JobType } from 'citadel-lib';
+import { IJob, JobType } from '@citadel/lib';
 import instanceCreate from './executors/instance_create';
 import instanceDelete from './executors/instance_delete';
 import instanceStart from './executors/instance_start';

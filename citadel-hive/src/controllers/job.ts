@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { JobStatus, renderSuccess } from 'citadel-lib';
+import { JobStatus, renderSuccess } from '@citadel/lib';
 import { JobModel } from '../models/job';
 import { Promise as PromiseBB } from 'bluebird';
 import Drone from '../models/drone';

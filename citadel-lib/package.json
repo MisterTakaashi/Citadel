@@ -1,5 +1,5 @@
 {
-  "name": "citadel-lib",
+  "name": "@citadel/lib",
   "version": "0.0.1",
   "description": "The lib package used for models and other utils",
   "main": "./dist/index.js",

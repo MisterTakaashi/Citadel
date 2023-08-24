@@ -1,4 +1,4 @@
-import { InstanceInfo } from 'citadel-lib';
+import { InstanceInfo } from '@citadel/lib';
 
 interface BaseProvider {
   getInstances(): Promise<InstanceInfo[]>;
