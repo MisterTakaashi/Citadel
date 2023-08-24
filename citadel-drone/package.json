@@ -1,6 +1,6 @@
 {
   "name": "@citadelnest/drone",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The agent of citadel servers that control the containers",
   "main": "./dist/server.js",
   "scripts": {
@@ -16,9 +16,9 @@
   "license": "GPL-3.0-or-later",
   "private": false,
   "dependencies": {
+    "@citadelnest/lib": "*",
     "axios": "^1.4.0",
     "bluebird": "^3.7.2",
-    "@citadelnest/lib": "*",
     "dockerode": "^3.3.1",
     "dotenv": "^16.3.1",
     "koa": "^2.13.4",
