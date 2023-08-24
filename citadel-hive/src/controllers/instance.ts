@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { renderError, renderSuccess, InstanceVolume, JobStatus, JobType } from '@citadel/lib';
+import { renderError, renderSuccess, InstanceVolume, JobStatus, JobType } from '@citadelnest/lib';
 import { DroneModel } from '../models/drone';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';

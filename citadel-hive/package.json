@@ -1,5 +1,5 @@
 {
-  "name": "@citadel/hive",
+  "name": "@citadelnest/hive",
   "version": "0.0.1",
   "description": "The server responsible for managing drones (workers)",
   "main": "./dist/server.js",
@@ -18,7 +18,7 @@
     "axios": "^1.4.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.20.2",
-    "@citadel/lib": "*",
+    "@citadelnest/lib": "*",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

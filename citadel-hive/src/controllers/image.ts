@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { renderSuccess, games } from '@citadel/lib';
+import { renderSuccess, games } from '@citadelnest/lib';
 import { getImageConfig } from '../lib/config-query';
 
 class ImageController {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import makeLogger from './logger';
-import { IJob } from '@citadel/lib';
+import { IJob } from '@citadelnest/lib';
 import dispatcher from '../dispatcher';
 
 const logger = makeLogger(module);
