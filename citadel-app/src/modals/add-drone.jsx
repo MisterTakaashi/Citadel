@@ -1,21 +1,24 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, RadioGroup, Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faApple, faLinux, faWindows } from '@fortawesome/free-brands-svg-icons';
 import Button from '../components/button';
 import useApiAction from '../lib/useApiAction';
 
 function AddDrone({ isOpen, onClose }) {
-  const [address, setAddress] = useState('http://localhost:3001');
+  const droneOses = [
+    { displayName: 'Linux', name: 'linux', icon: faLinux },
+    { displayName: 'macOS', name: 'macos', icon: faApple },
+    { displayName: 'Windows', name: 'windows', icon: faWindows },
+  ];
 
+  const [droneOs, setDroneOs] = useState('linux');
   const [addDrone, { loading: loadingAdd }] = useApiAction(
     `/drones`,
     'drone',
     'POST',
-    ({ url }) => {
-      return {
-        url,
-      };
-    },
+    () => ({}),
     () => onClose()
   );
 
@@ -38,7 +41,7 @@ function AddDrone({ isOpen, onClose }) {
             leaveFrom='opacity-100 scale-100'
             leaveTo='opacity-0 scale-95'
           >
-            <div className='inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded'>
+            <div className='inline-block w-full max-w-xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded'>
               <Dialog.Title
                 as='h3'
                 className='text-lg font-medium leading-6 text-gray-900 dark:text-white'
@@ -52,22 +55,36 @@ function AddDrone({ isOpen, onClose }) {
                   own self hosted drones or one of the Citadel&apos;s hosted drones when creating an
                   instance.
                 </p>
-                <p className='dark:text-white mt-5'>Drone address</p>
-                <input
-                  value={address}
-                  onChange={(event) => {
-                    setAddress(event.target.value);
-                  }}
-                  inputMode='numeric'
-                  className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
-                />
+                <RadioGroup value={droneOs} onChange={setDroneOs} className='flex flex-col'>
+                  <RadioGroup.Label className='dark:text-white mt-5'>Drone runner</RadioGroup.Label>
+                  <div className='flex gap-2'>
+                    {droneOses.map((possibleOs) => (
+                      <RadioGroup.Option
+                        key={possibleOs.name}
+                        value={possibleOs.name}
+                        className={`flex-1 rounded p-3 dark:text-white cursor-pointer ${
+                          droneOs === possibleOs.name
+                            ? 'border-2 border-blue-500'
+                            : 'border border-gray-600'
+                        }`}
+                      >
+                        <FontAwesomeIcon
+                          icon={possibleOs.icon}
+                          size='lg'
+                          className='text-gray-500'
+                        />{' '}
+                        {possibleOs.displayName}
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
               </div>
               <div className='mt-6 flex flex-row-reverse'>
                 <Button
                   disabled={loadingAdd}
                   loading={loadingAdd}
                   onClick={() => {
-                    addDrone({ url: address });
+                    addDrone();
                   }}
                 >
                   Add the drone
