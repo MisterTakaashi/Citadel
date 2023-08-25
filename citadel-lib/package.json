@@ -10,7 +10,7 @@
   "repository": "https://github.com/MisterTakaashi/Citadel",
   "author": "MisterTakaashi",
   "license": "GPL-3.0-or-later",
-  "private": true,
+  "private": false,
   "devDependencies": {
     "typescript": "~5.1.6"
   }
