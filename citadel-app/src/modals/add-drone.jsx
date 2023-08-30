@@ -4,13 +4,59 @@ import { Dialog, RadioGroup, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faApple, faLinux, faWindows } from '@fortawesome/free-brands-svg-icons';
 import Button from '../components/button';
+import CodeSnippet from '../components/code-snippet';
 import useApiAction from '../lib/useApiAction';
 
 function AddDrone({ isOpen, onClose }) {
   const droneOses = [
-    { displayName: 'Linux', name: 'linux', icon: faLinux },
-    { displayName: 'macOS', name: 'macos', icon: faApple },
-    { displayName: 'Windows', name: 'windows', icon: faWindows },
+    {
+      displayName: 'Linux',
+      name: 'linux',
+      icon: faLinux,
+      instructions: (
+        <div>
+          <p className='text-zinc-400'># Download the latest Drone runner</p>
+          <p>
+            curl -o citadel-drone -L
+            https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
+          </p>
+          <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
+          <p>./citadel-drone --host https://citadelnest.org --token TOKEN</p>
+        </div>
+      ),
+    },
+    {
+      displayName: 'macOS',
+      name: 'macos',
+      icon: faApple,
+      instructions: (
+        <div>
+          <p className='text-zinc-400'># Download the latest Drone runner</p>
+          <p>
+            curl -o citadel-drone -L
+            https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
+          </p>
+          <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
+          <p>./citadel-drone --host https://citadelnest.org --token TOKEN</p>
+        </div>
+      ),
+    },
+    {
+      displayName: 'Windows',
+      name: 'windows',
+      icon: faWindows,
+      instructions: (
+        <div>
+          <p className='text-zinc-400'># Download the latest Drone runner</p>
+          <p>
+            curl -o citadel-drone -L
+            https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
+          </p>
+          <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
+          <p>./citadel-drone --host https://citadelnest.org --token TOKEN</p>
+        </div>
+      ),
+    },
   ];
 
   const [droneOs, setDroneOs] = useState('linux');
@@ -48,7 +94,7 @@ function AddDrone({ isOpen, onClose }) {
               >
                 Add a drone
               </Dialog.Title>
-              <div className='mt-2'>
+              <div className='mt-2 flex flex-col gap-3'>
                 <p className='text-sm text-gray-400'>
                   Adding a self hosted drone will allow you to create new instances. <br />
                   The drones will be used to run the game images on you instances. You can use your
@@ -56,7 +102,7 @@ function AddDrone({ isOpen, onClose }) {
                   instance.
                 </p>
                 <RadioGroup value={droneOs} onChange={setDroneOs} className='flex flex-col'>
-                  <RadioGroup.Label className='dark:text-white mt-5'>Drone runner</RadioGroup.Label>
+                  <RadioGroup.Label className='dark:text-white'>Drone runner</RadioGroup.Label>
                   <div className='flex gap-2'>
                     {droneOses.map((possibleOs) => (
                       <RadioGroup.Option
@@ -78,6 +124,13 @@ function AddDrone({ isOpen, onClose }) {
                     ))}
                   </div>
                 </RadioGroup>
+                <CodeSnippet>
+                  {droneOses.find((possibleOs) => possibleOs.name === droneOs).instructions}
+                </CodeSnippet>
+                <p className='text-xs dark:text-white'>
+                  Once the drone connects to the hive, you will be able to see it on the dashboard
+                  after refreshing.
+                </p>
               </div>
               <div className='mt-6 flex flex-row-reverse'>
                 <Button
@@ -87,7 +140,7 @@ function AddDrone({ isOpen, onClose }) {
                     addDrone();
                   }}
                 >
-                  Add the drone
+                  Done
                 </Button>
               </div>
             </div>
