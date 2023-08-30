@@ -11,6 +11,7 @@ function AddDrone({ isOpen, onClose }) {
   const droneOses = [
     {
       displayName: 'Linux',
+      disabled: false,
       name: 'linux',
       icon: faLinux,
       instructions: (
@@ -27,6 +28,7 @@ function AddDrone({ isOpen, onClose }) {
     },
     {
       displayName: 'macOS',
+      disabled: true,
       name: 'macos',
       icon: faApple,
       instructions: (
@@ -43,6 +45,7 @@ function AddDrone({ isOpen, onClose }) {
     },
     {
       displayName: 'Windows',
+      disabled: true,
       name: 'windows',
       icon: faWindows,
       instructions: (
@@ -107,8 +110,11 @@ function AddDrone({ isOpen, onClose }) {
                     {droneOses.map((possibleOs) => (
                       <RadioGroup.Option
                         key={possibleOs.name}
+                        disabled={possibleOs.disabled}
                         value={possibleOs.name}
                         className={`flex-1 rounded p-3 dark:text-white cursor-pointer ${
+                          possibleOs.disabled ? 'bg-gray-500/[.2] cursor-not-allowed' : ''
+                        } ${
                           droneOs === possibleOs.name
                             ? 'border-2 border-blue-500'
                             : 'border border-gray-600'
