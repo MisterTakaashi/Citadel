@@ -1,12 +1,13 @@
 {
   "name": "@citadelnest/drone",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The agent of citadel servers that control the containers",
   "main": "./dist/server.js",
   "scripts": {
     "build": "tsc --build",
     "start": "yarn build && node dist/server.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "package-binary": "yarn build; pkg dist/server.js -o bin/citadel-drone"
   },
   "bin": {
     "citadel-drone": "./dist/server.js"
@@ -46,6 +47,7 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-prettier": "^5.0.0",
     "nodemon": "^3.0.1",
+    "pkg": "^5.8.1",
     "prettier": "^3.0.2",
     "typescript": "~5.1.6"
   }
