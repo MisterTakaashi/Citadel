@@ -6,6 +6,7 @@ import { faApple, faLinux, faWindows } from '@fortawesome/free-brands-svg-icons'
 import Button from '../components/button';
 import CodeSnippet from '../components/code-snippet';
 import useApiAction from '../lib/useApiAction';
+import CodeSnippetCopyline from '../components/code-snippet-copyline';
 
 function AddDrone({ isOpen, onClose }) {
   const [token, setToken] = useState();
@@ -17,13 +18,12 @@ function AddDrone({ isOpen, onClose }) {
       icon: faLinux,
       instructions: (
         <div>
-          <p className='text-zinc-400'># Download the latest Drone runner</p>
-          <p>
-            curl -o citadel-drone -L
-            https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
-          </p>
-          <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
-          <p>./citadel-drone --host https://citadelnest.org --token {token}</p>
+          <p className='text-zinc-400 px-2'># Download the latest Drone runner</p>
+          <CodeSnippetCopyline text='curl -o citadel-drone -L https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone' />
+          <p className='text-zinc-400 px-2'># Run the drone with the Hive URL and the Token</p>
+          <CodeSnippetCopyline
+            text={`./citadel-drone --host https://citadelnest.org --token ${token}`}
+          />
         </div>
       ),
     },
@@ -32,34 +32,12 @@ function AddDrone({ isOpen, onClose }) {
       disabled: true,
       name: 'macos',
       icon: faApple,
-      instructions: (
-        <div>
-          <p className='text-zinc-400'># Download the latest Drone runner</p>
-          <p>
-            curl -o citadel-drone -L
-            https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
-          </p>
-          <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
-          <p>./citadel-drone --host https://citadelnest.org --token {token}</p>
-        </div>
-      ),
     },
     {
       displayName: 'Windows',
       disabled: true,
       name: 'windows',
       icon: faWindows,
-      instructions: (
-        <div>
-          <p className='text-zinc-400'># Download the latest Drone runner</p>
-          <p>
-            curl -o citadel-drone -L
-            https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
-          </p>
-          <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
-          <p>./citadel-drone --host https://citadelnest.org --token {token}</p>
-        </div>
-      ),
     },
   ];
 
