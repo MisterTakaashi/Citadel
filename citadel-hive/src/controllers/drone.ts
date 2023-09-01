@@ -1,4 +1,4 @@
-import { InstanceInfo, SyncMessage, renderError, renderSuccess } from 'citadel-lib';
+import { InstanceInfo, SyncMessage, renderError, renderSuccess } from '@citadelnest/lib';
 import { Request, Response } from 'express';
 import Drone, { DroneModel } from '../models/drone';
 import { ulid } from 'ulid';

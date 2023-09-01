@@ -1,23 +1,65 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, RadioGroup, Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faApple, faLinux, faWindows } from '@fortawesome/free-brands-svg-icons';
 import Button from '../components/button';
+import CodeSnippet from '../components/code-snippet';
 import useApiAction from '../lib/useApiAction';
+import CodeSnippetCopyline from '../components/code-snippet-copyline';
 
 function AddDrone({ isOpen, onClose }) {
-  const [address, setAddress] = useState('http://localhost:3001');
+  const [token, setToken] = useState();
+  const droneOses = [
+    {
+      displayName: 'Linux',
+      disabled: false,
+      name: 'linux',
+      icon: faLinux,
+      instructions: (
+        <div>
+          <p className='text-zinc-400 px-2'># Download the latest Drone runner</p>
+          <CodeSnippetCopyline text='curl -o citadel-drone -L https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone' />
+          <p className='text-zinc-400 px-2'># Run the drone with the Hive URL and the Token</p>
+          <CodeSnippetCopyline
+            text={`./citadel-drone --host https://citadelnest.org --token ${token}`}
+          />
+        </div>
+      ),
+    },
+    {
+      displayName: 'macOS',
+      disabled: true,
+      name: 'macos',
+      icon: faApple,
+    },
+    {
+      displayName: 'Windows',
+      disabled: true,
+      name: 'windows',
+      icon: faWindows,
+    },
+  ];
 
+  const didAddDrone = useRef(false);
+
+  const [droneOs, setDroneOs] = useState('linux');
   const [addDrone, { loading: loadingAdd }] = useApiAction(
     `/drones`,
     'drone',
     'POST',
-    ({ url }) => {
-      return {
-        url,
-      };
-    },
-    () => onClose()
+    () => ({}),
+    (_, { token: newToken }) => {
+      setToken(newToken);
+    }
   );
+
+  useEffect(() => {
+    if (!isOpen || didAddDrone.current) return;
+
+    didAddDrone.current = true;
+    addDrone();
+  }, [isOpen, addDrone]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -38,38 +80,57 @@ function AddDrone({ isOpen, onClose }) {
             leaveFrom='opacity-100 scale-100'
             leaveTo='opacity-0 scale-95'
           >
-            <div className='inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded'>
+            <div className='inline-block w-full max-w-xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 shadow-xl rounded'>
               <Dialog.Title
                 as='h3'
                 className='text-lg font-medium leading-6 text-gray-900 dark:text-white'
               >
                 Add a drone
               </Dialog.Title>
-              <div className='mt-2'>
+              <div className='mt-2 flex flex-col gap-3'>
                 <p className='text-sm text-gray-400'>
-                  Adding a drone will allow you to create new instances. <br />
-                  The drone will run the game images, you can add your own drone or use one of the
-                  drone of Citadel when creating an instance.
+                  Adding a self hosted drone will allow you to create new instances. <br />
+                  The drones will be used to run the game images on you instances. You can use your
+                  own self hosted drones or one of the Citadel&apos;s hosted drones when creating an
+                  instance.
                 </p>
-                <p className='dark:text-white mt-5'>Drone address</p>
-                <input
-                  value={address}
-                  onChange={(event) => {
-                    setAddress(event.target.value);
-                  }}
-                  inputMode='numeric'
-                  className='py-2 pl-3 pr-10 bg-white rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-blue-400 focus-visible:ring-offset-blue-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm text-black w-full'
-                />
+                <RadioGroup value={droneOs} onChange={setDroneOs} className='flex flex-col'>
+                  <RadioGroup.Label className='dark:text-white'>Drone runner</RadioGroup.Label>
+                  <div className='flex gap-2'>
+                    {droneOses.map((possibleOs) => (
+                      <RadioGroup.Option
+                        key={possibleOs.name}
+                        disabled={possibleOs.disabled}
+                        value={possibleOs.name}
+                        className={`flex-1 rounded p-3 dark:text-white cursor-pointer ${
+                          possibleOs.disabled ? 'bg-gray-500/[.2] cursor-not-allowed' : ''
+                        } ${
+                          droneOs === possibleOs.name
+                            ? 'border-2 border-blue-500'
+                            : 'border border-gray-600'
+                        }`}
+                      >
+                        <FontAwesomeIcon
+                          icon={possibleOs.icon}
+                          size='lg'
+                          className='text-gray-500'
+                        />{' '}
+                        {possibleOs.displayName}
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
+                <CodeSnippet>
+                  {droneOses.find((possibleOs) => possibleOs.name === droneOs).instructions}
+                </CodeSnippet>
+                <p className='text-xs dark:text-white'>
+                  Once the drone connects to the hive, you will be able to see it on the dashboard
+                  after refreshing.
+                </p>
               </div>
               <div className='mt-6 flex flex-row-reverse'>
-                <Button
-                  disabled={loadingAdd}
-                  loading={loadingAdd}
-                  onClick={() => {
-                    addDrone({ url: address });
-                  }}
-                >
-                  Add the drone
+                <Button disabled={loadingAdd} loading={loadingAdd} onClick={onClose}>
+                  Done
                 </Button>
               </div>
             </div>

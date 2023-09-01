@@ -5,10 +5,10 @@
   "repository": "https://github.com/MisterTakaashi/Citadel",
   "author": "MisterTakaashi",
   "scripts": {
-    "hive": "yarn workspace citadel-hive",
-    "drone": "yarn workspace citadel-drone",
-    "lib": "yarn workspace citadel-lib",
-    "app": "yarn workspace citadel-app"
+    "hive": "yarn workspace @citadelnest/hive",
+    "drone": "yarn workspace @citadelnest/drone",
+    "lib": "yarn workspace @citadelnest/lib",
+    "app": "yarn workspace @citadelnest/dashboard"
   },
   "license": "GPL-3.0-or-later",
   "private": true,

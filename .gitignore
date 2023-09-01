@@ -132,3 +132,5 @@ dist
 #IntelliJ
 .idea
 
+# Pkg binaries
+citadel-drone/bin

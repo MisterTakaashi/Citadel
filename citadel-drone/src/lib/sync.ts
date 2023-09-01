@@ -1,5 +1,5 @@
 import Docker from 'dockerode';
-import { SyncMessage } from 'citadel-lib';
+import { SyncMessage } from '@citadelnest/lib';
 import DockerProvider from '../providers/docker';
 import { queryHive } from './hive';
 import makeLogger from './logger';

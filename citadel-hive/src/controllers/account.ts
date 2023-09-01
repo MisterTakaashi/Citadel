@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { renderError, renderSuccess } from 'citadel-lib';
+import { renderError, renderSuccess } from '@citadelnest/lib';
 import Account, { AccountModel } from '../models/account';
 
 interface AccountCreateRequest {

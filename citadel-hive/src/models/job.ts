@@ -1,6 +1,6 @@
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { JobStatus, JobType, IJob } from 'citadel-lib';
+import { JobStatus, JobType, IJob } from '@citadelnest/lib';
 import Drone from './drone';
 
 class Job extends TimeStamps implements IJob {
