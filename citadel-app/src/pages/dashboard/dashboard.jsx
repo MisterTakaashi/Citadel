@@ -155,6 +155,7 @@ function Dashboard() {
             {drones &&
               drones
                 .filter((drone) => drone.selfHosted)
+                .filter((drone) => drone.registered)
                 .map((drone) => (
                   <div
                     className='flex flex-row md:flex-col xl:flex-row justify-between items-center sm:items-start xl:items-center'

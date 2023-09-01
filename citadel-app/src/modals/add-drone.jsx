@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, RadioGroup, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,7 @@ import CodeSnippet from '../components/code-snippet';
 import useApiAction from '../lib/useApiAction';
 
 function AddDrone({ isOpen, onClose }) {
+  const [token, setToken] = useState();
   const droneOses = [
     {
       displayName: 'Linux',
@@ -22,7 +23,7 @@ function AddDrone({ isOpen, onClose }) {
             https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
           </p>
           <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
-          <p>./citadel-drone --host https://citadelnest.org --token TOKEN</p>
+          <p>./citadel-drone --host https://citadelnest.org --token {token}</p>
         </div>
       ),
     },
@@ -39,7 +40,7 @@ function AddDrone({ isOpen, onClose }) {
             https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
           </p>
           <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
-          <p>./citadel-drone --host https://citadelnest.org --token TOKEN</p>
+          <p>./citadel-drone --host https://citadelnest.org --token {token}</p>
         </div>
       ),
     },
@@ -56,11 +57,13 @@ function AddDrone({ isOpen, onClose }) {
             https://github.com/MisterTakaashi/Citadel/releases/download/latest/citadel-drone
           </p>
           <p className='text-zinc-400'># Run the drone with the Hive URL and the Token</p>
-          <p>./citadel-drone --host https://citadelnest.org --token TOKEN</p>
+          <p>./citadel-drone --host https://citadelnest.org --token {token}</p>
         </div>
       ),
     },
   ];
+
+  const didAddDrone = useRef(false);
 
   const [droneOs, setDroneOs] = useState('linux');
   const [addDrone, { loading: loadingAdd }] = useApiAction(
@@ -68,8 +71,17 @@ function AddDrone({ isOpen, onClose }) {
     'drone',
     'POST',
     () => ({}),
-    () => onClose()
+    (_, { token: newToken }) => {
+      setToken(newToken);
+    }
   );
+
+  useEffect(() => {
+    if (!isOpen || didAddDrone.current) return;
+
+    didAddDrone.current = true;
+    addDrone();
+  }, [isOpen, addDrone]);
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -139,13 +151,7 @@ function AddDrone({ isOpen, onClose }) {
                 </p>
               </div>
               <div className='mt-6 flex flex-row-reverse'>
-                <Button
-                  disabled={loadingAdd}
-                  loading={loadingAdd}
-                  onClick={() => {
-                    addDrone();
-                  }}
-                >
+                <Button disabled={loadingAdd} loading={loadingAdd} onClick={onClose}>
                   Done
                 </Button>
               </div>
