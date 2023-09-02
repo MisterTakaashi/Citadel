@@ -41,6 +41,8 @@ function InstanceOverview() {
     navigate('/')
   );
 
+  const isRunning = instance?.infos?.state === 'running';
+
   return (
     <div className='container mx-auto flex flex-col lg:flex-row items-start gap-10 px-5 md:px-0'>
       <Card title='Details' className='w-full md:basis-1/3'>
@@ -161,9 +163,11 @@ function InstanceOverview() {
               </Button>
             )}
             <Button
-              disabled={loading || loadingStop || loadingStart}
+              disabled={
+                loading || loadingStop || loadingStart || instance.infos.state === 'running'
+              }
               color='slate'
-              className='mx-2'
+              className={`mx-2 ${isRunning ? 'cursor-not-allowed' : ''}`}
               onClick={() => {
                 destroyDrone();
               }}

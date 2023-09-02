@@ -17,7 +17,7 @@ const queryHive = async <T>(
     body: JSON.stringify(data),
   });
 
-  if (response.ok) return response.json();
+  if (response.ok) return { ...(await response.json()), status: response.status };
 
   if (response.status < 500) throw new Error((await response.json()).message);
 
@@ -35,15 +35,12 @@ const connectToHive = async (host: string, token: string) => {
 };
 
 const pollNextJob = async () => {
-  const { status, data: apiResponse } = await queryHive<{ status: number; data: { data: { job: IJob } } }>(
-    '/jobs',
-    'GET'
-  );
+  const { status, data } = await queryHive<{ status: number; data: { job: IJob } }>('/jobs', 'GET');
 
   if (status === 201) return;
-  if (apiResponse.data?.job === undefined || apiResponse.data.job === null) return;
+  if (data?.job === undefined || data.job === null) return;
 
-  const { job } = apiResponse.data;
+  const { job } = data;
 
   logger.info(`New job polled (${job.jobType}) (${job.status})`);
 

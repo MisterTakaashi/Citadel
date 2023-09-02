@@ -4,16 +4,20 @@ import makeLogger from '../lib/logger';
 
 const logger = makeLogger(module);
 
-export default async ({ name }: { name: string }) => {
-  logger.info(`Starting instance (${name})...`);
+interface InstanceStartParams {
+  instance: string;
+}
+
+export default async ({ instance }: InstanceStartParams) => {
+  logger.info(`Starting instance (${instance})...`);
 
   const provider = new DockerProvider(new Docker());
   try {
-    await provider.startInstance(name);
+    await provider.startInstance(instance);
   } catch (err) {
     logger.error(`Cannot start instance: ${err.reason}`);
     return;
   }
 
-  logger.info(`Instance (${name}) started`);
+  logger.info(`Instance (${instance}) started`);
 };
