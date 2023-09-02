@@ -95,13 +95,19 @@ class InstanceController {
   }
 
   // POST /instances/:name/start
-  async start(req: Request, res: Response) {
+  async start(req: Request & { session: Session }, res: Response) {
     const { name } = req.params as { name: string };
+    const { session } = req;
+
+    const userDrones = await DroneModel.find({ owner: session.account });
+
+    const instance = await InstanceModel.findOne({ name, drone: { $in: userDrones } });
 
     const job = new JobModel({
       jobType: JobType.START_INSTANCE,
       status: JobStatus.CREATED,
       parameters: { instance: name },
+      drone: instance.drone,
     });
     await job.save();
 
