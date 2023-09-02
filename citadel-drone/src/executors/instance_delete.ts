@@ -4,12 +4,16 @@ import makeLogger from '../lib/logger';
 
 const logger = makeLogger(module);
 
-export default async ({ name }: { name: string }) => {
-  logger.info(`Deleting instance (${name})...`);
+interface InstanceDeleteParams {
+  instance: string;
+}
+
+export default async ({ instance }: InstanceDeleteParams) => {
+  logger.info(`Deleting instance (${instance})...`);
 
   const provider = new DockerProvider(new Docker());
   try {
-    await provider.removeInstance(name);
+    await provider.removeInstance(instance);
   } catch (err) {
     if (err.statusCode === 409) {
       logger.error('Cannot remove a running container');
@@ -19,5 +23,5 @@ export default async ({ name }: { name: string }) => {
     return;
   }
 
-  logger.info(`Instance (${name}) deleted`);
+  logger.info(`Instance (${instance}) deleted`);
 };

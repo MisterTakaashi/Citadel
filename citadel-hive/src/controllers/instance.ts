@@ -59,15 +59,19 @@ class InstanceController {
   }
 
   // DELETE /instances/:name
-  async remove(req: Request, res: Response) {
+  async remove(req: Request & { session: Session }, res: Response) {
     const { name } = req.params;
+    const { session } = req;
+
+    const userDrones = await DroneModel.find({ owner: session.account });
+
+    const instance = await InstanceModel.findOne({ name, drone: { $in: userDrones } });
 
     const job = new JobModel({
       jobType: JobType.DELETE_INSTANCE,
       status: JobStatus.CREATED,
-      parameters: {
-        instance: name,
-      },
+      parameters: { instance: name },
+      drone: instance.drone,
     });
     await job.save();
 
