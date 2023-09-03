@@ -7,6 +7,7 @@ import { InstanceModel } from '../models/instance';
 import { Promise as PromiseBB } from 'bluebird';
 import makeLogger from '../lib/logger';
 import Session from '../models/session';
+import { getRedisClient } from '../lib/redis';
 
 const logger = makeLogger(module);
 
@@ -88,7 +89,9 @@ class DroneController {
   // PUT /drones/sync
   async sync(req: Request & { drone: Drone }, res: Response & { drone: Drone; request: { body: SyncMessage } }) {
     const { token } = req.drone;
-    const { instances } = req.body as { instances: InstanceInfo[] };
+    const { instances, instancesLogs } = req.body as SyncMessage;
+
+    const redis = await getRedisClient();
 
     const drone = await DroneModel.findOne({ token });
 
@@ -118,6 +121,10 @@ class DroneController {
     });
 
     await InstanceModel.deleteMany({ drone: drone, name: { $nin: instances.map((instance) => instance.name) } });
+
+    await PromiseBB.each(instancesLogs, ([instanceName, logs]) => {
+      redis.sAdd(`instances:${instanceName}:logs:${Math.floor(Date.now() / 1000)}`, logs);
+    });
 
     renderSuccess(res, {});
   }
