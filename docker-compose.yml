@@ -16,3 +16,18 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongo
     depends_on:
       - mongo
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+
+  redis-commander:
+    image: rediscommander/redis-commander
+    environment:
+      REDIS_HOST: redis
+    ports:
+      - 8082:8081
+    depends_on:
+      - redis
