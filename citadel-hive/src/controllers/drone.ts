@@ -18,6 +18,13 @@ class DroneController {
     });
   }
 
+  // GET /drone/:name
+  async show(req: Request, res: Response) {
+    const { name } = req.params;
+
+    renderSuccess(res, { drone: await DroneModel.findOne({ name }) });
+  }
+
   // POST /drones
   async create(req: Request & { session: Session }, res: Response) {
     const { session } = req;
