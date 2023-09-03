@@ -25,6 +25,15 @@ class DroneController {
     renderSuccess(res, { drone: await DroneModel.findOne({ name }) });
   }
 
+  // GET /drone
+  async connected(req: Request & { drone: Drone }, res: Response) {
+    const { token } = req.drone;
+
+    const drone = await DroneModel.findOne({ token });
+
+    renderSuccess(res, { drone });
+  }
+
   // POST /drones
   async create(req: Request & { session: Session }, res: Response) {
     const { session } = req;
