@@ -7,11 +7,13 @@ import { connect } from 'mongoose';
 
 import router from './router';
 import makeLogger from './lib/logger';
+import { initRedis } from './lib/redis';
 
 (async () => {
   config();
 
   await connect(`mongodb://localhost:27017/citadel_${process.env.NODE_ENV || 'development'}`);
+  await initRedis();
 
   const logger = makeLogger(module);
 

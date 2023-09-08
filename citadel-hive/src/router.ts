@@ -28,6 +28,10 @@ router.get('/instances/:name/logs', validateAuthentication, new InstanceControll
 // Drones
 router.get('/drones', validateAuthentication, new DroneController().index);
 
+router.get('/drones/:name', validateAuthentication, new DroneController().show);
+
+router.get('/drone', validateDroneAuthentication, new DroneController().connected);
+
 router.post('/drones', validateAuthentication, new DroneController().create);
 
 router.post('/drones/register', validateDroneAuthentication, new DroneController().register);

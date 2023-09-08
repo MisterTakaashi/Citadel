@@ -124,13 +124,7 @@ class DroneController {
 
     await PromiseBB.each(instancesLogs, async ([instanceName, logs]) => {
       const logKey = `instances:${instanceName}:logs`;
-
-      const existingLogEntries = (await redis.keys(`${logKey}:*`)).sort((a, b) => a.localeCompare(b));
-      if (existingLogEntries.length > 10) {
-        const entriestoDelete = existingLogEntries.splice(0, existingLogEntries.length - 10);
-        await redis.del(entriestoDelete);
-      }
-
+      const existingLogEntries = await redis.keys(`${logKey}:*`);
       await redis.sAdd(`${logKey}:${Math.floor(Date.now() / 1000)}`, logs);
     });
 
