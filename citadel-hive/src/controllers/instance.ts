@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
+import * as PromiseBB from 'bluebird';
 import { renderError, renderSuccess, InstanceVolume, JobStatus, JobType } from '@citadelnest/lib';
 import { DroneModel } from '../models/drone';
 import { getImageConfig } from '../lib/config-query';
 import { JobModel } from '../models/job';
 import { InstanceModel } from '../models/instance';
 import Session from '../models/session';
+import { getRedisClient } from '../lib/redis';
 
 interface InstanceCreateRequest {
   drone: string;
@@ -137,8 +139,20 @@ class InstanceController {
   }
 
   // GET /instances/:name/logs
-  async logs(_: Request, res: Response) {
-    renderSuccess(res, { logs: [] });
+  async logs(req: Request, res: Response) {
+    const { name } = req.params as { name: string };
+
+    const redis = await getRedisClient();
+
+    const logKey = `instances:${name}:logs`;
+    const existingLogEntries = (await redis.keys(`${logKey}:*`)).sort((a, b) => a.localeCompare(b));
+    const logs = await PromiseBB.reduce(
+      existingLogEntries,
+      async (acc, existingLogEntry) => [...acc, ...(await redis.sMembers(existingLogEntry))],
+      []
+    );
+
+    renderSuccess(res, { logs });
   }
 }
 
