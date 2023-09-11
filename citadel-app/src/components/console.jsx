@@ -41,7 +41,7 @@ function Console({ logs, refresh, refreshInterval }) {
           className={`mb-2 break-all ${log.charAt(0) === '\u0065' ? 'text-red-500' : ''}`}
           key={uniqueId(log)}
         >
-          {log.substring('1')}
+          {log}
         </p>
       ))}
       <div ref={consoleEndRef} />

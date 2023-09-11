@@ -1,0 +1,90 @@
+use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
+
+use crate::{executors, providers};
+
+#[derive(Debug, Deserialize)]
+pub enum JobStatus {
+    #[serde(rename = "created")]
+    CREATED,
+    #[serde(rename = "delivered")]
+    DELIVERED,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum JobType {
+    #[serde(rename = "create_instance")]
+    CreateInstance,
+    #[serde(rename = "delete_instance")]
+    DeleteInstance,
+    #[serde(rename = "start_instance")]
+    StartInstance,
+    #[serde(rename = "stop_instance")]
+    StopInstance,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Resources {
+    pub cpu: u8,
+    pub ram: u8,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Volume {
+    pub to: String,
+    pub from: String,
+    pub file: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct JobParametersConfig {
+    #[serde(rename = "portsMapping")]
+    pub ports_mapping: HashMap<String, String>,
+    pub volumes: Vec<Volume>,
+    #[serde(rename = "environmentVariables")]
+    pub environment_variables: HashMap<String, String>,
+    pub resources: Resources,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct InstanceCreateJobParameters {
+    pub image: String,
+    pub config: JobParametersConfig,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct InstanceStartJobParameters {
+    pub instance: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct JobParameters {
+    pub value: serde_json::Value,
+}
+impl JobParameters {
+    pub fn from_value<T: impl DeserializeOwned>(&self, job_type: &JobType) -> T {
+        match job_type {
+            JobType::StartInstance => InstanceStartJobParameters {
+                instance: "Lol".to_owned()
+            },
+            _ => InstanceStartJobParameters {
+                instance: "Lol".to_owned()
+            },
+        }
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Job {
+    #[serde(rename = "jobType")]
+    job_type: JobType,
+    status: JobStatus,
+    parameters: serde_json::Value,
+}
+
+impl Job {
+    pub async fn execute(&self, provider: &impl providers::ProviderImpl) {
+        executors::dispatch(&self.job_type, provider, self.parameters.clone()).await;
+    }
+}

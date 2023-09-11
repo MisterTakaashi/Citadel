@@ -2,7 +2,7 @@ import InstanceInfo from "./InstanceInfo";
 
 interface SyncMessage {
   instances: InstanceInfo[];
-  instancesLogs: (string | string[])[][];
+  instancesLogs: { [instanceName: string]: string[] };
 }
 
 export default SyncMessage;
