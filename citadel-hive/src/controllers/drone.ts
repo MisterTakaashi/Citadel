@@ -122,7 +122,7 @@ class DroneController {
 
     await InstanceModel.deleteMany({ drone: drone, name: { $nin: instances.map((instance) => instance.name) } });
 
-    await PromiseBB.each(instancesLogs, async ([instanceName, logs]) => {
+    await PromiseBB.each(Object.entries(instancesLogs), async ([instanceName, logs]) => {
       const logKey = `instances:${instanceName}:logs`;
 
       const existingLogEntries = (await redis.keys(`${logKey}:*`)).sort((a, b) => a.localeCompare(b));
@@ -131,7 +131,10 @@ class DroneController {
         await redis.del(entriestoDelete);
       }
 
-      await redis.sAdd(`${logKey}:${Math.floor(Date.now() / 1000)}`, logs);
+      await PromiseBB.each(logs, async (log) => {
+        console.log('Adding', log);
+        await redis.rPush(`${logKey}:${Math.floor(Date.now() / 1000)}`, log);
+      });
     });
 
     renderSuccess(res, {});

@@ -148,7 +148,7 @@ class InstanceController {
     const existingLogEntries = (await redis.keys(`${logKey}:*`)).sort((a, b) => a.localeCompare(b));
     const logs = await PromiseBB.reduce(
       existingLogEntries,
-      async (acc, existingLogEntry) => [...acc, ...(await redis.sMembers(existingLogEntry))],
+      async (acc, existingLogEntry) => [...acc, ...(await redis.lRange(existingLogEntry, 0, -1))],
       []
     );
 
