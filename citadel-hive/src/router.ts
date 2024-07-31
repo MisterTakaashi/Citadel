@@ -30,8 +30,6 @@ router.get('/drones', validateAuthentication, new DroneController().index);
 
 router.get('/drones/:name', validateAuthentication, new DroneController().show);
 
-router.get('/drone', validateDroneAuthentication, new DroneController().connected);
-
 router.post('/drones', validateAuthentication, new DroneController().create);
 
 router.post('/drones/register', validateDroneAuthentication, new DroneController().register);
@@ -51,7 +49,9 @@ router.get('/sessions/:token', validateAuthentication, new SessionController().d
 
 router.post('/sessions', new SessionController().create);
 
-// Jobs
-router.get('/jobs', validateDroneAuthentication, new JobController().index);
+// Connected drone
+router.get('/drone', validateDroneAuthentication, new DroneController().connected);
+
+router.get('/drone/jobs', validateDroneAuthentication, new JobController().drone);
 
 export default router;

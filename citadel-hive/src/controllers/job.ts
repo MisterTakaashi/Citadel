@@ -5,10 +5,8 @@ import { Promise as PromiseBB } from 'bluebird';
 import Drone from '../models/drone';
 
 class JobController {
-  // TODO: this should not be the GET endpoint for /jobs, it should return all the jobs just as an information
-  // We should add an expoint explicitly for the drone to query
-  // GET /jobs !!WARNING this endpoint is a long poll endpoint!!
-  async index(req: Request & { drone: Drone }, res: Response) {
+  // GET /drone/jobs !!WARNING this endpoint is a long poll endpoint!!
+  async drone(req: Request & { drone: Drone }, res: Response) {
     const { drone } = req;
 
     const MAX_RETRIES = 10;

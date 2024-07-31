@@ -103,7 +103,7 @@ impl Hive {
 
     pub async fn fetch_jobs(&self, provider: &impl providers::ProviderImpl) -> () {
         let job = self
-            .query::<JobResponse, ()>("/jobs", reqwest::Method::GET, None)
+            .query::<JobResponse, ()>("/drone/jobs", reqwest::Method::GET, None)
             .await;
 
         if job.is_err() {
