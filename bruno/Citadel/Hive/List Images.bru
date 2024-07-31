@@ -1,0 +1,15 @@
+meta {
+  name: List Images
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3000/images
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRldkBjaXRhZGVsLmlvIiwiaWF0IjoxNzIyNDYwMjExfQ.7QeUdWk61GpDZC1gxrJZSpICbDsnUt2qGMIknFt5Bsk
+}
