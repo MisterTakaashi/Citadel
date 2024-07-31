@@ -1,0 +1,22 @@
+meta {
+  name: Create Instance
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3001/instances
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "image": "mistertakaashi/citadel-gmod-4000:latest",
+      "name": "gmod",
+      "config": {
+          "portsMapping": {"27015/udp": "27015"},
+          "volumes": []
+      }
+  }
+}
