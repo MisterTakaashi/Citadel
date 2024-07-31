@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { JobStatus, renderSuccess } from '@citadelnest/lib';
+import { JobStatus, renderError, renderSuccess } from '@citadelnest/lib';
 import { JobModel } from '../models/job';
 import { Promise as PromiseBB } from 'bluebird';
 import Drone from '../models/drone';
+import { JobCloseRequest } from './models/job';
 
 class JobController {
   // GET /drone/jobs !!WARNING this endpoint is a long poll endpoint!!
@@ -31,6 +32,31 @@ class JobController {
     renderSuccess(res, {
       job,
     });
+  }
+
+  // PUT /jobs/:jobId/close
+  async close(req: Request & { drone: Drone }, res: Response) {
+    const { jobId } = req.params;
+    const { status, reason } = req.body as JobCloseRequest;
+
+    const job = await JobModel.findById(jobId);
+
+    if (job === null) {
+      renderError(res, 404, 'Cannot find job');
+      return;
+    }
+
+    if (!Object.values(JobStatus).includes(status)) {
+      renderError(res, 400, 'This job status does not exist');
+      return;
+    }
+
+    job.status = status;
+    job.reason = reason;
+
+    await job.save();
+
+    renderSuccess(res, {});
   }
 }
 

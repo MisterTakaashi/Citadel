@@ -15,6 +15,9 @@ class Job extends TimeStamps implements IJob {
 
   @prop()
   public parameters: unknown;
+
+  @prop()
+  public reason: string;
 }
 
 const JobModel = getModelForClass(Job);
