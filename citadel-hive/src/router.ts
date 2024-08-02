@@ -50,6 +50,8 @@ router.get('/sessions/:token', validateAuthentication, new SessionController().d
 router.post('/sessions', new SessionController().create);
 
 // Jobs
+router.get('/jobs', validateAuthentication, new JobController().index);
+
 router.put('/jobs/:jobId/close', validateDroneAuthentication, new JobController().close);
 
 // Connected drone
