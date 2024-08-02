@@ -1,12 +1,16 @@
+use std::sync::OnceLock;
+
 use log::info;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 use crate::{job, providers};
 
+#[derive(Debug)]
 pub struct Hive {
     url: String,
     token: String,
 }
+static INSTANCE: OnceLock<Hive> = OnceLock::new();
 
 #[derive(Debug)]
 pub enum HiveError {
@@ -48,11 +52,19 @@ pub struct JobResponse {
 }
 
 impl Hive {
-    pub fn new(url: String, token: String) -> Self {
-        Self { url, token }
+    pub async fn initialize(
+        url: String,
+        token: String,
+    ) -> Result<HiveResponse<DroneRegisterResponse>, HiveError> {
+        INSTANCE
+            .set(Self { url, token })
+            .expect("Cannot initialize Hive");
+
+        Self::query::<DroneRegisterResponse, ()>("/drones/register", reqwest::Method::POST, None)
+            .await
     }
 
-    async fn build_client(&self) -> Result<reqwest::Client, HiveError> {
+    async fn build_client(hive: &Hive) -> Result<reqwest::Client, HiveError> {
         let mut headers = reqwest::header::HeaderMap::new();
         headers.insert(
             reqwest::header::CONTENT_TYPE,
@@ -61,7 +73,7 @@ impl Hive {
 
         headers.insert(
             "X-Api-Key",
-            reqwest::header::HeaderValue::from_str(self.token.as_str()).unwrap(),
+            reqwest::header::HeaderValue::from_str(hive.token.as_str()).unwrap(),
         );
 
         let client_builder = reqwest::Client::builder();
@@ -71,7 +83,6 @@ impl Hive {
     }
 
     pub async fn query<T, B>(
-        &self,
         endpoint: &str,
         method: reqwest::Method,
         body: Option<&B>,
@@ -80,9 +91,10 @@ impl Hive {
         T: DeserializeOwned,
         B: Serialize,
     {
-        let client = self.build_client().await?;
+        let hive = INSTANCE.get().expect("Hive must be initialized");
+        let client = Self::build_client(&hive).await?;
 
-        let mut request = client.request(method, format!("{}{}", self.url, endpoint));
+        let mut request = client.request(method, format!("{}{}", hive.url, endpoint));
 
         if body.is_some() {
             request = request.json::<B>(&body.unwrap());
@@ -96,15 +108,8 @@ impl Hive {
         Ok(result.json::<HiveResponse<T>>().await?)
     }
 
-    pub async fn register(&self) -> Result<HiveResponse<DroneRegisterResponse>, HiveError> {
-        self.query::<DroneRegisterResponse, ()>("/drones/register", reqwest::Method::POST, None)
-            .await
-    }
-
-    pub async fn fetch_jobs(&self, provider: &impl providers::ProviderImpl) -> () {
-        let job = self
-            .query::<JobResponse, ()>("/drone/jobs", reqwest::Method::GET, None)
-            .await;
+    pub async fn fetch_jobs(provider: &impl providers::ProviderImpl) -> () {
+        let job = Hive::query::<JobResponse, ()>("/drone/jobs", reqwest::Method::GET, None).await;
 
         if job.is_err() {
             info!("{job:?}");
@@ -118,11 +123,8 @@ impl Hive {
             return;
         }
 
-        unwrapped_job_option
-            .data
-            .job
-            .unwrap()
-            .execute(provider)
-            .await;
+        let final_job = unwrapped_job_option.data.job.unwrap();
+
+        final_job.execute(provider).await;
     }
 }
