@@ -6,6 +6,13 @@ import Drone from '../models/drone';
 import { JobCloseRequest } from './models/job';
 
 class JobController {
+  // GET /jobs
+  async index(_: Request, res: Response) {
+    renderSuccess(res, {
+      jobs: await JobModel.find({}).populate('drone').limit(20),
+    });
+  }
+
   // GET /drone/jobs !!WARNING this endpoint is a long poll endpoint!!
   async drone(req: Request & { drone: Drone }, res: Response) {
     const { drone } = req;
