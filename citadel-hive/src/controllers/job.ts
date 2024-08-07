@@ -9,7 +9,7 @@ class JobController {
   // GET /jobs
   async index(_: Request, res: Response) {
     renderSuccess(res, {
-      jobs: await JobModel.find({}).populate('drone').limit(20),
+      jobs: await JobModel.find({}).sort({ createdAt: -1 }).populate('drone').limit(20),
     });
   }
 
