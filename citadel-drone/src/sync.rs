@@ -53,27 +53,29 @@ impl From<hive::HiveError> for SyncError {
 }
 
 impl Hive {
-    pub async fn sync(&self, provider: &impl providers::ProviderImpl) -> Result<(), SyncError> {
+    pub async fn sync(provider: &impl providers::ProviderImpl) -> Result<(), SyncError> {
         let instances = provider.get_instances().await?;
 
-        let result = self
-            .query::<DroneInfoResponse, ()>("/drone", reqwest::Method::GET, None)
-            .await?;
+        let result =
+            Hive::query::<DroneInfoResponse, ()>("/drone", reqwest::Method::GET, None).await?;
 
         let mut instances_logs = HashMap::new();
 
         for instance in &instances {
-            instances_logs.insert(instance.name.clone(), provider
-                .get_logs(
-                    instance.name.as_str(),
-                    result
-                       .data
-                       .drone
-                       .last_sync
-                       .unwrap_or(OffsetDateTime::now_utc())
-                       .unix_timestamp(),
-                )
-                .await?);
+            instances_logs.insert(
+                instance.name.clone(),
+                provider
+                    .get_logs(
+                        instance.name.as_str(),
+                        result
+                            .data
+                            .drone
+                            .last_sync
+                            .unwrap_or(OffsetDateTime::now_utc())
+                            .unix_timestamp(),
+                    )
+                    .await?,
+            );
         }
 
         let body = SyncBody {
@@ -83,7 +85,7 @@ impl Hive {
 
         println!("{body:#?}");
 
-        self.query::<HashMap<(), ()>, SyncBody>("/sync", reqwest::Method::PUT, Some(&body))
+        Hive::query::<HashMap<(), ()>, SyncBody>("/sync", reqwest::Method::PUT, Some(&body))
             .await?;
 
         Ok(())

@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize, de::DeserializeOwned};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use crate::{executors, providers};
+use crate::{executors, hive::Hive, providers};
 
 #[derive(Debug, Deserialize)]
 pub enum JobStatus {
@@ -73,21 +73,48 @@ pub struct JobParameters {
     pub value: serde_json::Value,
 }
 
+#[derive(Debug, Serialize)]
+pub struct JobCloseBody {
+    status: String,
+    reason: Option<String>,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Job {
+    #[serde(rename = "_id")]
+    pub id: String,
     #[serde(rename = "jobType")]
     pub job_type: JobType,
     pub status: JobStatus,
     pub parameters: serde_json::Value,
 }
 impl Job {
-    pub fn from_value<T>(&self) -> T where T: DeserializeOwned {
+    pub fn from_value<T>(&self) -> T
+    where
+        T: DeserializeOwned,
+    {
         serde_json::from_value(self.parameters.clone()).unwrap()
     }
 }
 
 impl Job {
     pub async fn execute(&self, provider: &impl providers::ProviderImpl) {
-        executors::dispatch(&self, provider).await;
+        let close_body = match executors::dispatch(&self, provider).await {
+            Ok(_) => JobCloseBody {
+                reason: None,
+                status: "done".to_string(),
+            },
+            Err(err) => JobCloseBody {
+                reason: Some(format!("{err:?}")),
+                status: "failed".to_string(),
+            },
+        };
+
+        let _ = Hive::query::<HashMap<(), ()>, JobCloseBody>(
+            &format!("/jobs/{}/close", self.id)[..],
+            reqwest::Method::PUT,
+            Some(&close_body),
+        )
+        .await;
     }
 }

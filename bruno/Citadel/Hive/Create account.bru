@@ -1,0 +1,15 @@
+meta {
+  name: Create account
+  type: http
+  seq: 14
+}
+
+post {
+  url: http://localhost:3000/accounts
+  body: json
+  auth: none
+}
+
+body:json {
+  { "email": "soapmctravich@gmail.com", "password": "gougougou" }
+}

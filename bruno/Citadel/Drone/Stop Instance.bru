@@ -1,0 +1,11 @@
+meta {
+  name: Stop Instance
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3001/instances/citadel_redis/stop
+  body: json
+  auth: none
+}

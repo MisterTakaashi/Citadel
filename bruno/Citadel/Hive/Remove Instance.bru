@@ -1,0 +1,11 @@
+meta {
+  name: Remove Instance
+  type: http
+  seq: 13
+}
+
+delete {
+  url: http://localhost:3000/instances/citadel_gmod
+  body: json
+  auth: none
+}

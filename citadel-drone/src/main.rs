@@ -67,16 +67,15 @@ async fn main() {
     info!("🐝 Launching the Drone...");
     info!("Url: {}, Token: {}", url, token);
 
-    let server = Hive::new(url, token);
-    let restult2 = server.register().await;
-    info!("{:?}", restult2);
+    let initialization_result = Hive::initialize(url, token).await;
+    info!("{:?}", initialization_result);
 
     let provider = &providers::Provider::docker().unwrap();
 
     loop {
-        server.fetch_jobs(provider).await;
+        Hive::fetch_jobs(provider).await;
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let result = server.sync(provider).await;
+        let result = Hive::sync(provider).await;
 
         println!("{result:?}");
     }

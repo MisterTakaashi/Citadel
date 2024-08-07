@@ -1,0 +1,11 @@
+meta {
+  name: Remove Instance
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:3001/instances/citadel_redis
+  body: json
+  auth: none
+}

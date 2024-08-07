@@ -1,0 +1,36 @@
+meta {
+  name: Create Instance
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:3000/instances
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "image": "gmod-4000",
+      "name": "gmod",
+      "drone": "angry beetle",
+      "config": {
+          "portsMapping": {"27015/udp": "27015"},
+          "volumes": [
+              {
+                  "from": "/home/pauld/Desktop/pouet/sv.db",
+                  "to": "gmod_sv_db",
+                  "file": true
+              }
+          ],
+          "environmentVariables": {
+              "pouet": "valid"
+          },
+          "resources": {
+              "cpu": 2,
+              "ram": 5
+          }
+      }
+  }
+}

@@ -27,6 +27,16 @@ function ServerStatus({ state, background, className, size, bullet }) {
   );
 }
 
+const DroneType = PropTypes.shape({
+  _id: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  registered: PropTypes.bool.isRequired,
+  selfHosted: PropTypes.bool.isRequired,
+  owner: PropTypes.string.isRequired,
+  createdAt: PropTypes.string,
+  updatedAt: PropTypes.string,
+});
+
 ServerStatus.propTypes = {
   state: PropTypes.string.isRequired,
   background: PropTypes.bool,
@@ -43,3 +53,4 @@ ServerStatus.defaultProps = {
 };
 
 export default ServerStatus;
+export { DroneType };
