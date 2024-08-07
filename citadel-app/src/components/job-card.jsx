@@ -12,6 +12,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { DroneType } from './drone-status';
+import CodeSnippet from './code-snippet';
 
 const stateColors = Object.freeze({
   created: { color: 'text-blue-600', icon: faInbox },
@@ -66,6 +67,7 @@ function JobCard({ job }) {
           </Link>
         </div>
       </div>
+      {job.reason && <CodeSnippet>{job.reason}</CodeSnippet>}
       <div className='flex gap-1 px-2 border-gray-600 border-t-2 py-0.5'>
         <span className='text-xs bg-slate-900 p-1'>
           <FontAwesomeIcon icon={faServer} className='px-1' />
