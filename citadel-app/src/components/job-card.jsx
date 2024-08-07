@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
   faGear,
+  faHourglass,
   faInbox,
   faServer,
   faSquare,
@@ -18,6 +19,33 @@ const stateColors = Object.freeze({
   done: { color: 'text-green-600', icon: faCheck },
   failed: { color: 'text-red-600', icon: faXmark },
 });
+
+function timeSince(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+
+  let interval = seconds / 31536000;
+
+  if (interval > 1) {
+    return `${Math.floor(interval)} years ago`;
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    return `${Math.floor(interval)} months ago`;
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return `${Math.floor(interval)} days ago`;
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return `${Math.floor(interval)} hours ago`;
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return `${Math.floor(interval)} minutes ago`;
+  }
+  return `${Math.floor(seconds)} seconds ago`;
+}
 
 function JobCard({ job }) {
   return (
@@ -38,10 +66,15 @@ function JobCard({ job }) {
           </Link>
         </div>
       </div>
-      <div className='px-2 border-gray-600 border-t-2 py-0.5'>
+      <div className='flex gap-1 px-2 border-gray-600 border-t-2 py-0.5'>
         <span className='text-xs bg-slate-900 p-1'>
           <FontAwesomeIcon icon={faServer} className='px-1' />
           {job.drone.name}
+        </span>
+
+        <span className='text-xs bg-slate-900 p-1' title={job.createdAt}>
+          <FontAwesomeIcon icon={faHourglass} className='px-1' />
+          {timeSince(new Date(job.createdAt))}
         </span>
       </div>
     </div>
