@@ -1,0 +1,19 @@
+meta {
+  name: Create server
+  type: http
+  seq: 11
+}
+
+post {
+  url: http://localhost:3000/servers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvYXBtY3RyYXZpY2hAZ21haWwuY29tIiwiaWF0IjoxNjU2OTQwOTEyfQ.iXesg61OOfYUECqYOE2v1nGguea7C9AAEtfAUt1XO4Y
+}
+
+body:json {
+  { "url": "http://localhost:3001" }
+}

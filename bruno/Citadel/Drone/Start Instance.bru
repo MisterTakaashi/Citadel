@@ -1,0 +1,11 @@
+meta {
+  name: Start Instance
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3001/instances/citadel_redis/start
+  body: json
+  auth: none
+}
