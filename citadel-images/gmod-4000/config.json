@@ -5,12 +5,12 @@
     "27015/udp"
   ],
   "docker": {
-    "image": "mistertakaashi/citadel-gmod-4000:latest"
+    "image": "hackebein/garrysmod:latest"
   },
   "persistences": [
     {
       "name": "gmod_sv_db",
-      "path": "/home/steam/gameserver/garrysmod/sv.db",
+      "path": "/opt/steam/garrysmod/sv.db",
       "type": "save_file"
     }
   ],
