@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true
   },
   "include": [
-    "src"
+    "src/**/*"
   ]
 }

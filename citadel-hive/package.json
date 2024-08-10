@@ -5,7 +5,7 @@
   "main": "./dist/server.js",
   "scripts": {
     "build": "tsc --build",
-    "start": "yarn build && node dist/server.js",
+    "start": "yarn build && copyfiles ./configurations/**/*.json ./dist/ && node dist/server.js",
     "dev": "nodemon",
     "seed": "yarn build && node dist/seed.js"
   },
@@ -38,6 +38,7 @@
     "@types/node": "22.0.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.8.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.0.0",
