@@ -9,7 +9,11 @@ import useAuth from '../lib/useAuth';
 import useApiQuery from '../lib/useApiQuery';
 import JobCard from './job-card';
 
-function Layout({ noNavbar, children }) {
+function Layout(
+  { noNavbar, children } = {
+    noNavbar: false,
+  }
+) {
   const location = useLocation();
   const { user } = useAuth();
 
@@ -178,10 +182,6 @@ function Layout({ noNavbar, children }) {
 Layout.propTypes = {
   noNavbar: PropTypes.bool,
   children: PropTypes.node.isRequired,
-};
-
-Layout.defaultProps = {
-  noNavbar: false,
 };
 
 export default Layout;

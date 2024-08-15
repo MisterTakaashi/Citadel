@@ -44,7 +44,12 @@
       "plugin:prettier/recommended",
       "plugin:jsx-a11y/recommended",
       "prettier"
-    ]
+    ],
+    "rules": {
+      "react/require-default-props": [2, {
+        "functions": "defaultArguments"
+      }]
+    }
   },
   "browserslist": {
     "production": [

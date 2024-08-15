@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Card({ title, children, className }) {
+function Card(
+  { title, children, className } = {
+    className: '',
+    children: <div />,
+  }
+) {
   return (
     <div className={`dark:bg-gray-800 dark:text-white p-5 rounded ${className}`}>
       <p className='text-2xl px-3'>{title}</p>
@@ -15,11 +20,6 @@ Card.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
   className: PropTypes.string,
-};
-
-Card.defaultProps = {
-  className: '',
-  children: <div />,
 };
 
 export default Card;

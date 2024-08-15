@@ -8,7 +8,11 @@ import CodeSnippet from '../components/code-snippet';
 import useApiAction from '../lib/useApiAction';
 import CodeSnippetCopyline from '../components/code-snippet-copyline';
 
-function AddDrone({ isOpen, onClose }) {
+function AddDrone(
+  { isOpen, onClose } = {
+    onClose: () => {},
+  }
+) {
   const [token, setToken] = useState();
   const droneOses = [
     {
@@ -144,10 +148,6 @@ function AddDrone({ isOpen, onClose }) {
 AddDrone.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
-};
-
-AddDrone.defaultProps = {
-  onClose: () => {},
 };
 
 export default AddDrone;

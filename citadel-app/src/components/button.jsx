@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
-function ButtonComponent({ color, children, size, className, onClick, disabled, loading }) {
+function ButtonComponent(
+  { color, children, size, className, onClick, disabled, loading } = {
+    color: 'blue',
+    size: 'md',
+    className: '',
+    onClick: () => {},
+    disabled: false,
+    loading: false,
+  }
+) {
   let padding = 2;
   padding = size === 'sm' ? 1 : padding;
 
@@ -38,15 +47,6 @@ ButtonComponent.propTypes = {
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,
-};
-
-ButtonComponent.defaultProps = {
-  color: 'blue',
-  size: 'md',
-  className: '',
-  onClick: () => {},
-  disabled: false,
-  loading: false,
 };
 
 export default ButtonComponent;
